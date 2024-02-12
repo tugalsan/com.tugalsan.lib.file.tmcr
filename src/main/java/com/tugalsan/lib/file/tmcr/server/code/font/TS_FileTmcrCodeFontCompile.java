@@ -4,6 +4,8 @@ import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.charset.client.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
 import java.util.*;
 
 public class TS_FileTmcrCodeFontCompile {

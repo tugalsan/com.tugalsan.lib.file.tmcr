@@ -1,5 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.filename;
 
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+
 public class TS_FileTmcrCodeFileNameCompile {
 
 //    final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeFileNameCompile.class);
