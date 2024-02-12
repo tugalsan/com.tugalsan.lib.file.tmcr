@@ -145,7 +145,11 @@ public class TS_FileTmcrFileWeb extends TS_FileTmcrFileInterface {
 //                mHeight = tmp;
             }
 //            d.ci("addImageWeb", "w", mWidth, "h", mHeight, "r", rotationInDegrees_0_90_180_270);
-            mImageLoc = TS_FileTmcrFileConverter.convertLocalLocationToRemote(macroGlobals, mImageLoc);
+            mImageLoc = TS_FileTmcrFileConverter.convertLocalLocationToRemote(
+                    macroGlobals.username,
+                    macroGlobals.url,
+                    mImageLoc
+            );
             if (mImageLoc == null) {
                 d.ce("addImageWeb", "Cannot convertLocalLocationToRemote", mImageLoc);
                 return false;

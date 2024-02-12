@@ -1,6 +1,5 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.url.client.*;
@@ -15,7 +14,7 @@ public class TS_FileTmcrFileConverter {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileConverter.class);
 
-    public static String convertLocalLocationToRemote(TS_FileTmcrParser_Globals macroGlobals, String imageLoc_pathOrUrl) {
+    public static String convertLocalLocationToRemote(CharSequence username, TGS_Url inputUrl, String imageLoc_pathOrUrl) {
         //IF URL, RETURN
         if (imageLoc_pathOrUrl.startsWith("http")) {
             d.ci("convertLocalLocationToRemote", "nothing to do", imageLoc_pathOrUrl);
@@ -29,7 +28,7 @@ public class TS_FileTmcrFileConverter {
 
         var dirDat = TS_LibBootUtils.pck.dirDAT;
         var dirPub = TS_LibFilePathUtils.datPub(dirDat);
-        var dirUsr = TS_LibFilePathUtils.datUsrName(dirDat, macroGlobals.username);
+        var dirUsr = TS_LibFilePathUtils.datUsrName(dirDat, username);
         var dirTbl = TS_LibTableFileDirUtils.datTbl(dirDat);
 
         var isPubDir = file.startsWith(dirPub);
@@ -54,7 +53,7 @@ public class TS_FileTmcrFileConverter {
             var path = file.toString().substring(dirUsr.toString().length() + 1).replace("\\", "/");
             d.ci("convertLocalLocationToRemote", "isUsrDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
-            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(macroGlobals.url);
+            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(inputUrl);
             imageLoc_pathOrUrl = TGS_LibFileServletUtils.URL_SERVLET_FETCH_USER(false, acsrfSafe, pathSafe).toString();
             d.ci("convertLocalLocationToRemote", "isUsrDir", "url", imageLoc_pathOrUrl);
         } else {//isTblDir
@@ -63,7 +62,7 @@ public class TS_FileTmcrFileConverter {
             var path = file.toString().substring(dirTbl.toString().length() + 1).replace("\\", "/");
             d.ci("convertLocalLocationToRemote", "isTblDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
-            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(macroGlobals.url);
+            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(inputUrl);
             imageLoc_pathOrUrl = TGS_LibTableServletUtils.URL_SERVLET_FETCH_TBL_FILE(false, acsrfSafe, pathSafe).toString();
             d.ci("convertLocalLocationToRemote", "isTblDir", "url", imageLoc_pathOrUrl);
         }
