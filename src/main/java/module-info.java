@@ -1,4 +1,4 @@
-module com.tugalsan.api.file.tmcr { 
+module com.tugalsan.lib.file.tmcr { 
     requires java.desktop;
     requires itextpdf;
     requires com.tugalsan.api.tuple;
@@ -53,17 +53,17 @@ module com.tugalsan.api.file.tmcr {
     requires com.tugalsan.lib.rql.allow;
     requires com.tugalsan.lib.rql.report;
     requires com.tugalsan.lib.rql.rev;
-    exports com.tugalsan.api.file.tmcr.client;
-    exports com.tugalsan.api.file.tmcr.server.file;
-    exports com.tugalsan.api.file.tmcr.server.code.filename;
-    exports com.tugalsan.api.file.tmcr.server.code.font;
-    exports com.tugalsan.api.file.tmcr.server.code.image;
-    exports com.tugalsan.api.file.tmcr.server.code.inject;
-    exports com.tugalsan.api.file.tmcr.server.code.label;
-    exports com.tugalsan.api.file.tmcr.server.code.map;
-    exports com.tugalsan.api.file.tmcr.server.code.page;
-    exports com.tugalsan.api.file.tmcr.server.code.parser;
-    exports com.tugalsan.api.file.tmcr.server.code.table;
-    exports com.tugalsan.api.file.tmcr.server.code.text;
-    exports com.tugalsan.api.file.tmcr.server.code.url;
+    exports com.tugalsan.lib.file.tmcr.client;
+    exports com.tugalsan.lib.file.tmcr.server.file;
+    exports com.tugalsan.lib.file.tmcr.server.code.filename;
+    exports com.tugalsan.lib.file.tmcr.server.code.font;
+    exports com.tugalsan.lib.file.tmcr.server.code.image;
+    exports com.tugalsan.lib.file.tmcr.server.code.inject;
+    exports com.tugalsan.lib.file.tmcr.server.code.label;
+    exports com.tugalsan.lib.file.tmcr.server.code.map;
+    exports com.tugalsan.lib.file.tmcr.server.code.page;
+    exports com.tugalsan.lib.file.tmcr.server.code.parser;
+    exports com.tugalsan.lib.file.tmcr.server.code.table;
+    exports com.tugalsan.lib.file.tmcr.server.code.text;
+    exports com.tugalsan.lib.file.tmcr.server.code.url;
 }
