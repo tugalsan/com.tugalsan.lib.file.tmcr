@@ -2,6 +2,13 @@ package com.tugalsan.lib.file.tmcr.server.code.parser;
 
 import com.tugalsan.lib.file.tmcr.server.code.font.TS_FileTmcrCodeFontUsage;
 import com.tugalsan.lib.file.tmcr.server.code.filename.TS_FileTmcrCodeFileNameUsage;
+import com.tugalsan.lib.file.tmcr.server.code.image.TS_FileTmcrCodeImageUsage;
+import com.tugalsan.lib.file.tmcr.server.code.inject.TS_FileTmcrCodeInjectUsage;
+import com.tugalsan.lib.file.tmcr.server.code.label.TS_FileTmcrCodeLabelUsage;
+import com.tugalsan.lib.file.tmcr.server.code.map.TS_FileTmcrCodeMapUsage;
+import com.tugalsan.lib.file.tmcr.server.code.page.TS_FileTmcrCodePageUsage;
+import com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableUsage;
+import com.tugalsan.lib.file.tmcr.server.code.text.TS_FileTmcrCodeTextUsage;
 import com.tugalsan.lib.rql.client.*;
 import java.util.stream.*;
 

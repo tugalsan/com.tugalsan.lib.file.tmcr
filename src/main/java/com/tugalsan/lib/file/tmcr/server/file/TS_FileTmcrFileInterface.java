@@ -5,6 +5,7 @@ import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.lib.file.server.*;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
 import com.tugalsan.lib.table.server.*;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;

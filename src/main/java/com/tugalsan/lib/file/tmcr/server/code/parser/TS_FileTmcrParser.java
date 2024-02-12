@@ -8,6 +8,16 @@ import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.unsafe.client.*;
 import com.tugalsan.api.runnable.client.TGS_RunnableType2;
+import com.tugalsan.lib.file.tmcr.server.code.font.TS_FileTmcrCodeFontCompile;
+import com.tugalsan.lib.file.tmcr.server.code.image.TS_FileTmcrCodeImageCompile;
+import com.tugalsan.lib.file.tmcr.server.code.inject.TS_FileTmcrCodeInjectCompile;
+import com.tugalsan.lib.file.tmcr.server.code.label.TS_FileTmcrCodeLabelCompile;
+import com.tugalsan.lib.file.tmcr.server.code.label.TS_FileTmcrCodeLabelTags;
+import com.tugalsan.lib.file.tmcr.server.code.map.TS_FileTmcrCodeMapCompile;
+import com.tugalsan.lib.file.tmcr.server.code.page.TS_FileTmcrCodePageCompile;
+import com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableCompile;
+import com.tugalsan.lib.file.tmcr.server.code.text.TS_FileTmcrCodeTextCompile;
+import com.tugalsan.lib.file.tmcr.server.code.url.TS_FileTmcrCodeUrlCompile;
 
 public class TS_FileTmcrParser {
 

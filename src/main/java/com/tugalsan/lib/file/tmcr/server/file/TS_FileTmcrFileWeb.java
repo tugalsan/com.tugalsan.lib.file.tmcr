@@ -18,6 +18,8 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.lib.resource.client.*;
 import java.util.Objects;
 import com.tugalsan.lib.domain.server.*;
+import com.tugalsan.lib.file.tmcr.server.code.font.TS_FileTmcrCodeFontTags;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
 
 public class TS_FileTmcrFileWeb extends TS_FileTmcrFileInterface {
 

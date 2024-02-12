@@ -8,6 +8,8 @@ import com.tugalsan.api.math.client.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.random.server.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_BEGIN_TABLE;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_BEGIN_TABLECELL;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_END_TABLE;

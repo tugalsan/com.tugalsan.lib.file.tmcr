@@ -5,6 +5,7 @@ import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.restbl.server.*;
 import com.tugalsan.api.sql.resultset.server.*;
 import com.tugalsan.api.time.client.*;
+import com.tugalsan.lib.file.tmcr.server.code.font.TS_FileTmcrCodeFontWriter;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_BEGIN_TABLE;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_BEGIN_TABLECELL;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_END_TABLE;
@@ -14,6 +15,7 @@ import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableT
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_END_TABLECELL_90;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_TABLECELL_BORDER;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_TOKEN_NULL;
+import com.tugalsan.lib.file.tmcr.server.code.text.TS_FileTmcrCodeTextWriter;
 import java.util.stream.*;
 
 public class TS_FileTmcrCodeTableWriter {
