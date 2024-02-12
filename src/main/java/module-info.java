@@ -3,17 +3,14 @@ module com.tugalsan.lib.file.tmcr {
     requires itextpdf;
     requires com.tugalsan.api.tuple;
     requires com.tugalsan.api.unsafe;
-    requires com.tugalsan.api.crypto;
     requires com.tugalsan.api.coronator;
     requires com.tugalsan.api.callable;
     requires com.tugalsan.api.file;
     requires com.tugalsan.api.file.docx;
     requires com.tugalsan.api.file.xlsx;
-    requires com.tugalsan.api.tomcat;
     requires com.tugalsan.api.file.html;
     requires com.tugalsan.api.file.txt;
     requires com.tugalsan.api.file.pdf;
-    requires com.tugalsan.api.file.zip;
     requires com.tugalsan.api.file.img;
     requires com.tugalsan.api.log;
     requires com.tugalsan.api.charset;
@@ -21,7 +18,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.time;
     requires com.tugalsan.api.shape;
     requires com.tugalsan.api.list;
-    requires com.tugalsan.api.gui;
     requires com.tugalsan.api.string;
     requires com.tugalsan.api.cast;
     requires com.tugalsan.api.validator;
@@ -31,7 +27,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.math;
     requires com.tugalsan.api.url;
     requires com.tugalsan.api.servlet.url;
-    requires com.tugalsan.api.servlet.gwt;
     requires com.tugalsan.api.sql.conn;
     requires com.tugalsan.api.sql.select;
     requires com.tugalsan.api.sql.restbl;

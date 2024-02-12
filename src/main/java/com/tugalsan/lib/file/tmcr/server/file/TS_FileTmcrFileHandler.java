@@ -24,7 +24,7 @@ public class TS_FileTmcrFileHandler extends TS_FileTmcrFileInterface {
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
-    public void rename(Path dirDat, TS_FileTmcrParser_Globals macroGlobals) {
+    public void renameLocalFileNames_ifPrefferedFileNameLabelHasBeenSet(Path dirDat, TS_FileTmcrParser_Globals macroGlobals) {
         d.ci("rename", macroGlobals.prefferedFileNameLabel);
         if (!macroGlobals.prefferedFileNameLabel.isEmpty()) {
             if (TS_FileTmcrFileInterface.FILENAME_CHAR_SUPPORT_TURKISH) {

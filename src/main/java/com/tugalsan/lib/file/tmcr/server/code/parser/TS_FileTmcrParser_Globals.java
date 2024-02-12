@@ -12,7 +12,6 @@ import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 public class TS_FileTmcrParser_Globals {
 
 //    final private static TS_Log d = TS_Log.of(TS_FileTmcrParser_Globals.class);
-
     public String fontColor;
     public Path fontPathBold;
     public Path fontPathBoldItalic;
@@ -103,7 +102,7 @@ public class TS_FileTmcrParser_Globals {
             String funcName, String fileNameLabel, TGS_Url url,
             List<String> requestedFileTypes, Path dirDat,
             Path fontPathBold, Path fontPathBoldItalic, Path fontPathItalic, Path fontPathRegular,
-            String customDomain
+             String customDomain
     ) {
         this.anchor = anchor;
         this.macroLines = macroLines;
