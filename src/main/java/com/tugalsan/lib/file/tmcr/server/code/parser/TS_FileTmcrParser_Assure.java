@@ -1,5 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.rql.buffer.server.*;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.log.server.*;
@@ -8,6 +9,7 @@ import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.string.server.*;
 import com.tugalsan.api.time.client.*;
+import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
 import com.tugalsan.lib.rql.link.server.*;
 import com.tugalsan.lib.rql.txt.server.*;
@@ -18,7 +20,7 @@ public class TS_FileTmcrParser_Assure {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrParser_Assure.class);
 
-    public static boolean checkTokenSize(TS_FileTmcrParser_Globals macroGlobals, int tokenSize) {
+    public static boolean checkTokenSize(TS_FileCommonBall macroGlobals, int tokenSize) {
         if (macroGlobals.macroLineTokens.size() != tokenSize) {
             d.ce("macroGlobals.macroLine: [", macroGlobals.macroLine, "] should have ", tokenSize, " tokens error!");
             d.ce(TGS_StringUtils.toString_ln(macroGlobals.macroLineTokens));
@@ -27,7 +29,7 @@ public class TS_FileTmcrParser_Assure {
         return true;
     }
 
-    public static boolean checkTokenSize(TS_FileTmcrParser_Globals macroGlobals, int[] tokenSizes) {
+    public static boolean checkTokenSize(TS_FileCommonBall macroGlobals, int[] tokenSizes) {
         var macroTokenSize = macroGlobals.macroLineTokens.size();
         for (var tsi : tokenSizes) {
             if (macroTokenSize == tsi) {
@@ -39,7 +41,7 @@ public class TS_FileTmcrParser_Assure {
         return false;
     }
 
-    public static TGS_LibRqlTbl getTable(TS_FileTmcrParser_Globals macroGlobals, String tableName) {
+    public static TGS_LibRqlTbl getTable(TS_FileCommonBall macroGlobals, String tableName) {
         var table = TS_LibRqlBufferUtils.get(tableName);
         if (table == null) {
             d.ce(macroGlobals.macroLine, " -> tablename: [", tableName, "] sniff table not worked as expected!");
@@ -48,7 +50,7 @@ public class TS_FileTmcrParser_Assure {
         return table;
     }
 
-    public static String[] splitTableDotColname(TS_FileTmcrParser_Globals macroGlobals, int tableDotColnameIdx) {
+    public static String[] splitTableDotColname(TS_FileCommonBall macroGlobals, int tableDotColnameIdx) {
         var tableDotColname = macroGlobals.macroLineTokens.get(tableDotColnameIdx);
         var dividerIdx = tableDotColname.indexOf(".");
         if (dividerIdx == -1) {
@@ -61,7 +63,7 @@ public class TS_FileTmcrParser_Assure {
         };
     }
 
-    public static Integer getColumnIndex(TS_FileTmcrParser_Globals macroGlobals, TGS_LibRqlTbl table, String colname) {
+    public static Integer getColumnIndex(TS_FileCommonBall macroGlobals, TGS_LibRqlTbl table, String colname) {
         var colIdx = TGS_LibRqlTblUtils.colIdx(table, colname);
         if (colIdx == -1) {
             var tn = table.nameSql;
@@ -70,7 +72,7 @@ public class TS_FileTmcrParser_Assure {
         return colIdx;
     }
 
-    public static Long getId(TS_FileTmcrParser_Globals macroGlobals, int idIdx) {
+    public static Long getId(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler, int idIdx) {
         Long id;
         var token = macroGlobals.macroLineTokens.get(idIdx);
         if (token.equals(TS_FileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
@@ -78,20 +80,20 @@ public class TS_FileTmcrParser_Assure {
             if (id == null) {
                 var errText = TGS_StringUtils.concat("HATA: SATIR SEÇİLMEDİ HATASI! macroGlobals.macroLine: [", macroGlobals.macroLine, "].tokenAsId[", String.valueOf(idIdx), "]: [", token, "] requires you select a row from the table!");
                 d.ce(errText, false);
-                macroGlobals.mifHandler.saveFile(errText);
+                mifHandler.saveFile(errText);
             }
         } else {
             id = TGS_CastUtils.toLong(macroGlobals.macroLineTokens.get(idIdx));
             if (id == null) {
                 var errText = TGS_StringUtils.concat("HATA: ID BULUNAMADI!macroGlobals.macroLine: [", macroGlobals.macroLine, "].tokenAsId[", String.valueOf(idIdx), "] should be a number!");
                 d.ce(errText, false);
-                macroGlobals.mifHandler.saveFile(errText);
+                mifHandler.saveFile(errText);
             }
         }
         return id;
     }
 
-    public static String sniffCellSimple(TS_SQLConnAnchor anchor, TS_FileTmcrParser_Globals macroGlobals, TGS_LibRqlTbl table, long id, int colIdx) {
+    public static String sniffCellSimple(TS_SQLConnAnchor anchor, TS_FileCommonBall macroGlobals, TGS_LibRqlTbl table, long id, int colIdx) {
         if (d.infoEnable) {
             var tn = table.nameSql;
             d.ci("sniffCellSimple.table:", tn);
@@ -126,7 +128,7 @@ public class TS_FileTmcrParser_Assure {
         return text;
     }
 
-    public static String[] getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileTmcrParser_Globals macroGlobals,
+    public static String[] getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileCommonBall macroGlobals,
             CharSequence tableName, TGS_LibRqlCol column, String inputData) {
         String outputData;
         Long subId = null;

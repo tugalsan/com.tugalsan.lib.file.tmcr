@@ -1,16 +1,16 @@
 package com.tugalsan.lib.file.tmcr.server.code.filename;
 
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 
 public class TS_FileTmcrCodeFileNameCompile {
 
 //    final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeFileNameCompile.class);
 
-    public static boolean is_FILENAME_START(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_FILENAME_START(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(TS_FileTmcrCodeFileNameTags.CODE_FILENAME_START());
     }
 
-    public static boolean is_FILENAME_END(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_FILENAME_END(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(TS_FileTmcrCodeFileNameTags.CODE_FILENAME_END());
     }
 }

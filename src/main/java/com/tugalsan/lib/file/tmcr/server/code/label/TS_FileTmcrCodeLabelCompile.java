@@ -12,7 +12,7 @@ import static com.tugalsan.lib.file.tmcr.server.code.label.TS_FileTmcrCodeLabelT
 import static com.tugalsan.lib.file.tmcr.server.code.label.TS_FileTmcrCodeLabelTags.CODE_TOKEN_NOT_EQUALS;
 import static com.tugalsan.lib.file.tmcr.server.code.label.TS_FileTmcrCodeLabelTags.ERROR;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_SelectedId;
 import com.tugalsan.lib.rql.client.*;
 import com.tugalsan.lib.rql.txt.server.*;
@@ -22,11 +22,11 @@ public class TS_FileTmcrCodeLabelCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeLabelCompile.class);
 
-    public static boolean is_SET_LABEL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_SET_LABEL(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(CODE_SET_LABEL());
     }
 
-    public static boolean is_SET_LABEL_ON_SEARCH(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_SET_LABEL_ON_SEARCH(TS_FileCommonBall macroGlobals) {
         if (TGS_CharSetCast.equalsLocaleIgnoreCase(macroGlobals.macroLine, CODE_SET_LABEL() + " " + macroGlobals.doFind_gotoLabel)) {
             d.ci("is_SET_LABEL_ON_SEARCH", CODE_SET_LABEL() + " " + macroGlobals.doFind_gotoLabel + " found");
             return true;
@@ -35,7 +35,7 @@ public class TS_FileTmcrCodeLabelCompile {
         }
     }
 
-    public static boolean is_SET_LABEL_ON_ERROR(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_SET_LABEL_ON_ERROR(TS_FileCommonBall macroGlobals) {
         if (TGS_CharSetCast.equalsLocaleIgnoreCase(macroGlobals.macroLine, CODE_SET_LABEL() + " " + ERROR())) {
             d.ci("is_SET_LABEL_ON_ERROR", CODE_SET_LABEL() + " " + ERROR() + " found");
             return true;
@@ -44,11 +44,11 @@ public class TS_FileTmcrCodeLabelCompile {
         }
     }
 
-    public static boolean is_GOTO_LABEL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_GOTO_LABEL(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(CODE_GOTO_LABEL());
     }
 
-    public static String get_GOTO_LABEL(TS_SQLConnAnchor anchor, TS_FileTmcrParser_Globals macroGlobals) {
+    public static String get_GOTO_LABEL(TS_SQLConnAnchor anchor, TS_FileCommonBall macroGlobals) {
         //FETCH IDX_0 cmd
         d.ci("get_GOTO_LABEL", "IDX_0", macroGlobals.macroLineTokens.get(0));
         String doFind_gotoLabel = null;

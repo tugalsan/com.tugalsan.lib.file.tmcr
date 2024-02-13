@@ -1,5 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
+import com.tugalsan.api.file.html.server.TS_FileHtml;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.url.client.*;
@@ -14,6 +15,13 @@ public class TS_FileTmcrFileConverter {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileConverter.class);
 
+    public static String convertLocalLocationToRemote(TS_FileHtml fileWeb, String imageLoc) {
+        return convertLocalLocationToRemote(
+                fileWeb.macroGlobals.username, 
+                fileWeb.macroGlobals.url,
+                    imageLoc
+        );
+    }
     public static String convertLocalLocationToRemote(CharSequence username, TGS_Url inputUrl, String imageLoc_pathOrUrl) {
         //IF URL, RETURN
         if (imageLoc_pathOrUrl.startsWith("http")) {

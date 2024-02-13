@@ -15,7 +15,8 @@ import static com.tugalsan.lib.file.tmcr.server.code.page.TS_FileTmcrCodePageTag
 import static com.tugalsan.lib.file.tmcr.server.code.page.TS_FileTmcrCodePageTags.CODE_TOKEN_LAND;
 import static com.tugalsan.lib.file.tmcr.server.code.page.TS_FileTmcrCodePageTags.CODE_TOKEN_PORT;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import java.util.*;
 
 public class TS_FileTmcrCodePageCompile {
@@ -46,11 +47,11 @@ public class TS_FileTmcrCodePageCompile {
         return 10;
     }
 
-    public static boolean is_INSERT_PAGE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_INSERT_PAGE(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(CODE_INSERT_PAGE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_PAGE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_PAGE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_INSERT_PAGE");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 7)) {
             return d.returnError(result, "Token size not 7 error @[" + macroGlobals.macroLine + "]");
@@ -105,14 +106,14 @@ public class TS_FileTmcrCodePageCompile {
             d.ce(CODE_INSERT_PAGE() + " code token[1] error! -> SET Default as " + CODE_TOKEN_A4());
             pageSizeAX = DEFAULT_PAGE_SIZE_A();
         }
-        if (!macroGlobals.mifHandler.createNewPage(pageSizeAX, land, ml, mr, mt, mb)) {
+        if (!mifHandler.createNewPage(pageSizeAX, land, ml, mr, mt, mb)) {
             return d.returnError(result, "Cannot createNewPage->" + "macroGlobals.mifHandler.createNewPage(pageSizeAX:" + pageSizeAX + ", land, ml" + ml + ", mr" + mr + ", mt" + mt + ", mb" + mb + ")");
         }
         return d.returnTrue(result);
     }
 
-    public static boolean createNewPageDefault(TS_FileTmcrParser_Globals macroGlobals) {
-        return macroGlobals.mifHandler.createNewPage(DEFAULT_PAGE_SIZE_A(), DEFAULT_PAGE_LAYOUT_LANDSCAPE(),
+    public static boolean createNewPageDefault(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
+        return mifHandler.createNewPage(DEFAULT_PAGE_SIZE_A(), DEFAULT_PAGE_LAYOUT_LANDSCAPE(),
                 DEFAULT_PAGE_MARGIN_LFT(), DEFAULT_PAGE_MARGIN_RGT(),
                 DEFAULT_PAGE_MARGIN_TOP(), DEFAULT_PAGE_MARGIN_BTM());
     }

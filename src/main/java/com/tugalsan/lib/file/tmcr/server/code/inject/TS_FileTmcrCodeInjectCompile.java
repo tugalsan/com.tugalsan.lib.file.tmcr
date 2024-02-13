@@ -10,7 +10,7 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.client.*;
 import static com.tugalsan.lib.file.tmcr.server.code.inject.TS_FileTmcrCodeInjectTags.CODE_INJECT_CODE;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.route.client.*;
 import java.util.stream.*;
 
@@ -18,7 +18,7 @@ public class TS_FileTmcrCodeInjectCompile {
 
     final private static TS_Log d = TS_Log.of( TS_FileTmcrCodeInjectCompile.class);
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileCommonBall macroGlobals) {
         var result = d.createFuncBoolean("compile_CODE_INJECT_CODE");
         d.ci("compile_CODE_INJECT_CODE", "welcome");
         return TGS_UnSafe.call(() -> {

@@ -1,26 +1,28 @@
 package com.tugalsan.lib.file.tmcr.server.code.font;
 
+import com.tugalsan.api.file.common.server.TS_FileTmcrCodeFontTags;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.charset.client.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import java.util.*;
 
 public class TS_FileTmcrCodeFontCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeFontCompile.class);
 
-    public static boolean is_SET_FONT_COLOR(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_SET_FONT_COLOR(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(TS_FileTmcrCodeFontTags.CODE_SET_FONT_COLOR());
     }
 
-    public static boolean is_SET_FONT_SIZE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_SET_FONT_SIZE(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(TS_FileTmcrCodeFontTags.CODE_SET_FONT_SIZE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_COLOR(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_COLOR(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_COLOR");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
             return d.returnError(result, "token size not 2");
@@ -38,15 +40,15 @@ public class TS_FileTmcrCodeFontCompile {
                 || TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_RED().equals(macroGlobals.fontColor)
                 || TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_YELLOW().equals(macroGlobals.fontColor);
         if (!comparison) {
-            return d.returnError(result, "CODE_TOKEN_FONT_COLOR_XXX code token[1] error! should be " + TS_FileTmcrParser_Globals.class.getSimpleName() + ".CODE_TOKEN_FONT_COLOR_XXX");
+            return d.returnError(result, "CODE_TOKEN_FONT_COLOR_XXX code token[1] error! should be " + TS_FileCommonBall.class.getSimpleName() + ".CODE_TOKEN_FONT_COLOR_XXX");
         }
-        if (!macroGlobals.mifHandler.setFontColor()) {
+        if (!mifHandler.setFontColor()) {
             return d.returnError(result, "Error: macroGlobals.mifHandler.setFontColor() == false");
         }
         return d.returnTrue(result);
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_SIZE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_SIZE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_SIZE");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
             return d.returnError(result, "token size is not 2");
@@ -56,17 +58,17 @@ public class TS_FileTmcrCodeFontCompile {
             return d.returnError(result, TS_FileTmcrCodeFontTags.CODE_SET_FONT_SIZE() + " code token[1] error! size should be 1 or more");
         }
         macroGlobals.fontHeight = nfs;
-        if (!macroGlobals.mifHandler.setFontHeight()) {
+        if (!mifHandler.setFontHeight()) {
             return d.returnError(result, "Error: macroGlobals.mifHandler.setFontHeight() == false");
         }
         return d.returnTrue(result);
     }
 
-    public static boolean is_SET_FONT_STYLE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_SET_FONT_STYLE(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(TS_FileTmcrCodeFontTags.CODE_SET_FONT_STYLE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_STYLE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_STYLE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_STYLE");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
             return d.returnError(result, "Error: Tokensize is not 2!");
@@ -88,7 +90,7 @@ public class TS_FileTmcrCodeFontCompile {
         } else {
             return d.returnError(result, TS_FileTmcrCodeFontTags.CODE_SET_FONT_STYLE() + " code token[1] error! should be either: " + TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_STYLE_BOLD() + ", " + TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_STYLE_ITALIC() + ", " + TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_STYLE_BOLDITALIC() + ", " + TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_STYLE_PLAIN());
         }
-        if (!macroGlobals.mifHandler.setFontStyle()) {
+        if (!mifHandler.setFontStyle()) {
             return d.returnError(result, "Error: macroGlobals.mifHandler.setFontStyle() == false");
         }
         return d.returnTrue(result);

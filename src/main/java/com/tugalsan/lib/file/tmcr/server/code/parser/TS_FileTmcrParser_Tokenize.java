@@ -1,5 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.tuple.client.TGS_Tuple3;
 import com.tugalsan.api.string.client.TGS_StringUtils;
@@ -10,7 +11,7 @@ public class TS_FileTmcrParser_Tokenize {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrParser_Tokenize.class);
 
-    public static TGS_Tuple3<String, Boolean, String> compile_TOKENIZE(TS_FileTmcrParser_Globals macroGlobals, int i) {
+    public static TGS_Tuple3<String, Boolean, String> compile_TOKENIZE(TS_FileCommonBall macroGlobals, int i) {
         var result = d.createFuncBoolean("compile_TOKENIZE");
         macroGlobals.macroLine = TGS_StringUtils.removeConsecutive(macroGlobals.macroLines.get(i), " ").trim();
         macroGlobals.macroLineUpperCase = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLine);

@@ -9,7 +9,7 @@ import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.random.server.*;
 import com.tugalsan.api.string.client.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_BEGIN_TABLE;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_BEGIN_TABLECELL;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_END_TABLE;
@@ -19,32 +19,33 @@ import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableT
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_END_TABLECELL_90;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_TABLECELL_BORDER;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_FileTmcrCodeTableTags.CODE_TOKEN_NULL;
+import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 
 public class TS_FileTmcrCodeTableCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeTableCompile.class);
 
-    public static boolean is_BEGIN_TABLE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_BEGIN_TABLE(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(CODE_BEGIN_TABLE());
     }
 
-    public static boolean is_END_TABLE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_END_TABLE(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(CODE_END_TABLE());
     }
 
-    public static boolean is_BEGIN_TABLECELL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_BEGIN_TABLECELL(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(CODE_BEGIN_TABLECELL());
     }
 
-    public static boolean is_END_TABLECELL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_END_TABLECELL(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(CODE_END_TABLECELL());
     }
 
-    public static boolean is_TABLECELL_BORDER(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_TABLECELL_BORDER(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(CODE_TABLECELL_BORDER());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TABLECELL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TABLECELL(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_BEGIN_TABLECELL");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 4)) {
             return d.returnError(result, "token size not 4");
@@ -75,13 +76,13 @@ public class TS_FileTmcrCodeTableCompile {
             }
         }
         macroGlobals.cellHeight = cellHeight;
-        if (!macroGlobals.mifHandler.beginTableCell(rowSpan, colSpan, cellHeight)) {
+        if (!mifHandler.beginTableCell(rowSpan, colSpan, cellHeight)) {
             return d.returnError(result, "macroGlobals.mifHandler.beginTableCell(rowSpan, colSpan, cellHeight) == false");
         }
         return d.returnTrue(result);
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_END_TABLECELL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_END_TABLECELL(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_END_TABLECELL");
         var rotate = TGS_Coronator.ofInt()
                 .anoint(val -> 0)
@@ -90,13 +91,13 @@ public class TS_FileTmcrCodeTableCompile {
                 .anointIf(val -> macroGlobals.macroLineUpperCase.startsWith(CODE_END_TABLECELL_270()), val -> 270)
                 .coronate();
         macroGlobals.cellHeight = null;
-        if (!macroGlobals.mifHandler.endTableCell(rotate)) {
+        if (!mifHandler.endTableCell(rotate)) {
             return d.returnError(result, "macroGlobals.mifHandler.endTableCell(rotate) == false");
         }
         return d.returnTrue(result);
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_TABLECELL_BORDER(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_TABLECELL_BORDER(TS_FileCommonBall macroGlobals) {
         var result = d.createFuncBoolean("compile_TABLECELL_BORDER");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
             return d.returnError(result, "token size not 2");
@@ -105,7 +106,7 @@ public class TS_FileTmcrCodeTableCompile {
         return d.returnTrue(result);
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TABLE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TABLE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_BEGIN_TABLE");
         if (macroGlobals.macroLineTokens.size() < 2) {
             return d.returnError(result, CODE_BEGIN_TABLE() + " code should have more than 1 token error!");
@@ -125,15 +126,15 @@ public class TS_FileTmcrCodeTableCompile {
         d.ci("compile_BEGIN_TABLE.PRE relColSizes: " + TGS_StringUtils.toString(relColSizes, ", "));
         relColSizes = TGS_MathUtils.convertWeighted(relColSizes, 1, 100);
         d.ci("compile_BEGIN_TABLE.FIX relColSizes: " + TGS_StringUtils.toString(relColSizes, ", "));
-        if (!macroGlobals.mifHandler.beginTable(relColSizes)) {
+        if (!mifHandler.beginTable(relColSizes)) {
             return d.returnError(result, "macroGlobals.mifHandler.beginTable(relColSizes) == false");
         }
         return d.returnTrue(result);
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_END_TABLE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_END_TABLE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_END_TABLE");
-        if (!macroGlobals.mifHandler.endTable()) {
+        if (!mifHandler.endTable()) {
             return d.returnError(result, "macroGlobals.mifHandler.endTable() == false");
         }
         return d.returnTrue(result);

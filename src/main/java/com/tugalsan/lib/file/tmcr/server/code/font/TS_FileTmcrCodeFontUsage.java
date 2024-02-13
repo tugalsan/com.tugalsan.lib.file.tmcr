@@ -1,5 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.font;
 
+import com.tugalsan.api.file.common.server.TS_FileTmcrCodeFontTags;
+
 public class TS_FileTmcrCodeFontUsage {
 
     public static void addUsageCode(StringBuilder sb) {

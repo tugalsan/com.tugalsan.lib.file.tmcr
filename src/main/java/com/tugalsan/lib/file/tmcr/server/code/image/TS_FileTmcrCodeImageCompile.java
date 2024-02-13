@@ -15,8 +15,9 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_SelectedId;
+import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.resource.client.*;
 import com.tugalsan.lib.rql.client.*;
 import com.tugalsan.lib.table.server.*;
@@ -32,7 +33,7 @@ public class TS_FileTmcrCodeImageCompile {
         return 80;
     }
 
-    public static boolean is_INSERT_IMAGE(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_INSERT_IMAGE(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLine.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
     }
 
@@ -52,7 +53,7 @@ public class TS_FileTmcrCodeImageCompile {
       table.addCell(cell10);                 
     
      */
-    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_IMAGE(TS_FileTmcrParser_Globals macroGlobals, Path dirDat) {
+    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_IMAGE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler, Path dirDat) {
         var result = d.createFuncBoolean(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE() + "/" + TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
         d.ci(result.value0, "INFO: macroLine: " + macroGlobals.macroLineUpperCase);
         d.ci(result.value0, "INFO: dirDat: " + dirDat.toString());
@@ -315,7 +316,7 @@ public class TS_FileTmcrCodeImageCompile {
             }
         } catch (Exception e) {
             TGS_UnSafe.throwIfInterruptedException(e);
-            macroGlobals.mifHandler.addText("ERROR: preImage == e @ preImageLoc:" + preImageLoc + ", e:" + e.getMessage());
+            mifHandler.addText("ERROR: preImage == e @ preImageLoc:" + preImageLoc + ", e:" + e.getMessage());
             d.ci(result.value0, "  processed.");
             d.ci(result.value0, "compile_INSERT_IMAGE_COMMON  processed. ");
             return d.returnTrue(result);
@@ -405,7 +406,7 @@ public class TS_FileTmcrCodeImageCompile {
         d.ci(result.value0, "INFO: pstImageType: " + pstImage.getType());
         d.ci(result.value0, "INFO: END");
 
-        if (!macroGlobals.mifHandler.addImage(pstImage, pstImageLoc, textWrap, left0_center1_right2, macroGlobals.imageCounter++)) {
+        if (!mifHandler.addImage(pstImage, pstImageLoc, textWrap, left0_center1_right2, macroGlobals.imageCounter++)) {
             return d.returnError(result, "ERR@ " + pstImageLoc);
         }
         d.ci(result.value0, "compile_INSERT_IMAGE_COMMON  processed. ");

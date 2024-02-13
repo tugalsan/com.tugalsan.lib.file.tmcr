@@ -9,8 +9,9 @@ import com.tugalsan.api.string.client.*;
 import static com.tugalsan.lib.file.tmcr.server.code.map.TS_FileTmcrCodeMapTags.CODE_MAPADD_FROMSQL;
 import static com.tugalsan.lib.file.tmcr.server.code.map.TS_FileTmcrCodeMapTags.CODE_MAPGET;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_SelectedId;
+import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
 import java.util.*;
 
@@ -18,11 +19,11 @@ public class TS_FileTmcrCodeMapCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeMapCompile.class);
 
-    public static boolean is_MAPADD_FROMSQL(TS_FileTmcrParser_Globals macroGlobals) {
+    public static boolean is_MAPADD_FROMSQL(TS_FileCommonBall macroGlobals) {
         return macroGlobals.macroLineUpperCase.startsWith(CODE_MAPADD_FROMSQL());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_MAPGET(TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_CODE_MAPGET(TS_FileCommonBall macroGlobals) {
         var result = d.createFuncBoolean("compile_CODE_MAPGET");
         for (var j = macroGlobals.macroLineTokens.size() - 1; j > -1; j--) {
             if (macroGlobals.macroLineTokens.get(j).startsWith(CODE_MAPGET())) {
@@ -57,7 +58,7 @@ public class TS_FileTmcrCodeMapCompile {
     }
 
     //MAPADD_FROMSQL VAR ID ...
-    public static TGS_Tuple3<String, Boolean, String> compile_MAPADD_FROMSQL(TS_SQLConnAnchor anchor, TS_FileTmcrParser_Globals macroGlobals) {
+    public static TGS_Tuple3<String, Boolean, String> compile_MAPADD_FROMSQL(TS_SQLConnAnchor anchor, TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_MAPADD_FROMSQL");
         if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 3)) {
             return d.returnError(result, "token size not 3");
@@ -80,7 +81,7 @@ public class TS_FileTmcrCodeMapCompile {
         }
         var tn = table.nameSql;
         var column = table.columns.get(colIdx);
-        var id = TS_FileTmcrParser_Assure.getId(macroGlobals, 2);
+        var id = TS_FileTmcrParser_Assure.getId(macroGlobals, mifHandler, 2);
         if (id == null) {
             return d.returnError(result, "id == null");
         }

@@ -1,5 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
+import com.tugalsan.api.file.common.server.TS_FileCommonInterface;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import com.tugalsan.api.log.server.TS_Log;
@@ -7,19 +8,19 @@ import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.txt.server.TS_FileTxtUtils;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.url.client.*;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 
-public class TS_FileTmcrFileTMCR extends TS_FileTmcrFileInterface {
+public class TS_FileTmcrFileTMCR extends TS_FileCommonInterface {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileTMCR.class);
 
-    private TS_FileTmcrParser_Globals macroGlobals;
+    private TS_FileCommonBall macroGlobals;
 
     private TS_FileTmcrFileTMCR(boolean enabled, Path localFile, TGS_Url remoteFile) {
         super(enabled, localFile, remoteFile);
     }
 
-    public static void use(boolean enabled, TS_FileTmcrParser_Globals macroGlobals, Path localFile, TGS_Url remoteFile, TGS_RunnableType1<TS_FileTmcrFileTMCR> tmcr) {
+    public static void use(boolean enabled, TS_FileCommonBall macroGlobals, Path localFile, TGS_Url remoteFile, TGS_RunnableType1<TS_FileTmcrFileTMCR> tmcr) {
         var instance = new TS_FileTmcrFileTMCR(enabled, localFile, remoteFile);
         try {
             instance.use_init(macroGlobals);
@@ -33,7 +34,7 @@ public class TS_FileTmcrFileTMCR extends TS_FileTmcrFileInterface {
 
     }
 
-    private void use_init(TS_FileTmcrParser_Globals macroGlobals) {
+    private void use_init(TS_FileCommonBall macroGlobals) {
         this.macroGlobals = macroGlobals;
         if (isClosed()) {
             return;

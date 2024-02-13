@@ -1,46 +1,51 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.lib.file.tmcr.server.code.font.TS_FileTmcrCodeFontTags;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Globals;
-import com.tugalsan.api.string.server.*;
-import com.tugalsan.api.cast.client.*;
+import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.file.html.server.TS_FileHtml;
+import com.tugalsan.api.file.common.server.TS_FileCommonInterface;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
+import com.tugalsan.api.file.common.server.TS_FileTmcrCodeFontTags;
+import com.tugalsan.api.file.docx.server.TS_FileDocx;
+import com.tugalsan.api.file.xlsx.server.TS_FileXlsx;
 import com.tugalsan.api.list.client.*;
 import java.awt.image.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.stream.*;
-import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.log.server.*;
+import com.tugalsan.api.file.pdf.server.TS_FilePdf;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
-import com.tugalsan.api.unsafe.client.*;
+import com.tugalsan.api.string.server.TS_StringUtils;
+import com.tugalsan.api.tuple.client.TGS_Tuple1;
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
+import java.util.stream.IntStream;
 
-public class TS_FileTmcrFileHandler extends TS_FileTmcrFileInterface {
+public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
-    public void renameLocalFileNames_ifPrefferedFileNameLabelHasBeenSet(Path dirDat, TS_FileTmcrParser_Globals macroGlobals) {
+    public void renameLocalFileNames_ifPrefferedFileNameLabelHasBeenSet(Path dirDat, TS_FileCommonBall macroGlobals) {
         d.ci("rename", macroGlobals.prefferedFileNameLabel);
         if (!macroGlobals.prefferedFileNameLabel.isEmpty()) {
-            if (TS_FileTmcrFileInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
+            if (TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
                 macroGlobals.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(macroGlobals.prefferedFileNameLabel);
             } else {
                 macroGlobals.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(macroGlobals.prefferedFileNameLabel);
             }
-            if (!TS_FileTmcrFileInterface.FILENAME_CHAR_SUPPORT_SPACE){
+            if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
                 macroGlobals.prefferedFileNameLabel = macroGlobals.prefferedFileNameLabel.replace(" ", "_");
             }
-            files.forEach(file -> file.renameLocalFileName_ifEnabled(dirDat, macroGlobals));
+            files.forEach(file -> TS_FileTmcrFileNamer.renameLocalFileName_ifEnabled(file, dirDat, macroGlobals));
         }
     }
 
-    public TS_FileTmcrParser_Globals macroGlobals;
-    final public List<TS_FileTmcrFileInterface> files;
+    public TS_FileCommonBall macroGlobals;
+    final public List<TS_FileCommonInterface> files;
 
     public List<String> getRemoteFiles() {
         List<String> remoteFiles = TGS_ListUtils.of();
@@ -48,13 +53,13 @@ public class TS_FileTmcrFileHandler extends TS_FileTmcrFileInterface {
         return remoteFiles;
     }
 
-    private TS_FileTmcrFileHandler(TS_FileTmcrParser_Globals macroGlobals, TS_FileTmcrFileInterface... files) {
+    private TS_FileTmcrFileHandler(TS_FileCommonBall macroGlobals, TS_FileCommonInterface... files) {
         super(true, null, null);
         this.macroGlobals = macroGlobals;
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
     }
 
-    public static void use(TS_FileTmcrParser_Globals macroGlobals, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
+    public static void use(TS_FileCommonBall macroGlobals, String favIconPng, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
@@ -71,24 +76,24 @@ public class TS_FileTmcrFileHandler extends TS_FileTmcrFileInterface {
         var fileNameFullPDF = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
         var fileNameFullXLSX = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
         var fileNameFullDOCX = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
-        var localfileTMCR = TS_FileTmcrFileInterface.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username);
-        var localfileHTML = TS_FileTmcrFileInterface.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username);
-        var localfileHTM = TS_FileTmcrFileInterface.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username);
-        var localfilePDF = TS_FileTmcrFileInterface.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username);
-        var localfileXLSX = TS_FileTmcrFileInterface.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username);
-        var localfileDOCX = TS_FileTmcrFileInterface.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username);
-        var remotefileTMCR = TS_FileTmcrFileInterface.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username, macroGlobals.url);
-        var remotefileHTML = TS_FileTmcrFileInterface.constructURLForRemoteFile(false, macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username, macroGlobals.url);
-        var remotefileHTM = TS_FileTmcrFileInterface.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username, macroGlobals.url);
-        var remotefilePDF = TS_FileTmcrFileInterface.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username, macroGlobals.url);
-        var remotefileXLSX = TS_FileTmcrFileInterface.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username, macroGlobals.url);
-        var remotefileDOCX = TS_FileTmcrFileInterface.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username, macroGlobals.url);
+        var localfileTMCR = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username);
+        var localfileHTML = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username);
+        var localfileHTM = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username);
+        var localfilePDF = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username);
+        var localfileXLSX = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username);
+        var localfileDOCX = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username);
+        var remotefileTMCR = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username, macroGlobals.url);
+        var remotefileHTML = TS_FileTmcrFileNamer.constructURLForRemoteFile(false, macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username, macroGlobals.url);
+        var remotefileHTM = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username, macroGlobals.url);
+        var remotefilePDF = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username, macroGlobals.url);
+        var remotefileXLSX = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username, macroGlobals.url);
+        var remotefileDOCX = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username, macroGlobals.url);
         TS_FileTmcrFileTMCR.use(enableTMCR, macroGlobals, localfileTMCR, remotefileTMCR, tmcr -> {
-            TS_FileTmcrFileWeb.use(enableHTML, macroGlobals, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, webHTML -> {
-                TS_FileTmcrFileWeb.use(enableHTM, macroGlobals, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, webHTM -> {
-                    TS_FileTmcrFilePDF.use(enablePDF, macroGlobals, localfilePDF, remotefilePDF, pdf -> {
-                        TS_FileTmcrFileXLSX.use(enableXLSX, macroGlobals, localfileXLSX, remotefileXLSX, xlsx -> {
-                            TS_FileTmcrFileDOCX.use(enableDOCX, macroGlobals, localfileDOCX, remotefileDOCX, docx -> {
+            TS_FileHtml.use(enableHTML, macroGlobals, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileConverter.convertLocalLocationToRemote(webHTM, imageLoc), webHTML -> {
+                TS_FileHtml.use(enableHTM, macroGlobals, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileConverter.convertLocalLocationToRemote(webHTM, imageLoc), webHTM -> {
+                    TS_FilePdf.use(enablePDF, macroGlobals, localfilePDF, remotefilePDF, pdf -> {
+                        TS_FileXlsx.use(enableXLSX, macroGlobals, localfileXLSX, remotefileXLSX, xlsx -> {
+                            TS_FileDocx.use(enableDOCX, macroGlobals, localfileDOCX, remotefileDOCX, docx -> {
                                 var instance = new TS_FileTmcrFileHandler(macroGlobals,
                                         tmcr, webHTML, webHTM, pdf, xlsx, docx
                                 );
@@ -96,9 +101,11 @@ public class TS_FileTmcrFileHandler extends TS_FileTmcrFileInterface {
                             });
                         });
                     });
-                });
+                }
+                );
             });
-        });
+        }
+        );
     }
 
     @Override
