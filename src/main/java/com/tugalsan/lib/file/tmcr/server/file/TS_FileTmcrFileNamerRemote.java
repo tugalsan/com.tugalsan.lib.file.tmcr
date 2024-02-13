@@ -11,9 +11,9 @@ import com.tugalsan.lib.file.server.*;
 import com.tugalsan.lib.table.client.*;
 import com.tugalsan.lib.table.server.*;
 
-public class TS_FileTmcrFileConverter {
+public class TS_FileTmcrFileNamerRemote {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileConverter.class);
+    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileNamerRemote.class);
 
     public static String convertLocalLocationToRemote(TS_FileHtml fileWeb, String imageLoc) {
         return convertLocalLocationToRemote(

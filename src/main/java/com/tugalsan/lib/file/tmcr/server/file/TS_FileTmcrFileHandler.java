@@ -7,7 +7,7 @@ import com.tugalsan.api.file.common.server.TS_FileCommonInterface;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
-import com.tugalsan.api.file.common.server.TS_FileTmcrCodeFontTags;
+import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import com.tugalsan.api.file.docx.server.TS_FileDocx;
 import com.tugalsan.api.file.xlsx.server.TS_FileXlsx;
 import com.tugalsan.api.list.client.*;
@@ -40,7 +40,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
             if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
                 macroGlobals.prefferedFileNameLabel = macroGlobals.prefferedFileNameLabel.replace(" ", "_");
             }
-            files.forEach(file -> TS_FileTmcrFileNamer.renameLocalFileName_ifEnabled(file, dirDat, macroGlobals));
+            files.forEach(file -> TS_FileTmcrFileNamerLocal.renameLocalFileName_ifEnabled(file, dirDat, macroGlobals));
         }
     }
 
@@ -76,21 +76,21 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         var fileNameFullPDF = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
         var fileNameFullXLSX = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
         var fileNameFullDOCX = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
-        var localfileTMCR = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username);
-        var localfileHTML = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username);
-        var localfileHTM = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username);
-        var localfilePDF = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username);
-        var localfileXLSX = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username);
-        var localfileDOCX = TS_FileTmcrFileNamer.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username);
-        var remotefileTMCR = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username, macroGlobals.url);
-        var remotefileHTML = TS_FileTmcrFileNamer.constructURLForRemoteFile(false, macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username, macroGlobals.url);
-        var remotefileHTM = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username, macroGlobals.url);
-        var remotefilePDF = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username, macroGlobals.url);
-        var remotefileXLSX = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username, macroGlobals.url);
-        var remotefileDOCX = TS_FileTmcrFileNamer.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username, macroGlobals.url);
+        var localfileTMCR = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username);
+        var localfileHTML = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username);
+        var localfileHTM = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username);
+        var localfilePDF = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username);
+        var localfileXLSX = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username);
+        var localfileDOCX = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username);
+        var remotefileTMCR = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username, macroGlobals.url);
+        var remotefileHTML = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(false, macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username, macroGlobals.url);
+        var remotefileHTM = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username, macroGlobals.url);
+        var remotefilePDF = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username, macroGlobals.url);
+        var remotefileXLSX = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username, macroGlobals.url);
+        var remotefileDOCX = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username, macroGlobals.url);
         TS_FileTmcrFileTMCR.use(enableTMCR, macroGlobals, localfileTMCR, remotefileTMCR, tmcr -> {
-            TS_FileHtml.use(enableHTML, macroGlobals, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileConverter.convertLocalLocationToRemote(webHTM, imageLoc), webHTML -> {
-                TS_FileHtml.use(enableHTM, macroGlobals, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileConverter.convertLocalLocationToRemote(webHTM, imageLoc), webHTM -> {
+            TS_FileHtml.use(enableHTML, macroGlobals, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileNamerRemote.convertLocalLocationToRemote(webHTM, imageLoc), webHTML -> {
+                TS_FileHtml.use(enableHTM, macroGlobals, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileNamerRemote.convertLocalLocationToRemote(webHTM, imageLoc), webHTM -> {
                     TS_FilePdf.use(enablePDF, macroGlobals, localfilePDF, remotefilePDF, pdf -> {
                         TS_FileXlsx.use(enableXLSX, macroGlobals, localfileXLSX, remotefileXLSX, xlsx -> {
                             TS_FileDocx.use(enableDOCX, macroGlobals, localfileDOCX, remotefileDOCX, docx -> {
@@ -112,7 +112,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
     public boolean saveFile(String errorSource) {
         TGS_UnSafe.run(() -> {
             if (errorSource != null) {
-                macroGlobals.fontColor = TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_RED();
+                macroGlobals.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                 beginText(0);
                 addText(errorSource);
                 endText();
@@ -305,18 +305,18 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
     private boolean addText2(String mainText) {
         d.ci("addText2", "mainText", mainText);
         if (colors.isEmpty()) {
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_BLACK());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_RED());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_YELLOW());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_BLUE());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_GREEN());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_PINK());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_ORANGE());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_CYAN());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_DARK_GRAY());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_GRAY());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY());
-            colors.add(TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_MAGENTA());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_YELLOW());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLUE());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GREEN());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_PINK());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_ORANGE());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_CYAN());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_DARK_GRAY());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GRAY());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY());
+            colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_MAGENTA());
         }
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         mainText = mainText.replace("{fc_", "{FC_");

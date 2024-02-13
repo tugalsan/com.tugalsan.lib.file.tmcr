@@ -2,7 +2,7 @@ package com.tugalsan.lib.file.tmcr.server.code.parser;
 
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.file.tmcr.server.code.filename.TS_FileTmcrCodeFileNameCompile;
-import com.tugalsan.api.file.common.server.TS_FileTmcrCodeFontTags;
+import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import java.util.*;
 import com.tugalsan.lib.boot.server.*;
 import com.tugalsan.api.log.server.*;
@@ -143,7 +143,7 @@ public class TS_FileTmcrParser {
                     cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(macroGlobals, mifHandler, cp.dirDAT);
                     if (!cmd.value1) {
                         var fontColorBackup = macroGlobals.fontColor;
-                        macroGlobals.fontColor = TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_RED();
+                        macroGlobals.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                         mifHandler.beginText(0);
                         mifHandler.addText(cmd.value0 + "->" + cmd.value2);
                         mifHandler.endText();
@@ -486,7 +486,7 @@ public class TS_FileTmcrParser {
         d.ci("compileCode_completed", "ADDING DEBUG FN FOOTER");
         if (d.infoEnable) {//DEBUG
             var fontColorBackup = macroGlobals.fontColor;
-            macroGlobals.fontColor = TS_FileTmcrCodeFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY();
+            macroGlobals.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY();
             mifHandler.setFontColor();
             mifHandler.beginText(0);
             //mifHandler.addText("DEBUG.prefferedFilename->[" + macroGlobals.prefferedFileNameLabel + "]");

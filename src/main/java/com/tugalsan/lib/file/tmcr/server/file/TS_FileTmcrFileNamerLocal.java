@@ -10,9 +10,9 @@ import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.table.server.TS_LibTableFileGetUtils;
 import java.nio.file.Path;
 
-public class TS_FileTmcrFileNamer {
+public class TS_FileTmcrFileNamerLocal {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileNamer.class);
+    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileNamerLocal.class);
 
     public static Path constructPathForLocalFile(Path dirDat, String fileNameFull, String username) {
         var tmpFolder = TS_LibFilePathUtils.datUsrNameTmp(dirDat, username);
