@@ -21,6 +21,7 @@ import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import java.util.stream.IntStream;
 
@@ -59,7 +60,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
     }
 
-    public static void use(TS_FileCommonBall macroGlobals, String favIconPng, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
+    public static void use(TS_FileCommonBall macroGlobals, TGS_Url favIconPng, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;

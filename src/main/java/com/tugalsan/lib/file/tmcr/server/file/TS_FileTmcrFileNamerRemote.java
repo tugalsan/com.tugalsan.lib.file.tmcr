@@ -15,18 +15,18 @@ public class TS_FileTmcrFileNamerRemote {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileNamerRemote.class);
 
-    public static String convertLocalLocationToRemote(TS_FileHtml fileWeb, String imageLoc) {
+    public static TGS_Url convertLocalLocationToRemote(TS_FileHtml fileWeb, String imageLoc) {
         return convertLocalLocationToRemote(
                 fileWeb.macroGlobals.username, 
                 fileWeb.macroGlobals.url,
                     imageLoc
         );
     }
-    public static String convertLocalLocationToRemote(CharSequence username, TGS_Url inputUrl, String imageLoc_pathOrUrl) {
+    public static TGS_Url convertLocalLocationToRemote(CharSequence username, TGS_Url inputUrl, String imageLoc_pathOrUrl) {
         //IF URL, RETURN
         if (imageLoc_pathOrUrl.startsWith("http")) {
             d.ci("convertLocalLocationToRemote", "nothing to do", imageLoc_pathOrUrl);
-            return imageLoc_pathOrUrl;
+            return TGS_Url.of(imageLoc_pathOrUrl);
         }
         var file = TS_PathUtils.toPathOrError(imageLoc_pathOrUrl).value0;
         if (file == null) {
@@ -74,6 +74,6 @@ public class TS_FileTmcrFileNamerRemote {
             imageLoc_pathOrUrl = TGS_LibTableServletUtils.URL_SERVLET_FETCH_TBL_FILE(false, acsrfSafe, pathSafe).toString();
             d.ci("convertLocalLocationToRemote", "isTblDir", "url", imageLoc_pathOrUrl);
         }
-        return imageLoc_pathOrUrl;
+        return TGS_Url.of(imageLoc_pathOrUrl);
     }
 }
