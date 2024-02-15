@@ -6,9 +6,9 @@ import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 
-public class TS_FileTmcrFileReName {
+public class TS_FileTmcrFilePreffredFileName {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileReName.class);
+    final private static TS_Log d = TS_Log.of(TS_FileTmcrFilePreffredFileName.class);
 
     public static void renameLocalFileName2prefferedFileNameLabel_ifEnabled(TS_FileCommonInterface mif, TS_FileCommonBall fileCommonBall) {
         if (!mif.isEnabled()) {

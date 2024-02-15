@@ -97,7 +97,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                 if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
                     fileCommonBall.prefferedFileNameLabel = fileCommonBall.prefferedFileNameLabel.replace(" ", "_");
                 }
-                fileHandler.files.forEach(file -> TS_FileTmcrFileReName.renameLocalFileName2prefferedFileNameLabel_ifEnabled(file, fileCommonBall));
+                fileHandler.files.forEach(file -> TS_FileTmcrFilePreffredFileName.renameLocalFileName2prefferedFileNameLabel_ifEnabled(file, fileCommonBall));
             }
 
             exeBeforeZip.run(fileHandler);
