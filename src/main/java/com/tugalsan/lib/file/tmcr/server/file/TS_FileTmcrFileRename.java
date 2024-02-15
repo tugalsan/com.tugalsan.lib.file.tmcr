@@ -10,49 +10,49 @@ public class TS_FileTmcrFileReName {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileReName.class);
 
-    static public void renameLocalFileName_ifEnabled(TS_FileCommonInterface mif, TS_FileCommonBall fileCommonBall) {
+    public static void renameLocalFileName2prefferedFileNameLabel_ifEnabled(TS_FileCommonInterface mif, TS_FileCommonBall fileCommonBall) {
         if (!mif.isEnabled()) {
             return;
         }
         var localFilePathStr = mif.getLocalFileName().toAbsolutePath().toString();
         var type = TGS_FileTmcrTypes.FILE_TYPE_HTML();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, false, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, false, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
         type = TGS_FileTmcrTypes.FILE_TYPE_HTM();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
         type = TGS_FileTmcrTypes.FILE_TYPE_DOCX();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
         type = TGS_FileTmcrTypes.FILE_TYPE_XLSX();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
         type = TGS_FileTmcrTypes.FILE_TYPE_PDF();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
         type = TGS_FileTmcrTypes.FILE_TYPE_TMCR();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
         type = TGS_FileTmcrTypes.FILE_TYPE_ZIP();
         if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+            renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
     }
 
-    private static void renameLocalFileName_do(TS_FileCommonBall fileCommonBall, TS_FileCommonInterface mif, boolean forcedowload, String newFileNameFull) {
+    private static void renameLocalFileName2prefferedFileNameLabel_ifEnabled_do(TS_FileCommonBall fileCommonBall, TS_FileCommonInterface mif, boolean forcedowload, String newFileNameFull) {
         d.cr("renameLocalFileName_do", "init", "localFile", mif.getLocalFileName(), "fileNameFull", newFileNameFull);
         var renamedLocalFile = TS_FileTmcrFileSetName.path(fileCommonBall, newFileNameFull);
         d.ci("renameLocalFileName_do", "renamedLocalFile", renamedLocalFile);

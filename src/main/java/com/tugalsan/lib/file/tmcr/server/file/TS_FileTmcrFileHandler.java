@@ -2,6 +2,8 @@ package com.tugalsan.lib.file.tmcr.server.file;
 
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.file.client.TGS_FileUtilsEng;
+import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import com.tugalsan.api.file.html.server.TS_FileHtml;
 import com.tugalsan.api.file.common.server.TS_FileCommonInterface;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
@@ -14,12 +16,17 @@ import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.file.pdf.server.TS_FilePdf;
+import com.tugalsan.api.file.server.TS_FileUtils;
+import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
+import com.tugalsan.api.runnable.client.TGS_RunnableType2;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.lib.boot.server.TS_LibBootUtils;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
+import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
 import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
@@ -29,6 +36,36 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
 
     public TS_FileCommonBall fileCommonBall;
     final public List<TS_FileCommonInterface> files;
+
+    public boolean isZipFileRequested() {
+        return fileCommonBall.requestedFileTypes.stream()
+                .filter(type -> Objects.equals(type, TGS_FileTmcrTypes.FILE_TYPE_ZIP()))
+                .findAny().isPresent();
+    }
+
+    public Path pathZipFile() {
+        if (files.isEmpty()) {
+            return null;
+        }
+        var aFile = files.get(0).getLocalFileName().toAbsolutePath().toString();
+        var aFileDotIdx = aFile.lastIndexOf(".");
+        if (aFileDotIdx == -1) {
+            d.ce("act_ifZipRequestedZipFiles_setRemoteFileZipName_shortenUrlIfPossible", "aFileDotIdx == -1");
+            return null;
+        }
+        var zipSuffix = ".zip";
+        return Path.of(aFile.substring(0, aFileDotIdx) + zipSuffix);
+    }
+
+    public List<Path> zipableFiles() {
+        return TGS_StreamUtils.toLst(
+                files.stream()
+                        .filter(mif -> mif.isEnabled())
+                        .filter(mif -> !mif.getLocalFileName().toString().endsWith(TGS_FileTmcrTypes.FILE_TYPE_TMCR())
+                        && !mif.getLocalFileName().toString().endsWith(TGS_FileTmcrTypes.FILE_TYPE_HTML()))
+                        .map(mif -> mif.getLocalFileName())
+        );
+    }
 
     public List<String> getRemoteFiles() {
         List<String> remoteFiles = TGS_ListUtils.of();
@@ -42,7 +79,51 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
     }
 
-    public static void use(TS_FileCommonBall fileCommonBall, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
+    public static boolean use(TS_FileCommonBall fileCommonBall,TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage, TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip, TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip) {
+        d.ci("use", "running macro code...");
+        TS_FileTmcrFileHandler.use_do(fileCommonBall, fileHandler -> {
+            d.ci("use", "compileCode");
+            TS_FileTmcrParser.compileCode(TS_LibBootUtils.pck.sqlAnc, fileCommonBall, fileHandler, (userDotTable, percentage) -> {
+                progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
+            });
+
+            d.ci("use", "RENAME LOCAL FILES", "prefferedFileNameLabel", fileCommonBall.prefferedFileNameLabel);
+            if (!fileCommonBall.prefferedFileNameLabel.isEmpty()) {
+                if (TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
+                    fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(fileCommonBall.prefferedFileNameLabel);
+                } else {
+                    fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(fileCommonBall.prefferedFileNameLabel);
+                }
+                if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
+                    fileCommonBall.prefferedFileNameLabel = fileCommonBall.prefferedFileNameLabel.replace(" ", "_");
+                }
+                fileHandler.files.forEach(file -> TS_FileTmcrFileReName.renameLocalFileName2prefferedFileNameLabel_ifEnabled(file, fileCommonBall));
+            }
+
+            exeBeforeZip.run(fileHandler);
+            if (fileHandler.isZipFileRequested()) {
+                var zipableFiles = fileHandler.zipableFiles();
+                if (zipableFiles.isEmpty()) {
+                    d.ce("use", "zipableFiles.isEmpty()!");
+                    return;
+                }
+                var pathZIP = fileHandler.pathZipFile();
+                if (pathZIP == null) {
+                    d.ce("use", "pathZIP == null");
+                    return;
+                }
+                TS_FileZipUtils.zipList(zipableFiles, pathZIP);
+                if (!TS_FileUtils.isExistFile(pathZIP)) {
+                    d.ce("use", "!TS_FileUtils.isExistFile", pathZIP);
+                    return;
+                }
+                exeAfterZip.run(fileHandler);
+            }
+        });
+        return fileCommonBall.runReport;
+    }
+    
+    private static void use_do(TS_FileCommonBall fileCommonBall, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
