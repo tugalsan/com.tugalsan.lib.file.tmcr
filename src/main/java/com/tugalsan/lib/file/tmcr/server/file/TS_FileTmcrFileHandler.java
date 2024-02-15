@@ -79,9 +79,12 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
     }
 
-    public static boolean use(TS_FileCommonBall fileCommonBall,TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage, TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip, TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip) {
+    public static boolean use(TS_FileCommonBall fileCommonBall, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage, TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip, TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip) {
         d.ci("use", "running macro code...");
+        TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
         TS_FileTmcrFileHandler.use_do(fileCommonBall, fileHandler -> {
+            holdForAWhile.value0 = fileHandler;
+
             d.ci("use", "compileCode");
             TS_FileTmcrParser.compileCode(TS_LibBootUtils.pck.sqlAnc, fileCommonBall, fileHandler, (userDotTable, percentage) -> {
                 progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
@@ -99,30 +102,29 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                 }
                 fileHandler.files.forEach(file -> TS_FileTmcrFilePreffredFileName.renameLocalFileName2prefferedFileNameLabel_ifEnabled(file, fileCommonBall));
             }
-
-            exeBeforeZip.run(fileHandler);
-            if (fileHandler.isZipFileRequested()) {
-                var zipableFiles = fileHandler.zipableFiles();
-                if (zipableFiles.isEmpty()) {
-                    d.ce("use", "zipableFiles.isEmpty()!");
-                    return;
-                }
-                var pathZIP = fileHandler.pathZipFile();
-                if (pathZIP == null) {
-                    d.ce("use", "pathZIP == null");
-                    return;
-                }
-                TS_FileZipUtils.zipList(zipableFiles, pathZIP);
-                if (!TS_FileUtils.isExistFile(pathZIP)) {
-                    d.ce("use", "!TS_FileUtils.isExistFile", pathZIP);
-                    return;
-                }
-                exeAfterZip.run(fileHandler);
-            }
         });
+        exeBeforeZip.run(holdForAWhile.value0);
+        if (holdForAWhile.value0.isZipFileRequested()) {
+            var zipableFiles = holdForAWhile.value0.zipableFiles();
+            if (zipableFiles.isEmpty()) {
+                d.ce("use", "zipableFiles.isEmpty()!");
+                return false;
+            }
+            var pathZIP = holdForAWhile.value0.pathZipFile();
+            if (pathZIP == null) {
+                d.ce("use", "pathZIP == null");
+                return false;
+            }
+            TS_FileZipUtils.zipList(zipableFiles, pathZIP);
+            if (!TS_FileUtils.isExistFile(pathZIP)) {
+                d.ce("use", "!TS_FileUtils.isExistFile", pathZIP);
+                return false;
+            }
+            exeAfterZip.run(holdForAWhile.value0);
+        }
         return fileCommonBall.runReport;
     }
-    
+
     private static void use_do(TS_FileCommonBall fileCommonBall, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
