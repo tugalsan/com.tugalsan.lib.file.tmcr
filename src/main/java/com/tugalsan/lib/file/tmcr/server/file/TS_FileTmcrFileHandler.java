@@ -5,8 +5,6 @@ import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.file.html.server.TS_FileHtml;
 import com.tugalsan.api.file.common.server.TS_FileCommonInterface;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
-import com.tugalsan.api.file.client.TGS_FileUtilsEng;
-import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import com.tugalsan.api.file.docx.server.TS_FileDocx;
 import com.tugalsan.api.file.xlsx.server.TS_FileXlsx;
@@ -21,7 +19,6 @@ import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
-import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import java.util.stream.IntStream;
 
@@ -30,22 +27,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
-    public void renameLocalFileNames_ifPrefferedFileNameLabelHasBeenSet(Path dirDat, TS_FileCommonBall macroGlobals) {
-        d.ci("rename", macroGlobals.prefferedFileNameLabel);
-        if (!macroGlobals.prefferedFileNameLabel.isEmpty()) {
-            if (TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
-                macroGlobals.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(macroGlobals.prefferedFileNameLabel);
-            } else {
-                macroGlobals.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(macroGlobals.prefferedFileNameLabel);
-            }
-            if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
-                macroGlobals.prefferedFileNameLabel = macroGlobals.prefferedFileNameLabel.replace(" ", "_");
-            }
-            files.forEach(file -> TS_FileTmcrFileNamerLocal.renameLocalFileName_ifEnabled(file, dirDat, macroGlobals));
-        }
-    }
-
-    public TS_FileCommonBall macroGlobals;
+    public TS_FileCommonBall fileCommonBall;
     final public List<TS_FileCommonInterface> files;
 
     public List<String> getRemoteFiles() {
@@ -54,48 +36,48 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return remoteFiles;
     }
 
-    private TS_FileTmcrFileHandler(TS_FileCommonBall macroGlobals, TS_FileCommonInterface... files) {
+    private TS_FileTmcrFileHandler(TS_FileCommonBall fileCommonBall, TS_FileCommonInterface... files) {
         super(true, null, null);
-        this.macroGlobals = macroGlobals;
+        this.fileCommonBall = fileCommonBall;
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
     }
 
-    public static void use(TS_FileCommonBall macroGlobals, TGS_Url favIconPng, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
+    public static void use(TS_FileCommonBall fileCommonBall, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
         var webHTMBase64 = true;
-        var enableTMCR = macroGlobals.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_TMCR());
-        var enableHTML = macroGlobals.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTML());
-        var enableHTM = macroGlobals.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTM());
-        var enablePDF = macroGlobals.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_PDF());
-        var enableXLSX = macroGlobals.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_XLSX());
-        var enableDOCX = macroGlobals.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_DOCX());
-        var fileNameFullTMCR = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_TMCR();
-        var fileNameFullHTML = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTML();
-        var fileNameFullHTM = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTM();
-        var fileNameFullPDF = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
-        var fileNameFullXLSX = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
-        var fileNameFullDOCX = macroGlobals.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
-        var localfileTMCR = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username);
-        var localfileHTML = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username);
-        var localfileHTM = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username);
-        var localfilePDF = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username);
-        var localfileXLSX = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username);
-        var localfileDOCX = TS_FileTmcrFileNamerLocal.constructPathForLocalFile(macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username);
-        var remotefileTMCR = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullTMCR, macroGlobals.username, macroGlobals.url);
-        var remotefileHTML = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(false, macroGlobals.dirDat, fileNameFullHTML, macroGlobals.username, macroGlobals.url);
-        var remotefileHTM = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullHTM, macroGlobals.username, macroGlobals.url);
-        var remotefilePDF = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullPDF, macroGlobals.username, macroGlobals.url);
-        var remotefileXLSX = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullXLSX, macroGlobals.username, macroGlobals.url);
-        var remotefileDOCX = TS_FileTmcrFileNamerLocal.constructURLForRemoteFile(true, macroGlobals.dirDat, fileNameFullDOCX, macroGlobals.username, macroGlobals.url);
-        TS_FileTmcrFileTMCR.use(enableTMCR, macroGlobals, localfileTMCR, remotefileTMCR, tmcr -> {
-            TS_FileHtml.use(enableHTML, macroGlobals, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileNamerRemote.convertLocalLocationToRemote(webHTM, imageLoc), webHTML -> {
-                TS_FileHtml.use(enableHTM, macroGlobals, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, favIconPng, (webHTM, imageLoc) -> TS_FileTmcrFileNamerRemote.convertLocalLocationToRemote(webHTM, imageLoc), webHTM -> {
-                    TS_FilePdf.use(enablePDF, macroGlobals, localfilePDF, remotefilePDF, pdf -> {
-                        TS_FileXlsx.use(enableXLSX, macroGlobals, localfileXLSX, remotefileXLSX, xlsx -> {
-                            TS_FileDocx.use(enableDOCX, macroGlobals, localfileDOCX, remotefileDOCX, docx -> {
-                                var instance = new TS_FileTmcrFileHandler(macroGlobals,
+        var enableTMCR = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_TMCR());
+        var enableHTML = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTML());
+        var enableHTM = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTM());
+        var enablePDF = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_PDF());
+        var enableXLSX = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_XLSX());
+        var enableDOCX = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_DOCX());
+        var fileNameFullTMCR = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_TMCR();
+        var fileNameFullHTML = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTML();
+        var fileNameFullHTM = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTM();
+        var fileNameFullPDF = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
+        var fileNameFullXLSX = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
+        var fileNameFullDOCX = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
+        var localfileTMCR = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullTMCR);
+        var localfileHTML = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullHTML);
+        var localfileHTM = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullHTM);
+        var localfilePDF = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullPDF);
+        var localfileXLSX = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullXLSX);
+        var localfileDOCX = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullDOCX);
+        var remotefileTMCR = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullTMCR, true);
+        var remotefileHTML = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullHTML, false);
+        var remotefileHTM = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullHTM, true);
+        var remotefilePDF = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullPDF, true);
+        var remotefileXLSX = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullXLSX, true);
+        var remotefileDOCX = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullDOCX, true);
+        TS_FileTmcrFileTMCR.use(enableTMCR, fileCommonBall, localfileTMCR, remotefileTMCR, tmcr -> {
+            TS_FileHtml.use(enableHTML, fileCommonBall, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_FileTmcrFileSetName.urlFromPath(fileCommonBall, imageLoc), webHTML -> {
+                TS_FileHtml.use(enableHTM, fileCommonBall, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_FileTmcrFileSetName.urlFromPath(fileCommonBall, imageLoc), webHTM -> {
+                    TS_FilePdf.use(enablePDF, fileCommonBall, localfilePDF, remotefilePDF, pdf -> {
+                        TS_FileXlsx.use(enableXLSX, fileCommonBall, localfileXLSX, remotefileXLSX, xlsx -> {
+                            TS_FileDocx.use(enableDOCX, fileCommonBall, localfileDOCX, remotefileDOCX, docx -> {
+                                var instance = new TS_FileTmcrFileHandler(fileCommonBall,
                                         tmcr, webHTML, webHTM, pdf, xlsx, docx
                                 );
                                 fileHandler.run(instance);
@@ -113,7 +95,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
     public boolean saveFile(String errorSource) {
         TGS_UnSafe.run(() -> {
             if (errorSource != null) {
-                macroGlobals.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
+                fileCommonBall.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                 beginText(0);
                 addText(errorSource);
                 endText();
@@ -128,7 +110,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                 }
             }, e -> d.ct("saveFile", e));
         });
-        return macroGlobals.runReport = true;
+        return fileCommonBall.runReport = true;
     }
 
     @Override
@@ -331,8 +313,8 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
             var plainText = plainArr.get(plainArr_i);
             d.ci("addText2.mainText.plainText[" + plainArr_i + "]:[" + plainText + "]");
             if (plainArr_i != 0) {
-                macroGlobals.fontItalic = false;
-                macroGlobals.fontBold = false;
+                fileCommonBall.fontItalic = false;
+                fileCommonBall.fontBold = false;
                 var b = setFontStyle();
                 if (!b) {
                     result.value0 = false;
@@ -343,7 +325,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                 var boldText = boldArr.get(boldArr_i);
                 d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "]:[" + boldText + "]");
                 if (boldArr_i != 0) {
-                    macroGlobals.fontBold = true;
+                    fileCommonBall.fontBold = true;
                     var b = setFontStyle();
                     if (!b) {
                         result.value0 = false;
@@ -354,7 +336,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                     var italicText = italicArr.get(italicArr_i);
                     d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "]:[" + italicText + "]");
                     if (italicArr_i != 0) {
-                        macroGlobals.fontItalic = true;
+                        fileCommonBall.fontItalic = true;
                         var b = setFontStyle();
                         if (!b) {
                             result.value0 = false;
@@ -373,7 +355,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                                 var found = false;
                                 for (var cti = 0; cti < colors.size(); cti++) {
                                     if (colors.get(cti).equals(fontColor)) {
-                                        macroGlobals.fontColor = colors.get(cti);
+                                        fileCommonBall.fontColor = colors.get(cti);
                                         var b = setFontColor();
                                         if (!b) {
                                             result.value0 = false;
@@ -384,7 +366,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                                 }
                                 if (!found) {
                                     d.ci("addText2.fontColorText[" + fontColor + "] cannot be processed. BLACK will be used isntead");
-                                    macroGlobals.fontColor = colors.get(0);
+                                    fileCommonBall.fontColor = colors.get(0);
                                     var b = setFontColor();
                                     if (!b) {
                                         result.value0 = false;
@@ -405,14 +387,14 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                                     if (fsInt == null) {
                                         d.ci("addText2.fontHeight[" + fontHeight + "] cannot be processed. 10 will be used instead.");
                                         fontHeightText = fontHeightText.substring(i + 1);
-                                        macroGlobals.fontHeight = 10;
+                                        fileCommonBall.fontHeight = 10;
                                         var b = setFontHeight();
                                         if (!b) {
                                             result.value0 = false;
                                         }
                                     } else {
                                         fontHeightText = fontHeightText.substring(i + 1);
-                                        macroGlobals.fontHeight = fsInt;
+                                        fileCommonBall.fontHeight = fsInt;
                                         var b = setFontHeight();
                                         if (!b) {
                                             result.value0 = false;

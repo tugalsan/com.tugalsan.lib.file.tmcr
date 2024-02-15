@@ -33,8 +33,8 @@ public class TS_FileTmcrCodeImageCompile {
         return 80;
     }
 
-    public static boolean is_INSERT_IMAGE(TS_FileCommonBall macroGlobals) {
-        return macroGlobals.macroLine.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
+    public static boolean is_INSERT_IMAGE(TS_FileCommonBall fileCommonBall) {
+        return fileCommonBall.macroLine.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
     }
 
     /*
@@ -53,21 +53,21 @@ public class TS_FileTmcrCodeImageCompile {
       table.addCell(cell10);                 
     
      */
-    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_IMAGE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler, Path dirDat) {
+    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_IMAGE(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, Path dirDat) {
         var result = d.createFuncBoolean(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE() + "/" + TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
-        d.ci(result.value0, "INFO: macroLine: " + macroGlobals.macroLineUpperCase);
+        d.ci(result.value0, "INFO: macroLine: " + fileCommonBall.macroLineUpperCase);
         d.ci(result.value0, "INFO: dirDat: " + dirDat.toString());
 
         //WHICH CODE
         boolean fromSQL;
-        if (macroGlobals.macroLineUpperCase.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL())) {
+        if (fileCommonBall.macroLineUpperCase.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL())) {
             fromSQL = true;
-            if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 10)) {
+            if (!TS_FileTmcrParser_Assure.checkTokenSize(fileCommonBall, 10)) {
                 return d.returnError(result, "ERROR: on code " + TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL() + ", tokensize should be 10");
             }
         } else {//CODE_INSERT_IMAGE
             fromSQL = false;
-            if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 8)) {
+            if (!TS_FileTmcrParser_Assure.checkTokenSize(fileCommonBall, 8)) {
                 return d.returnError(result, "ERROR: on code " + TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE() + ", tokensize should be 8");
             }
         }
@@ -76,7 +76,7 @@ public class TS_FileTmcrCodeImageCompile {
         //GET ROTATION
         var rotationIsLandscape = false;
         var rotationIsPortrait = false;
-        var rotationTAG = macroGlobals.macroLineTokens.get(fromSQL ? 8 : 7);
+        var rotationTAG = fileCommonBall.macroLineTokens.get(fromSQL ? 8 : 7);
         var r = TGS_CastUtils.toInteger(rotationTAG);
         if (r == null) {
             if (Objects.equals(rotationTAG, TS_FileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE())) {
@@ -95,7 +95,7 @@ public class TS_FileTmcrCodeImageCompile {
 
         //GET TEXTWRAP
         boolean textWrap;
-        var wrapText = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLineTokens.get(5));
+        var wrapText = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLineTokens.get(5));
         if (Objects.equals(wrapText, TS_FileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP())) {
             textWrap = true;
         } else if (Objects.equals(wrapText, TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
@@ -107,7 +107,7 @@ public class TS_FileTmcrCodeImageCompile {
 
         //GET ALLIGN
         int left0_center1_right2;
-        var allignText = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLineTokens.get(4));
+        var allignText = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLineTokens.get(4));
         if (Objects.equals(allignText, TS_FileTmcrCodeImageTags.CODE_TOKEN_LEFT())) {
             left0_center1_right2 = 0;
         } else if (Objects.equals(allignText, TS_FileTmcrCodeImageTags.CODE_TOKEN_CENTER())) {
@@ -120,22 +120,22 @@ public class TS_FileTmcrCodeImageCompile {
         d.ci(result.value0, "INFO: left0_center1_right2 is : " + left0_center1_right2);
 
         //GET WIDTH
-        var w = TGS_CastUtils.toInteger(macroGlobals.macroLineTokens.get(1));
-        if (w == null && !TGS_CharSetCast.equalsLocaleIgnoreCase(macroGlobals.macroLineTokens.get(1), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
+        var w = TGS_CastUtils.toInteger(fileCommonBall.macroLineTokens.get(1));
+        if (w == null && !TGS_CharSetCast.equalsLocaleIgnoreCase(fileCommonBall.macroLineTokens.get(1), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
             return d.returnError(result, "ERROR: code token[1] error! width is : " + w);
         }
         d.ci(result.value0, "INFO: width is : " + w);
 
         //GET HEIGHT
-        var h = TGS_CastUtils.toInteger(macroGlobals.macroLineTokens.get(2));
-        if (h == null && !TGS_CharSetCast.equalsLocaleIgnoreCase(macroGlobals.macroLineTokens.get(2), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
+        var h = TGS_CastUtils.toInteger(fileCommonBall.macroLineTokens.get(2));
+        if (h == null && !TGS_CharSetCast.equalsLocaleIgnoreCase(fileCommonBall.macroLineTokens.get(2), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
             return d.returnError(result, "ERROR: code token[2] error! height is : " + h);
         }
         d.ci(result.value0, "INFO: height is : " + h);
 
         //GET RESPECT
         boolean respect;
-        var respectTXT = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLineTokens.get(3));
+        var respectTXT = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLineTokens.get(3));
         if (Objects.equals(respectTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_RESPECT())) {
             respect = true;
         } else if (Objects.equals(respectTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_RESPECT())) {
@@ -150,7 +150,7 @@ public class TS_FileTmcrCodeImageCompile {
         if (fromSQL) {//FROM SQL
             //GET CREATE
             boolean create;
-            var createTXT = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLineTokens.get(9));
+            var createTXT = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLineTokens.get(9));
             if (Objects.equals(createTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_CREATE())) {
                 create = true;
             } else if (Objects.equals(createTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
@@ -165,24 +165,24 @@ public class TS_FileTmcrCodeImageCompile {
             Integer imgColIdx;
             {
                 //GET tableAndColname
-                var tableAndColname = TS_FileTmcrParser_Assure.splitTableDotColname(macroGlobals, 6);
+                var tableAndColname = TS_FileTmcrParser_Assure.splitTableDotColname(fileCommonBall, 6);
                 if (tableAndColname == null) {
-                    return d.returnError(result, "ERROR: fromSQL.code token[6] error! tableAndColname:" + macroGlobals.macroLineTokens.get(6));
+                    return d.returnError(result, "ERROR: fromSQL.code token[6] error! tableAndColname:" + fileCommonBall.macroLineTokens.get(6));
                 }
                 d.ci(result.value0, "INFO: fromSQL.tableAndColname is : " + TGS_StringUtils.toString(tableAndColname, ","));
 
-                imageTable = TS_FileTmcrParser_Assure.getTable(macroGlobals, tableAndColname[0]);
+                imageTable = TS_FileTmcrParser_Assure.getTable(fileCommonBall, tableAndColname[0]);
                 if (imageTable == null) {
-                    return d.returnError(result, "ERROR: fromSQL.code token[6] error! imageTable == null: " + macroGlobals.macroLineTokens.get(6));
+                    return d.returnError(result, "ERROR: fromSQL.code token[6] error! imageTable == null: " + fileCommonBall.macroLineTokens.get(6));
                 }
                 if (d.infoEnable) {
                     var imageTableName = imageTable.nameSql;
                     d.ci(result.value0, "INFO: fromSQL.imageTable", imageTableName);
                 }
 
-                imgColIdx = TS_FileTmcrParser_Assure.getColumnIndex(macroGlobals, imageTable, tableAndColname[1]);
+                imgColIdx = TS_FileTmcrParser_Assure.getColumnIndex(fileCommonBall, imageTable, tableAndColname[1]);
                 if (imgColIdx == null) {
-                    return d.returnError(result, "ERROR: fromSQL.code token[6] error! imgColIdx == null: " + macroGlobals.macroLineTokens.get(6));
+                    return d.returnError(result, "ERROR: fromSQL.code token[6] error! imgColIdx == null: " + fileCommonBall.macroLineTokens.get(6));
                 }
                 d.ci(result.value0, "INFO: fromSQL.imageColumnname and idx is : " + tableAndColname[1] + " - " + imgColIdx);
             }
@@ -192,13 +192,13 @@ public class TS_FileTmcrCodeImageCompile {
 
             //GET ID
             Long id;
-            if (macroGlobals.macroLineTokens.get(7).equals(TS_FileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
-                id = macroGlobals.selectedId;
+            if (fileCommonBall.macroLineTokens.get(7).equals(TS_FileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
+                id = fileCommonBall.selectedId;
                 if (id == null) {
                     return d.returnError(result, "ERROR: fromSQL.code token[7] error! SATIR SEÇİLMEDİ HATASI");
                 }
             } else {
-                id = TGS_CastUtils.toLong(macroGlobals.macroLineTokens.get(7));
+                id = TGS_CastUtils.toLong(fileCommonBall.macroLineTokens.get(7));
                 if (id == null) {
                     return d.returnError(result, "ERROR: fromSQL.code token[7] should be a number");
                 }
@@ -208,8 +208,8 @@ public class TS_FileTmcrCodeImageCompile {
             //GET FN
             String fn = null;
             {
-                var fns = TS_LibTableFileListUtils.getFileNames_DataIn(macroGlobals.url,
-                        macroGlobals.username,
+                var fns = TS_LibTableFileListUtils.getFileNames_DataIn(fileCommonBall.url,
+                        fileCommonBall.username,
                         dirDat,
                         imageTableName, imageTableColumn.getColumnName(), id, imageTableColumn.getDataString1_LnkTargetTableName(), create
                 );
@@ -248,7 +248,7 @@ public class TS_FileTmcrCodeImageCompile {
             }
             d.ci(result.value0, "INFO: fromSQL.preImageLoc: " + preImageLoc);
         } else {//FROM URL
-            var ref = macroGlobals.macroLineTokens.get(6);
+            var ref = fileCommonBall.macroLineTokens.get(6);
             d.ci(result.value0, "fromUrl", "ref.init", ref);
             preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
             d.ci(result.value0, "fromUrl", "preImageLoc.try", preImageLoc);
@@ -271,7 +271,7 @@ public class TS_FileTmcrCodeImageCompile {
                 } else {
                     ref = found.value1;
                     d.ci(result.value0, "fromUrl", "ref.found.url", ref);
-                    macroGlobals.macroLineTokens.set(6, ref);
+                    fileCommonBall.macroLineTokens.set(6, ref);
                     preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
                     d.ci(result.value0, "fromUrl", "preImageLoc.try2.purposely", preImageLoc);
                 }
@@ -284,7 +284,7 @@ public class TS_FileTmcrCodeImageCompile {
                 var filename = ref.substring(idxLastSlash + 1);
                 d.ci(result.value0, "fromUrl", "filename", filename);
                 var randomStr = TS_RandomUtils.nextString(10, true, true, false, false, null);
-                var fileTmp = TS_LibFilePathUtils.datUsrNameTmp(dirDat, macroGlobals.username).resolve(randomStr + filename);
+                var fileTmp = TS_LibFilePathUtils.datUsrNameTmp(dirDat, fileCommonBall.username).resolve(randomStr + filename);
                 d.ci(result.value0, "fromUrl", "fileTmp", fileTmp);
                 var refTmp = TS_UrlDownloadUtils.toFile(TGS_Url.of(ref), fileTmp);
                 d.ci(result.value0, "fromUrl", "refTmp", refTmp);
@@ -294,7 +294,7 @@ public class TS_FileTmcrCodeImageCompile {
                 ref = refTmp.toString();
                 d.ci(result.value0, "fromUrl", "ref.updated", ref);
             }
-            macroGlobals.macroLineTokens.set(6, ref);
+            fileCommonBall.macroLineTokens.set(6, ref);
             preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
             d.ci(result.value0, "fromUrl", "preImageLoc.updated", preImageLoc);
         }
@@ -366,15 +366,15 @@ public class TS_FileTmcrCodeImageCompile {
             }
 
             //CHANGE W and H by cellHeight
-            if (macroGlobals.cellHeight == null) {
-                d.ci(result.value0, "INFO: #5.1 SKIP macroGlobals.cellHeight == null");
-            } else if (macroGlobals.cellHeight >= h) {
-                d.ci(result.value0, "INFO: #5.2 SKIP macroGlobals.cellHeight >= h");
+            if (fileCommonBall.cellHeight == null) {
+                d.ci(result.value0, "INFO: #5.1 SKIP fileCommonBall.cellHeight == null");
+            } else if (fileCommonBall.cellHeight >= h) {
+                d.ci(result.value0, "INFO: #5.2 SKIP fileCommonBall.cellHeight >= h");
             } else {
-                d.ci(result.value0, "INFO: #5.3 DETECTED macroGlobals.cellHeight < h");
-                var newImageWidth = 1d * macroGlobals.cellHeight * w / h;
+                d.ci(result.value0, "INFO: #5.3 DETECTED fileCommonBall.cellHeight < h");
+                var newImageWidth = 1d * fileCommonBall.cellHeight * w / h;
                 w = (int) Math.round(newImageWidth);
-                h = macroGlobals.cellHeight;
+                h = fileCommonBall.cellHeight;
             }
             d.ci(result.value0, "INFO: #5.4 w/h is : " + w + "/" + h);
 
@@ -406,7 +406,7 @@ public class TS_FileTmcrCodeImageCompile {
         d.ci(result.value0, "INFO: pstImageType: " + pstImage.getType());
         d.ci(result.value0, "INFO: END");
 
-        if (!mifHandler.addImage(pstImage, pstImageLoc, textWrap, left0_center1_right2, macroGlobals.imageCounter++)) {
+        if (!mifHandler.addImage(pstImage, pstImageLoc, textWrap, left0_center1_right2, fileCommonBall.imageCounter++)) {
             return d.returnError(result, "ERR@ " + pstImageLoc);
         }
         d.ci(result.value0, "compile_INSERT_IMAGE_COMMON  processed. ");

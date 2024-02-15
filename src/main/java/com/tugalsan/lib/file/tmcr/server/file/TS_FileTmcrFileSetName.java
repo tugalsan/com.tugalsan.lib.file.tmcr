@@ -1,28 +1,34 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.file.html.server.TS_FileHtml;
-import com.tugalsan.api.file.server.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.url.client.*;
-import com.tugalsan.lib.acsrf.client.*;
-import com.tugalsan.lib.boot.server.*;
-import com.tugalsan.lib.file.client.*;
-import com.tugalsan.lib.file.server.*;
-import com.tugalsan.lib.table.client.*;
-import com.tugalsan.lib.table.server.*;
+import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.file.server.TS_PathUtils;
+import com.tugalsan.api.log.server.TS_Log;
+import com.tugalsan.api.url.client.TGS_Url;
+import com.tugalsan.api.url.client.TGS_UrlQueryUtils;
+import com.tugalsan.lib.acsrf.client.TGS_LibAcsrfParamUtils;
+import com.tugalsan.lib.file.client.TGS_LibFileServletUtils;
+import com.tugalsan.lib.file.server.TS_LibFilePathUtils;
+import com.tugalsan.lib.table.client.TGS_LibTableServletUtils;
+import com.tugalsan.lib.table.server.TS_LibTableFileDirUtils;
+import com.tugalsan.lib.table.server.TS_LibTableFileGetUtils;
+import java.nio.file.Path;
 
-public class TS_FileTmcrFileNamerRemote {
+public class TS_FileTmcrFileSetName {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileNamerRemote.class);
+    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileSetName.class);
 
-    public static TGS_Url convertLocalLocationToRemote(TS_FileHtml fileWeb, String imageLoc) {
-        return convertLocalLocationToRemote(
-                fileWeb.macroGlobals.username, 
-                fileWeb.macroGlobals.url,
-                    imageLoc
+    public static Path path(TS_FileCommonBall fileCommonBall, String fileNameFull) {
+        var tmpFolder = TS_LibFilePathUtils.datUsrNameTmp(fileCommonBall.dirDat, fileCommonBall.username);
+        return Path.of(tmpFolder.toString(), fileNameFull);
+    }
+
+    public static TGS_Url urlUser(TS_FileCommonBall fileCommonBall, String fileNameFull, boolean forcedownload) {
+        return TGS_Url.of(
+                TS_LibTableFileGetUtils.urlUsrTmp(forcedownload, fileCommonBall.dirDat, fileCommonBall.url, fileCommonBall.username, fileNameFull)
         );
     }
-    public static TGS_Url convertLocalLocationToRemote(CharSequence username, TGS_Url inputUrl, String imageLoc_pathOrUrl) {
+
+    public static TGS_Url urlFromPath(TS_FileCommonBall fileCommonBall, String imageLoc_pathOrUrl) {
         //IF URL, RETURN
         if (imageLoc_pathOrUrl.startsWith("http")) {
             d.ci("convertLocalLocationToRemote", "nothing to do", imageLoc_pathOrUrl);
@@ -34,9 +40,9 @@ public class TS_FileTmcrFileNamerRemote {
             return null;
         }
 
-        var dirDat = TS_LibBootUtils.pck.dirDAT;
+        var dirDat = fileCommonBall.dirDat;
         var dirPub = TS_LibFilePathUtils.datPub(dirDat);
-        var dirUsr = TS_LibFilePathUtils.datUsrName(dirDat, username);
+        var dirUsr = TS_LibFilePathUtils.datUsrName(dirDat, fileCommonBall.username);
         var dirTbl = TS_LibTableFileDirUtils.datTbl(dirDat);
 
         var isPubDir = file.startsWith(dirPub);
@@ -61,7 +67,7 @@ public class TS_FileTmcrFileNamerRemote {
             var path = file.toString().substring(dirUsr.toString().length() + 1).replace("\\", "/");
             d.ci("convertLocalLocationToRemote", "isUsrDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
-            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(inputUrl);
+            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(fileCommonBall.url);
             imageLoc_pathOrUrl = TGS_LibFileServletUtils.URL_SERVLET_FETCH_USER(false, acsrfSafe, pathSafe).toString();
             d.ci("convertLocalLocationToRemote", "isUsrDir", "url", imageLoc_pathOrUrl);
         } else {//isTblDir
@@ -70,7 +76,7 @@ public class TS_FileTmcrFileNamerRemote {
             var path = file.toString().substring(dirTbl.toString().length() + 1).replace("\\", "/");
             d.ci("convertLocalLocationToRemote", "isTblDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
-            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(inputUrl);
+            var acsrfSafe = TGS_LibAcsrfParamUtils.acsrfSafe(fileCommonBall.url);
             imageLoc_pathOrUrl = TGS_LibTableServletUtils.URL_SERVLET_FETCH_TBL_FILE(false, acsrfSafe, pathSafe).toString();
             d.ci("convertLocalLocationToRemote", "isTblDir", "url", imageLoc_pathOrUrl);
         }

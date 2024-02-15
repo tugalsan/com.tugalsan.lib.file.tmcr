@@ -14,16 +14,16 @@ public class TS_FileTmcrFileTMCR extends TS_FileCommonInterface {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileTMCR.class);
 
-    private TS_FileCommonBall macroGlobals;
+    private TS_FileCommonBall fileCommonBall;
 
     private TS_FileTmcrFileTMCR(boolean enabled, Path localFile, TGS_Url remoteFile) {
         super(enabled, localFile, remoteFile);
     }
 
-    public static void use(boolean enabled, TS_FileCommonBall macroGlobals, Path localFile, TGS_Url remoteFile, TGS_RunnableType1<TS_FileTmcrFileTMCR> tmcr) {
+    public static void use(boolean enabled, TS_FileCommonBall fileCommonBall, Path localFile, TGS_Url remoteFile, TGS_RunnableType1<TS_FileTmcrFileTMCR> tmcr) {
         var instance = new TS_FileTmcrFileTMCR(enabled, localFile, remoteFile);
         try {
-            instance.use_init(macroGlobals);
+            instance.use_init(fileCommonBall);
             tmcr.run(instance);
         } catch (Exception e) {
             instance.saveFile(e.getMessage());
@@ -34,8 +34,8 @@ public class TS_FileTmcrFileTMCR extends TS_FileCommonInterface {
 
     }
 
-    private void use_init(TS_FileCommonBall macroGlobals) {
-        this.macroGlobals = macroGlobals;
+    private void use_init(TS_FileCommonBall fileCommonBall) {
+        this.fileCommonBall = fileCommonBall;
         if (isClosed()) {
             return;
         }
@@ -48,7 +48,7 @@ public class TS_FileTmcrFileTMCR extends TS_FileCommonInterface {
         }
         setClosed();
         d.ci("saveFile.MACRO->");
-        TS_FileTxtUtils.toFile(macroGlobals.macroLines, localFile, false);
+        TS_FileTxtUtils.toFile(fileCommonBall.macroLines, localFile, false);
         if (TS_FileUtils.isExistFile(getLocalFileName())) {
             d.ci("saveFile.FIX: MACRO File save", getLocalFileName(), "successfull");
         } else {

@@ -11,17 +11,17 @@ public class TS_FileTmcrParser_Tokenize {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrParser_Tokenize.class);
 
-    public static TGS_Tuple3<String, Boolean, String> compile_TOKENIZE(TS_FileCommonBall macroGlobals, int i) {
+    public static TGS_Tuple3<String, Boolean, String> compile_TOKENIZE(TS_FileCommonBall fileCommonBall, int i) {
         var result = d.createFuncBoolean("compile_TOKENIZE");
-        macroGlobals.macroLine = TGS_StringUtils.removeConsecutive(macroGlobals.macroLines.get(i), " ").trim();
-        macroGlobals.macroLineUpperCase = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLine);
+        fileCommonBall.macroLine = TGS_StringUtils.removeConsecutive(fileCommonBall.macroLines.get(i), " ").trim();
+        fileCommonBall.macroLineUpperCase = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLine);
         d.ci(result.value0, "compileAll.After Tokenize.trim");
-        macroGlobals.macroLineTokens = TS_StringUtils.toList(macroGlobals.macroLine, " ");
+        fileCommonBall.macroLineTokens = TS_StringUtils.toList(fileCommonBall.macroLine, " ");
         d.ci(result.value0, "compileAll.After Tokenize.parse");
-        if (macroGlobals.macroLineTokens == null) {
-            return d.returnError(result, "ERROR: macroGlobals.macroLineTokens == null for macroline[" + i + "]->[" + macroGlobals.macroLines.get(i) + "]");
+        if (fileCommonBall.macroLineTokens == null) {
+            return d.returnError(result, "ERROR: fileCommonBall.macroLineTokens == null for macroline[" + i + "]->[" + fileCommonBall.macroLines.get(i) + "]");
         }
-        d.ci(result.value0, "line " + i + " " + macroGlobals.macroLine + ", Tokensize: " + macroGlobals.macroLineTokens.size());
+        d.ci(result.value0, "line " + i + " " + fileCommonBall.macroLine + ", Tokensize: " + fileCommonBall.macroLineTokens.size());
         d.ci(result.value0, "compileAll.After Tokenize");
         return d.returnTrue(result);
     }

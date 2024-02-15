@@ -14,84 +14,84 @@ public class TS_FileTmcrCodeFontCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeFontCompile.class);
 
-    public static boolean is_SET_FONT_COLOR(TS_FileCommonBall macroGlobals) {
-        return macroGlobals.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_COLOR());
+    public static boolean is_SET_FONT_COLOR(TS_FileCommonBall fileCommonBall) {
+        return fileCommonBall.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_COLOR());
     }
 
-    public static boolean is_SET_FONT_SIZE(TS_FileCommonBall macroGlobals) {
-        return macroGlobals.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_SIZE());
+    public static boolean is_SET_FONT_SIZE(TS_FileCommonBall fileCommonBall) {
+        return fileCommonBall.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_SIZE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_COLOR(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
+    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_COLOR(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_COLOR");
-        if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
+        if (!TS_FileTmcrParser_Assure.checkTokenSize(fileCommonBall, 2)) {
             return d.returnError(result, "token size not 2");
         }
-        macroGlobals.fontColor = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLineTokens.get(1));
-        var comparison = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLUE().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_DARK_GRAY().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GRAY().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GREEN().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_MAGENTA().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_ORANGE().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_PINK().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED().equals(macroGlobals.fontColor)
-                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_YELLOW().equals(macroGlobals.fontColor);
+        fileCommonBall.fontColor = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLineTokens.get(1));
+        var comparison = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLUE().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_DARK_GRAY().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GRAY().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GREEN().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_MAGENTA().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_ORANGE().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_PINK().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED().equals(fileCommonBall.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_YELLOW().equals(fileCommonBall.fontColor);
         if (!comparison) {
             return d.returnError(result, "CODE_TOKEN_FONT_COLOR_XXX code token[1] error! should be " + TS_FileCommonBall.class.getSimpleName() + ".CODE_TOKEN_FONT_COLOR_XXX");
         }
         if (!mifHandler.setFontColor()) {
-            return d.returnError(result, "Error: macroGlobals.mifHandler.setFontColor() == false");
+            return d.returnError(result, "Error: fileCommonBall.mifHandler.setFontColor() == false");
         }
         return d.returnTrue(result);
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_SIZE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
+    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_SIZE(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_SIZE");
-        if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
+        if (!TS_FileTmcrParser_Assure.checkTokenSize(fileCommonBall, 2)) {
             return d.returnError(result, "token size is not 2");
         }
-        var nfs = TGS_CastUtils.toInteger(macroGlobals.macroLineTokens.get(1));
+        var nfs = TGS_CastUtils.toInteger(fileCommonBall.macroLineTokens.get(1));
         if (nfs == null || nfs < 1) {
             return d.returnError(result, TS_FileCommonFontTags.CODE_SET_FONT_SIZE() + " code token[1] error! size should be 1 or more");
         }
-        macroGlobals.fontHeight = nfs;
+        fileCommonBall.fontHeight = nfs;
         if (!mifHandler.setFontHeight()) {
-            return d.returnError(result, "Error: macroGlobals.mifHandler.setFontHeight() == false");
+            return d.returnError(result, "Error: fileCommonBall.mifHandler.setFontHeight() == false");
         }
         return d.returnTrue(result);
     }
 
-    public static boolean is_SET_FONT_STYLE(TS_FileCommonBall macroGlobals) {
-        return macroGlobals.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_STYLE());
+    public static boolean is_SET_FONT_STYLE(TS_FileCommonBall fileCommonBall) {
+        return fileCommonBall.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_STYLE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_STYLE(TS_FileCommonBall macroGlobals, TS_FileTmcrFileHandler mifHandler) {
+    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_STYLE(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_STYLE");
-        if (!TS_FileTmcrParser_Assure.checkTokenSize(macroGlobals, 2)) {
+        if (!TS_FileTmcrParser_Assure.checkTokenSize(fileCommonBall, 2)) {
             return d.returnError(result, "Error: Tokensize is not 2!");
         }
-        macroGlobals.fontUnderlined = false;
-        var code = TGS_CharSetCast.toLocaleUpperCase(macroGlobals.macroLineTokens.get(1));
+        fileCommonBall.fontUnderlined = false;
+        var code = TGS_CharSetCast.toLocaleUpperCase(fileCommonBall.macroLineTokens.get(1));
         if (Objects.equals(code, TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLD())) {
-            macroGlobals.fontBold = true;
-            macroGlobals.fontItalic = false;
+            fileCommonBall.fontBold = true;
+            fileCommonBall.fontItalic = false;
         } else if (Objects.equals(code, TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_ITALIC())) {
-            macroGlobals.fontBold = false;
-            macroGlobals.fontItalic = true;
+            fileCommonBall.fontBold = false;
+            fileCommonBall.fontItalic = true;
         } else if (Objects.equals(code, TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLDITALIC())) {
-            macroGlobals.fontBold = true;
-            macroGlobals.fontItalic = true;
+            fileCommonBall.fontBold = true;
+            fileCommonBall.fontItalic = true;
         } else if (Objects.equals(code, TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_PLAIN())) {
-            macroGlobals.fontBold = false;
-            macroGlobals.fontItalic = false;
+            fileCommonBall.fontBold = false;
+            fileCommonBall.fontItalic = false;
         } else {
             return d.returnError(result, TS_FileCommonFontTags.CODE_SET_FONT_STYLE() + " code token[1] error! should be either: " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLD() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_ITALIC() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLDITALIC() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_PLAIN());
         }
         if (!mifHandler.setFontStyle()) {
-            return d.returnError(result, "Error: macroGlobals.mifHandler.setFontStyle() == false");
+            return d.returnError(result, "Error: fileCommonBall.mifHandler.setFontStyle() == false");
         }
         return d.returnTrue(result);
     }
