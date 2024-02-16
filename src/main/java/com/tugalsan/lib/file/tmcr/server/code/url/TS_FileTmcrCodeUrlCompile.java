@@ -4,7 +4,6 @@ import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.sql.conn.server.*;
-import com.tugalsan.lib.domain.server.*;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import static com.tugalsan.lib.file.tmcr.server.code.url.TS_FileTmcrCodeUrlTags.CODE_URL_SH_NEW;
 import static com.tugalsan.lib.file.tmcr.server.code.url.TS_FileTmcrCodeUrlTags.CODE_URL_SH_OLD;
@@ -33,17 +32,13 @@ public class TS_FileTmcrCodeUrlCompile {
     public static TGS_Tuple3<String, Boolean, String> compile_CODE_URL_LOCALHOST(TS_SQLConnAnchor anchor, TS_FileCommonBall fileCommonBall, int idx) {
         var result = d.createFuncBoolean("compile_CODE_URL_LOCALHOST");
         d.ci("compile_CODE_URL_LOCALHOST", "before", fileCommonBall.macroLines.get(idx));
-        var domain = TS_LibDomainCardUtils.get();
-        if (domain == null) {
-            return d.returnError(result, "domian pack == null for url:" + fileCommonBall.url);
-        }
-        d.ci("compile_CODE_URL_LOCALHOST", "host", domain.domainName);
+        d.ci("compile_CODE_URL_LOCALHOST", "host", fileCommonBall.domainName);
         if (TGS_CharSetCast.containsLocaleIgnoreCase(fileCommonBall.macroLines.get(idx), CODE_URL_LOCALHOST())) {
-            fileCommonBall.macroLines.set(idx, fileCommonBall.macroLines.get(idx).replace(CODE_URL_LOCALHOST(), domain.domainName));
+            fileCommonBall.macroLines.set(idx, fileCommonBall.macroLines.get(idx).replace(CODE_URL_LOCALHOST(), fileCommonBall.domainName));
         }
         var codeLocalHostLowerCase = TGS_CharSetCast.toLocaleLowerCase(CODE_URL_LOCALHOST());
         if (TGS_CharSetCast.containsLocaleIgnoreCase(fileCommonBall.macroLines.get(idx), codeLocalHostLowerCase)) {
-            fileCommonBall.macroLines.set(idx, fileCommonBall.macroLines.get(idx).replace(codeLocalHostLowerCase, domain.domainName));
+            fileCommonBall.macroLines.set(idx, fileCommonBall.macroLines.get(idx).replace(codeLocalHostLowerCase, fileCommonBall.domainName));
         }
         d.ci("compile_CODE_URL_LOCALHOST", "after", fileCommonBall.macroLines.get(idx));
         return d.returnTrue(result);

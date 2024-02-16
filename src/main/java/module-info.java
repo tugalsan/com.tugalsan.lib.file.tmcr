@@ -35,12 +35,8 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.sql.resultset;
     requires com.tugalsan.api.sql.col.typed;
     requires com.tugalsan.lib.acsrf;
-    requires com.tugalsan.lib.scale;
     requires com.tugalsan.lib.file;
     requires com.tugalsan.lib.table;
-//    requires com.tugalsan.lib.resource;
-    requires com.tugalsan.lib.domain;
-    requires com.tugalsan.lib.login;
     requires com.tugalsan.lib.route;
     requires com.tugalsan.lib.rql;
     requires com.tugalsan.lib.rql.txt;
