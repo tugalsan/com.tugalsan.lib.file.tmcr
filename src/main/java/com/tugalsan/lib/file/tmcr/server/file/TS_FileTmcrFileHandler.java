@@ -2,6 +2,7 @@ package com.tugalsan.lib.file.tmcr.server.file;
 
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.coronator.client.TGS_Coronator;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import com.tugalsan.api.file.html.server.TS_FileHtml;
@@ -24,12 +25,13 @@ import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.boot.server.TS_LibBootUtils;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
 import java.util.stream.IntStream;
 
-public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
+public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
@@ -43,20 +45,6 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                 .findAny().isPresent();
     }
 
-    public Path pathZipFile() {
-        if (files.isEmpty()) {
-            return null;
-        }
-        var aFile = files.get(0).getLocalFileName().toAbsolutePath().toString();
-        var aFileDotIdx = aFile.lastIndexOf(".");
-        if (aFileDotIdx == -1) {
-            d.ce("act_ifZipRequestedZipFiles_setRemoteFileZipName_shortenUrlIfPossible", "aFileDotIdx == -1");
-            return null;
-        }
-        var zipSuffix = ".zip";
-        return Path.of(aFile.substring(0, aFileDotIdx) + zipSuffix);
-    }
-
     public List<Path> zipableFiles() {
         return TGS_StreamUtils.toLst(
                 files.stream()
@@ -68,59 +56,64 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
     }
 
     public List<String> getRemoteFiles() {
-        List<String> remoteFiles = TGS_ListUtils.of();
-        files.stream().filter(mif -> mif.isEnabled()).forEachOrdered(f -> remoteFiles.add(f.getRemoteFileName().url.toString()));
+        List<String> remoteFiles = TGS_StreamUtils.toLst(
+                files.stream()
+                        .filter(mif -> mif.isEnabled())
+                        .map(f -> f.getRemoteFileName().url.toString())
+        );
         return remoteFiles;
     }
 
-    private TS_FileTmcrFileHandler(TS_FileCommonBall fileCommonBall, TS_FileCommonInterface... files) {
-        super(true, null, null);
+    private TS_FileTmcrFileHandler(TS_FileCommonBall fileCommonBall, Path localfileZIP, TGS_Url remotefileZIP, TS_FileCommonInterface... files) {
+//        super(true, null, null);
         this.fileCommonBall = fileCommonBall;
+        this.localfileZIP = localfileZIP;
+        this.remotefileZIP = remotefileZIP;
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
     }
+    public Path localfileZIP;
+    public TGS_Url remotefileZIP;
 
     public static boolean use(TS_FileCommonBall fileCommonBall, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage, TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip, TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip) {
         d.ci("use", "running macro code...");
-        TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
-        TS_FileTmcrFileHandler.use_do(fileCommonBall, fileHandler -> {
-            holdForAWhile.value0 = fileHandler;
+        var fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
+            TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
+            TS_FileTmcrFileHandler.use_do(fileCommonBall, _fileHandler -> {
+                holdForAWhile.value0 = _fileHandler;
 
-            d.ci("use", "compileCode");
-            TS_FileTmcrParser.compileCode(TS_LibBootUtils.pck.sqlAnc, fileCommonBall, fileHandler, (userDotTable, percentage) -> {
-                progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
+                d.ci("use", "compileCode");
+                TS_FileTmcrParser.compileCode(TS_LibBootUtils.pck.sqlAnc, fileCommonBall, _fileHandler, (userDotTable, percentage) -> {
+                    progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
+                });
             });
-
-            d.ci("use", "RENAME LOCAL FILES", "prefferedFileNameLabel", fileCommonBall.prefferedFileNameLabel);
-            if (!fileCommonBall.prefferedFileNameLabel.isEmpty()) {
-                if (TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
-                    fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(fileCommonBall.prefferedFileNameLabel);
-                } else {
-                    fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(fileCommonBall.prefferedFileNameLabel);
-                }
-                if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
-                    fileCommonBall.prefferedFileNameLabel = fileCommonBall.prefferedFileNameLabel.replace(" ", "_");
-                }
-                fileHandler.files.forEach(file -> TS_FileTmcrFilePreffredFileName.renameLocalFileName2prefferedFileNameLabel_ifEnabled(file, fileCommonBall));
-            }
+            return holdForAWhile.value0;
         });
-        exeBeforeZip.run(holdForAWhile.value0);
-        if (holdForAWhile.value0.isZipFileRequested()) {
-            var zipableFiles = holdForAWhile.value0.zipableFiles();
+        d.ci("use", "RENAME LOCAL FILES", "prefferedFileNameLabel", fileCommonBall.prefferedFileNameLabel);
+        if (!fileCommonBall.prefferedFileNameLabel.isEmpty()) {
+            if (TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
+                fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(fileCommonBall.prefferedFileNameLabel);
+            } else {
+                fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(fileCommonBall.prefferedFileNameLabel);
+            }
+            if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
+                fileCommonBall.prefferedFileNameLabel = fileCommonBall.prefferedFileNameLabel.replace(" ", "_");
+            }
+            fileHandler.files.forEach(file -> TS_FileTmcrFilePrefferedFileName.renameFiles_ifEnabled(file, fileCommonBall));
+        }
+        exeBeforeZip.run(fileHandler);
+        if (fileHandler.isZipFileRequested()) {
+            var zipableFiles = fileHandler.zipableFiles();
             if (zipableFiles.isEmpty()) {
                 d.ce("use", "zipableFiles.isEmpty()!");
                 return false;
             }
-            var pathZIP = holdForAWhile.value0.pathZipFile();
-            if (pathZIP == null) {
-                d.ce("use", "pathZIP == null");
+            TS_FileZipUtils.zipList(zipableFiles, fileHandler.localfileZIP);
+            if (!TS_FileUtils.isExistFile(fileHandler.localfileZIP)) {
+                d.ce("use", "!TS_FileUtils.isExistFile", fileHandler.localfileZIP);
                 return false;
             }
-            TS_FileZipUtils.zipList(zipableFiles, pathZIP);
-            if (!TS_FileUtils.isExistFile(pathZIP)) {
-                d.ce("use", "!TS_FileUtils.isExistFile", pathZIP);
-                return false;
-            }
-            exeAfterZip.run(holdForAWhile.value0);
+            TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonBall, fileHandler);
+            exeAfterZip.run(fileHandler);
         }
         return fileCommonBall.runReport;
     }
@@ -136,18 +129,21 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         var enablePDF = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_PDF());
         var enableXLSX = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_XLSX());
         var enableDOCX = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_DOCX());
+        var fileNameFullZIP = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_ZIP();
         var fileNameFullTMCR = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_TMCR();
         var fileNameFullHTML = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTML();
         var fileNameFullHTM = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTM();
         var fileNameFullPDF = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
         var fileNameFullXLSX = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
         var fileNameFullDOCX = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
+        var localfileZIP = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullZIP);
         var localfileTMCR = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullTMCR);
         var localfileHTML = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullHTML);
         var localfileHTM = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullHTM);
         var localfilePDF = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullPDF);
         var localfileXLSX = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullXLSX);
         var localfileDOCX = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullDOCX);
+        var remotefileZIP = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullZIP, true);
         var remotefileTMCR = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullTMCR, true);
         var remotefileHTML = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullHTML, false);
         var remotefileHTM = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullHTM, true);
@@ -160,7 +156,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
                     TS_FilePdf.use(enablePDF, fileCommonBall, localfilePDF, remotefilePDF, pdf -> {
                         TS_FileXlsx.use(enableXLSX, fileCommonBall, localfileXLSX, remotefileXLSX, xlsx -> {
                             TS_FileDocx.use(enableDOCX, fileCommonBall, localfileDOCX, remotefileDOCX, docx -> {
-                                var instance = new TS_FileTmcrFileHandler(fileCommonBall,
+                                var instance = new TS_FileTmcrFileHandler(fileCommonBall, localfileZIP, remotefileZIP,
                                         tmcr, webHTML, webHTM, pdf, xlsx, docx
                                 );
                                 fileHandler.run(instance);
@@ -174,7 +170,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         );
     }
 
-    @Override
+//    @Override
     public boolean saveFile(String errorSource) {
         TGS_UnSafe.run(() -> {
             if (errorSource != null) {
@@ -196,7 +192,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return fileCommonBall.runReport = true;
     }
 
-    @Override
+//    @Override
     public boolean createNewPage(int pageSizeAX, boolean landscape, Integer marginLeft, Integer marginRight, Integer marginTop, Integer marginBottom) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -214,7 +210,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;//I know
     }
 
-    @Override
+//    @Override
     public boolean addImage(BufferedImage pstImage, Path pstImageLoc, boolean textWrap, int left0_center1_right2, long imageCounter) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -231,7 +227,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return result.value0;
     }
 
-    @Override
+//    @Override
     public boolean beginTableCell(int rowSpan, int colSpan, Integer cellHeight) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -248,7 +244,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return result.value0;
     }
 
-    @Override
+//    @Override
     public boolean endTableCell(int rotationInDegrees_0_90_180_270) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -266,7 +262,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return result.value0;
     }
 
-    @Override
+//    @Override
     public boolean beginTable(int[] relColSizes) {
         d.ci("beginTable", "#1");
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
@@ -290,7 +286,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean endTable() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -308,7 +304,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean beginText(int allign_Left0_center1_right2_just3) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -326,7 +322,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean endText() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -346,7 +342,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    @Override
+//    @Override
     public boolean addText(String mainText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var tokens = TS_StringUtils.toList(mainText, "\n");
@@ -511,7 +507,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean addLineBreak() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -529,7 +525,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean setFontStyle() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -547,7 +543,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean setFontHeight() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -565,7 +561,7 @@ public class TS_FileTmcrFileHandler extends TS_FileCommonInterface {
         return true;
     }
 
-    @Override
+//    @Override
     public boolean setFontColor() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();

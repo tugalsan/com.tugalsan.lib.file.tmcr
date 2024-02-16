@@ -6,11 +6,11 @@ import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 
-public class TS_FileTmcrFilePreffredFileName {
+public class TS_FileTmcrFilePrefferedFileName {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTmcrFilePreffredFileName.class);
+    final private static TS_Log d = TS_Log.of(TS_FileTmcrFilePrefferedFileName.class);
 
-    public static void renameLocalFileName2prefferedFileNameLabel_ifEnabled(TS_FileCommonInterface mif, TS_FileCommonBall fileCommonBall) {
+    public static void renameFiles_ifEnabled(TS_FileCommonInterface mif, TS_FileCommonBall fileCommonBall) {
         if (!mif.isEnabled()) {
             return;
         }
@@ -45,11 +45,12 @@ public class TS_FileTmcrFilePreffredFileName {
             renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
             return;
         }
-        type = TGS_FileTmcrTypes.FILE_TYPE_ZIP();
-        if (localFilePathStr.endsWith(type)) {
-            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
-            return;
-        }
+//        type = TGS_FileTmcrTypes.FILE_TYPE_ZIP();
+//        if (localFilePathStr.endsWith(type)) {
+//            renameLocalFileName_do(fileCommonBall, mif, true, fileCommonBall.prefferedFileNameLabel + type);
+//            return;
+//        }
+        d.ce("renameLocalFileName2prefferedFileNameLabel_ifEnabled", "WHAT TODO WITH IT", mif.getLocalFileName());
     }
 
     private static void renameLocalFileName_do(TS_FileCommonBall fileCommonBall, TS_FileCommonInterface mif, boolean forcedowload, String newFileNameFull) {
@@ -67,4 +68,23 @@ public class TS_FileTmcrFilePreffredFileName {
             mif.setRemoteFileName(renamedRemoteFile);
         }
     }
+
+    public static void renameZip(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler fh) {
+        var type = TGS_FileTmcrTypes.FILE_TYPE_ZIP();
+        var newFileNameFull = fileCommonBall.prefferedFileNameLabel + type;
+        d.cr("renameZip", "init", "localFile", fh.localfileZIP, "fileNameFull", newFileNameFull);
+        var renamedLocalFile = TS_FileTmcrFileSetName.path(fileCommonBall, newFileNameFull);
+        d.ci("renameZip", "renamedLocalFile", renamedLocalFile);
+        var renamedRemoteFile = TS_FileTmcrFileSetName.urlUser(fileCommonBall, newFileNameFull, true);
+        d.ci("renameZip", "renamedRemoteFile", renamedRemoteFile);
+        if (!TS_FileUtils.isExistFile(fh.localfileZIP)) {
+            d.ce("renameZip", "ERROR: File not exists", "localFile", fh.localfileZIP);
+            return;
+        }
+        if (TS_FileUtils.moveAs(fh.localfileZIP, renamedLocalFile, true) != null) {
+            fh.localfileZIP = renamedLocalFile;
+            fh.remotefileZIP = renamedRemoteFile;
+        }
+    }
+
 }
