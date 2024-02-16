@@ -36,7 +36,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.sql.col.typed;
     requires com.tugalsan.lib.acsrf;
     requires com.tugalsan.lib.scale;
-    requires com.tugalsan.lib.boot;
     requires com.tugalsan.lib.file;
     requires com.tugalsan.lib.table;
     requires com.tugalsan.lib.resource;

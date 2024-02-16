@@ -252,30 +252,6 @@ public class TS_FileTmcrCodeImageCompile {
             d.ci(result.value0, "fromUrl", "ref.init", ref);
             preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
             d.ci(result.value0, "fromUrl", "preImageLoc.try", preImageLoc);
-            if (!TS_FileUtils.isExistFile(preImageLoc)) {//FIX: TRY TO UPGRADE OLD REF CODE
-                d.ci(result.value0, "fromUrl", "preImageLoc.upgrade.mode", ref);
-                List<TGS_Tuple2<String, String>> upgrade = TGS_ListUtils.of(
-                        new TGS_Tuple2(
-                                "D:/TOMCAT/webapps/AutoSQLWebInBox/TEMPLATES/mesametal.jpg",
-                                TGS_LibResourceUtils.other.res.mesametal_com.logo.mesametal_jpg().toString()
-                        ),
-                        new TGS_Tuple2(
-                                "D:/TOMCAT/webapps/AutoSQLWebInBox/TEMPLATES/mebosa.jpg",
-                                TGS_LibResourceUtils.other.res.mebosa_com.logo.mebosa_jpg().toString()
-                        )
-                );
-                var fref = ref.replace("\\", "/");
-                var found = upgrade.stream().filter(p -> Objects.equals(p.value0, fref)).findAny().orElse(null);
-                if (found == null) {
-                    d.ci(result.value0, "SKIP: preImageLoc -> not upgrade-able", ref);
-                } else {
-                    ref = found.value1;
-                    d.ci(result.value0, "fromUrl", "ref.found.url", ref);
-                    fileCommonBall.macroLineTokens.set(6, ref);
-                    preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
-                    d.ci(result.value0, "fromUrl", "preImageLoc.try2.purposely", preImageLoc);
-                }
-            }
             if (preImageLoc == null) {//FIX: TRY TO DOWNLOAD URL TO TEMP
                 var idxLastSlash = ref.lastIndexOf("/");
                 if (idxLastSlash == -1) {

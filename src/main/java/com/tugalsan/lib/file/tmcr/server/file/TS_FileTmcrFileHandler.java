@@ -21,17 +21,17 @@ import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.runnable.client.TGS_RunnableType2;
+import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.TGS_Url;
-import com.tugalsan.lib.boot.server.TS_LibBootUtils;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
 import java.util.stream.IntStream;
 
-public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
+public class TS_FileTmcrFileHandler {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
@@ -65,7 +65,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
     }
 
     private TS_FileTmcrFileHandler(TS_FileCommonBall fileCommonBall, Path localfileZIP, TGS_Url remotefileZIP, TS_FileCommonInterface... files) {
-//        super(true, null, null);
         this.fileCommonBall = fileCommonBall;
         this.localfileZIP = localfileZIP;
         this.remotefileZIP = remotefileZIP;
@@ -74,7 +73,7 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
     public Path localfileZIP;
     public TGS_Url remotefileZIP;
 
-    public static boolean use(TS_FileCommonBall fileCommonBall, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage, TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip, TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip) {
+    public static boolean use(TS_FileCommonBall fileCommonBall, TS_SQLConnAnchor anchor, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage, TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip, TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip) {
         d.ci("use", "running macro code...");
         var fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
@@ -82,7 +81,7 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
                 holdForAWhile.value0 = _fileHandler;
 
                 d.ci("use", "compileCode");
-                TS_FileTmcrParser.compileCode(TS_LibBootUtils.pck.sqlAnc, fileCommonBall, _fileHandler, (userDotTable, percentage) -> {
+                TS_FileTmcrParser.compileCode(anchor, fileCommonBall, _fileHandler, (userDotTable, percentage) -> {
                     progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
                 });
             });
@@ -170,7 +169,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         );
     }
 
-//    @Override
     public boolean saveFile(String errorSource) {
         TGS_UnSafe.run(() -> {
             if (errorSource != null) {
@@ -192,7 +190,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return fileCommonBall.runReport = true;
     }
 
-//    @Override
     public boolean createNewPage(int pageSizeAX, boolean landscape, Integer marginLeft, Integer marginRight, Integer marginTop, Integer marginBottom) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -210,7 +207,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;//I know
     }
 
-//    @Override
     public boolean addImage(BufferedImage pstImage, Path pstImageLoc, boolean textWrap, int left0_center1_right2, long imageCounter) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -227,7 +223,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return result.value0;
     }
 
-//    @Override
     public boolean beginTableCell(int rowSpan, int colSpan, Integer cellHeight) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -244,7 +239,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return result.value0;
     }
 
-//    @Override
     public boolean endTableCell(int rotationInDegrees_0_90_180_270) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -262,7 +256,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return result.value0;
     }
 
-//    @Override
     public boolean beginTable(int[] relColSizes) {
         d.ci("beginTable", "#1");
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
@@ -286,7 +279,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean endTable() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -304,7 +296,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean beginText(int allign_Left0_center1_right2_just3) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -322,7 +313,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean endText() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -342,7 +332,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-//    @Override
     public boolean addText(String mainText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var tokens = TS_StringUtils.toList(mainText, "\n");
@@ -507,7 +496,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean addLineBreak() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -525,7 +513,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean setFontStyle() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -543,7 +530,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean setFontHeight() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
@@ -561,7 +547,6 @@ public class TS_FileTmcrFileHandler /*extends TS_FileCommonInterface*/ {
         return true;
     }
 
-//    @Override
     public boolean setFontColor() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();

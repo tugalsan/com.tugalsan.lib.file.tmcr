@@ -63,7 +63,6 @@ public class TS_FileTmcrFileSetName {
             d.ci("convertLocalLocationToRemote", "isPubDir", "url", imageLoc_pathOrUrl);
         } else if (isUsrDir) {
             d.ci("convertLocalLocationToRemote", "isUsrDir", imageLoc_pathOrUrl);
-            //D:\xampp_data\DAT\USR\admin\tmp\mesametal.jpg.190.30.0.true.80.jpg
             var path = file.toString().substring(dirUsr.toString().length() + 1).replace("\\", "/");
             d.ci("convertLocalLocationToRemote", "isUsrDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);

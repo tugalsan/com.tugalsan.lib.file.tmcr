@@ -4,7 +4,6 @@ import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.file.tmcr.server.code.filename.TS_FileTmcrCodeFileNameCompile;
 import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import java.util.*;
-import com.tugalsan.lib.boot.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.unsafe.client.*;
@@ -31,7 +30,6 @@ public class TS_FileTmcrParser {
 
     public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         var e = TGS_UnSafe.call(() -> {
-            var cp = TS_LibBootUtils.pck;
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, CLEAR_PERCENTAGES());
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, 1);
@@ -140,7 +138,7 @@ public class TS_FileTmcrParser {
 
                 if (TS_FileTmcrCodeImageCompile.is_INSERT_IMAGE(fileCommonBall)) {
                     d.ci("compileCode", "is_INSERT_IMAGE");
-                    cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonBall, mifHandler, cp.dirDAT);
+                    cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonBall, mifHandler, fileCommonBall.dirDat);
                     if (!cmd.value1) {
                         var fontColorBackup = fileCommonBall.fontColor;
                         fileCommonBall.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
