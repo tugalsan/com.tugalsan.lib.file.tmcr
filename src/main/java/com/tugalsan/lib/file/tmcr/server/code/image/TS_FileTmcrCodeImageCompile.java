@@ -12,13 +12,11 @@ import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
-import com.tugalsan.lib.file.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_SelectedId;
 import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
-import com.tugalsan.lib.table.server.*;
 import java.awt.image.*;
 import java.nio.file.*;
 import java.util.*;
@@ -35,26 +33,10 @@ public class TS_FileTmcrCodeImageCompile {
         return fileCommonBall.macroLine.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
     }
 
-    /*
-    
-    TODO ITEXT IMAGE
-    String imageFile = "C:/itextExamples/javafxLogo.jpg";       
-      ImageData data = ImageDataFactory.create(imageFile);        
-
-      // Creating the image       
-      Image img = new Image(data);              
-
-      // Adding image to the cell10       
-      cell10.add(img.setAutoScale(true));        
-
-      // Adding cell110 to the table       
-      table.addCell(cell10);                 
-    
-     */
-    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_IMAGE(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, Path dirDat) {
+    public static TGS_Tuple3<String, Boolean, String> compile_INSERT_IMAGE(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE() + "/" + TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
         d.ci(result.value0, "INFO: macroLine: " + fileCommonBall.macroLineUpperCase);
-        d.ci(result.value0, "INFO: dirDat: " + dirDat.toString());
+        d.ci(result.value0, "INFO: dirDat: " + fileCommonBall.dirDat);
 
         //WHICH CODE
         boolean fromSQL;
@@ -206,10 +188,8 @@ public class TS_FileTmcrCodeImageCompile {
             //GET FN
             String fn = null;
             {
-                var fns = TS_LibTableFileListUtils.getFileNames_DataIn(fileCommonBall.url,
-                        fileCommonBall.username,
-                        dirDat,
-                        imageTableName, imageTableColumn.getColumnName(), id, 
+                var fns = fileCommonBall.libTableFileList_getFileNames_DataIn.call(
+                        imageTableName, imageTableColumn.getColumnName(), id,
                         imageTableColumn.getDataString1_LnkTargetTableName(), create
                 );
                 if (fns.isEmpty()) {
@@ -239,8 +219,7 @@ public class TS_FileTmcrCodeImageCompile {
 
             //GET preImageLoc
             if (fn != null) {
-                var getInBox = TS_LibTableFileDirUtils.datTblTblnameColname(
-                        dirDat,
+                var getInBox = fileCommonBall.libTableFileDir_datTblTblnameColname.call(
                         imageTableName, imageTableColumn.getColumnName()
                 );
                 preImageLoc = Path.of(getInBox.toString(), fn);
@@ -259,7 +238,7 @@ public class TS_FileTmcrCodeImageCompile {
                 var filename = ref.substring(idxLastSlash + 1);
                 d.ci(result.value0, "fromUrl", "filename", filename);
                 var randomStr = TS_RandomUtils.nextString(10, true, true, false, false, null);
-                var fileTmp = TS_LibFilePathUtils.datUsrNameTmp(dirDat, fileCommonBall.username).resolve(randomStr + filename);
+                var fileTmp = fileCommonBall.dirDatUsrTmp.resolve(randomStr + filename);
                 d.ci(result.value0, "fromUrl", "fileTmp", fileTmp);
                 var refTmp = TS_UrlDownloadUtils.toFile(TGS_Url.of(ref), fileTmp);
                 d.ci(result.value0, "fromUrl", "refTmp", refTmp);

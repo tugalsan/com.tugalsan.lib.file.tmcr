@@ -1,6 +1,5 @@
 module com.tugalsan.lib.file.tmcr { 
     requires java.desktop;
-    requires itextpdf;
     requires com.tugalsan.api.tuple;
     requires com.tugalsan.api.unsafe;
     requires com.tugalsan.api.coronator;
@@ -34,9 +33,9 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.sql.restbl;
     requires com.tugalsan.api.sql.resultset;
     requires com.tugalsan.api.sql.col.typed;
-    requires com.tugalsan.lib.acsrf;//CAN BE REMOVED TOGETHER
-    requires com.tugalsan.lib.file;//CAN BE REMOVED TOGETHER
-    requires com.tugalsan.lib.table;//CAN BE REMOVED TOGETHER
+//    requires com.tugalsan.lib.acsrf;//CAN BE REMOVED TOGETHER
+//    requires com.tugalsan.lib.file;//CAN BE REMOVED TOGETHER
+//    requires com.tugalsan.lib.table;//CAN BE REMOVED TOGETHER
     requires com.tugalsan.lib.rql;
     requires com.tugalsan.lib.rql.txt;
     requires com.tugalsan.lib.rql.link;

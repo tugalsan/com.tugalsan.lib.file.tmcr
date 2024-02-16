@@ -138,7 +138,7 @@ public class TS_FileTmcrParser {
 
                 if (TS_FileTmcrCodeImageCompile.is_INSERT_IMAGE(fileCommonBall)) {
                     d.ci("compileCode", "is_INSERT_IMAGE");
-                    cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonBall, mifHandler, fileCommonBall.dirDat);
+                    cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonBall, mifHandler);
                     if (!cmd.value1) {
                         var fontColorBackup = fileCommonBall.fontColor;
                         fileCommonBall.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();

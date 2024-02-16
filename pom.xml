@@ -8,12 +8,22 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>com.tugalsan.api.file.docx</artifactId>
+            <artifactId>com.tugalsan.lib.rql.restbl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>com.tugalsan.api.file.pdf</artifactId>
+            <artifactId>com.tugalsan.api.file.zip</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.tugalsan.api.file.common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.tugalsan.api.file.docx</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -23,19 +33,14 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>com.tugalsan.api.file.pdf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>com.tugalsan.lib.table</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>com.tugalsan.lib.rql.restbl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>com.tugalsan.api.file.common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+        </dependency> -->
     </dependencies>
     
     <build>
