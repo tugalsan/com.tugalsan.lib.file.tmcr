@@ -37,7 +37,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.lib.acsrf;
     requires com.tugalsan.lib.file;
     requires com.tugalsan.lib.table;
-    requires com.tugalsan.lib.route;
     requires com.tugalsan.lib.rql;
     requires com.tugalsan.lib.rql.txt;
     requires com.tugalsan.lib.rql.link;
