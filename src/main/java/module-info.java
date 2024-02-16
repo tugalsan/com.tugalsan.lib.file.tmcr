@@ -34,9 +34,9 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.sql.restbl;
     requires com.tugalsan.api.sql.resultset;
     requires com.tugalsan.api.sql.col.typed;
-    requires com.tugalsan.lib.acsrf;
-    requires com.tugalsan.lib.file;
-    requires com.tugalsan.lib.table;
+    requires com.tugalsan.lib.acsrf;//CAN BE REMOVED TOGETHER
+    requires com.tugalsan.lib.file;//CAN BE REMOVED TOGETHER
+    requires com.tugalsan.lib.table;//CAN BE REMOVED TOGETHER
     requires com.tugalsan.lib.rql;
     requires com.tugalsan.lib.rql.txt;
     requires com.tugalsan.lib.rql.link;
