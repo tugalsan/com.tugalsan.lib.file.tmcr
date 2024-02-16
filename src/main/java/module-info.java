@@ -38,7 +38,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.lib.scale;
     requires com.tugalsan.lib.file;
     requires com.tugalsan.lib.table;
-    requires com.tugalsan.lib.resource;
+//    requires com.tugalsan.lib.resource;
     requires com.tugalsan.lib.domain;
     requires com.tugalsan.lib.login;
     requires com.tugalsan.lib.route;
