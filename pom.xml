@@ -36,11 +36,6 @@
             <artifactId>com.tugalsan.api.file.pdf</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>com.tugalsan.lib.table</artifactId>
-            <version>${project.version}</version>
-        </dependency> -->
     </dependencies>
     
     <build>
