@@ -74,18 +74,23 @@ public class TS_FileTmcrFileHandler {
     public TGS_Url remotefileZIP;
 
     public static boolean use(TS_FileCommonBall fileCommonBall, TS_SQLConnAnchor anchor,
+            TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage
+    ) {
+        return use(fileCommonBall, anchor, progressUpdate_with_userDotTable_and_percentage, null);
+    }
+
+    public static boolean use(TS_FileCommonBall fileCommonBall, TS_SQLConnAnchor anchor,
             TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            TGS_RunnableType1<TS_FileTmcrFileHandler> exeBeforeZip,
-            TGS_RunnableType1<TS_FileTmcrFileHandler> exeAfterZip
+            TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler
     ) {
         d.ci("use", "running macro code...");
-        var fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
+        var _fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
-            TS_FileTmcrFileHandler.use_do(fileCommonBall, _fileHandler -> {
-                holdForAWhile.value0 = _fileHandler;
+            TS_FileTmcrFileHandler.use_do(fileCommonBall, __fileHandler -> {
+                holdForAWhile.value0 = __fileHandler;
 
                 d.ci("use", "compileCode");
-                TS_FileTmcrParser.compileCode(anchor, fileCommonBall, _fileHandler, (userDotTable, percentage) -> {
+                TS_FileTmcrParser.compileCode(anchor, fileCommonBall, __fileHandler, (userDotTable, percentage) -> {
                     if (progressUpdate_with_userDotTable_and_percentage != null) {
                         progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
                     }
@@ -103,25 +108,22 @@ public class TS_FileTmcrFileHandler {
             if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
                 fileCommonBall.prefferedFileNameLabel = fileCommonBall.prefferedFileNameLabel.replace(" ", "_");
             }
-            fileHandler.files.forEach(file -> TS_FileTmcrFilePrefferedFileName.renameFiles_ifEnabled(file, fileCommonBall));
+            _fileHandler.files.forEach(file -> TS_FileTmcrFilePrefferedFileName.renameFiles_ifEnabled(file, fileCommonBall));
         }
-        if (exeBeforeZip != null) {
-            exeBeforeZip.run(fileHandler);
-        }
-        if (fileHandler.isZipFileRequested()) {
-            var zipableFiles = fileHandler.zipableFiles();
+        if (_fileHandler.isZipFileRequested()) {
+            var zipableFiles = _fileHandler.zipableFiles();
             if (zipableFiles.isEmpty()) {
                 d.ce("use", "zipableFiles.isEmpty()!");
                 return false;
             }
-            TS_FileZipUtils.zipList(zipableFiles, fileHandler.localfileZIP);
-            if (!TS_FileUtils.isExistFile(fileHandler.localfileZIP)) {
-                d.ce("use", "!TS_FileUtils.isExistFile", fileHandler.localfileZIP);
+            TS_FileZipUtils.zipList(zipableFiles, _fileHandler.localfileZIP);
+            if (!TS_FileUtils.isExistFile(_fileHandler.localfileZIP)) {
+                d.ce("use", "!TS_FileUtils.isExistFile", _fileHandler.localfileZIP);
                 return false;
             }
-            TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonBall, fileHandler);
-            if (exeAfterZip != null) {
-                exeAfterZip.run(fileHandler);
+            TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonBall, _fileHandler);
+            if (fileHandler != null) {
+                fileHandler.run(_fileHandler);
             }
         }
         return fileCommonBall.runReport;
