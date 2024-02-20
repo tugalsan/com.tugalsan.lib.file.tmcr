@@ -82,7 +82,9 @@ public class TS_FileTmcrFileHandler {
 
                 d.ci("use", "compileCode");
                 TS_FileTmcrParser.compileCode(anchor, fileCommonBall, _fileHandler, (userDotTable, percentage) -> {
-                    progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
+                    if (progressUpdate_with_userDotTable_and_percentage != null) {
+                        progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
+                    }
                 });
             });
             return holdForAWhile.value0;
@@ -99,7 +101,9 @@ public class TS_FileTmcrFileHandler {
             }
             fileHandler.files.forEach(file -> TS_FileTmcrFilePrefferedFileName.renameFiles_ifEnabled(file, fileCommonBall));
         }
-        exeBeforeZip.run(fileHandler);
+        if (exeBeforeZip != null) {
+            exeBeforeZip.run(fileHandler);
+        }
         if (fileHandler.isZipFileRequested()) {
             var zipableFiles = fileHandler.zipableFiles();
             if (zipableFiles.isEmpty()) {
@@ -112,7 +116,9 @@ public class TS_FileTmcrFileHandler {
                 return false;
             }
             TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonBall, fileHandler);
-            exeAfterZip.run(fileHandler);
+            if (exeAfterZip != null) {
+                exeAfterZip.run(fileHandler);
+            }
         }
         return fileCommonBall.runReport;
     }
