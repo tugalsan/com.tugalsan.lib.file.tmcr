@@ -5,6 +5,7 @@ import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.string.client.TGS_StringUtils;
 
 public class TS_FileTmcrFilePrefferedFileName {
 
@@ -70,6 +71,9 @@ public class TS_FileTmcrFilePrefferedFileName {
     }
 
     public static void renameZip(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler fh) {
+        if (TGS_StringUtils.isNullOrEmpty(fileCommonBall.prefferedFileNameLabel)) {
+            return;
+        }
         var type = TGS_FileTmcrTypes.FILE_TYPE_ZIP();
         var newFileNameFull = fileCommonBall.prefferedFileNameLabel + type;
         d.cr("renameZip", "init", "localFile", fh.localfileZIP, "fileNameFull", newFileNameFull);
