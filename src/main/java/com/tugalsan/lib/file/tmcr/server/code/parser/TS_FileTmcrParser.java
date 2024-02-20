@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 import com.tugalsan.lib.file.tmcr.server.code.filename.TS_FileTmcrCodeFileNameCompile;
 import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import java.util.*;
@@ -28,24 +28,24 @@ public class TS_FileTmcrParser {
         return -1;
     }
 
-    public static void compileCode(TS_SQLConnAnchor anchor,  TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    public static void compileCode(TS_SQLConnAnchor anchor,  TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         var e = TGS_UnSafe.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
-                progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, CLEAR_PERCENTAGES());
-                progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, 1);
+                progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
+                progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, 1);
             }
             d.ci("compileCode", "replacing...");
-            for (var i = 0; i < fileCommonBall.macroLines.size(); i++) {
-                if (TS_FileTmcrCodeUrlCompile.is_CODE_URL_SH_OLD(fileCommonBall, i)) {
-                    var cmd = TS_FileTmcrCodeUrlCompile.compile_CODE_URL_SH_OLD(fileCommonBall, i);
+            for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                if (TS_FileTmcrCodeUrlCompile.is_CODE_URL_SH_OLD(fileCommonConfig, i)) {
+                    var cmd = TS_FileTmcrCodeUrlCompile.compile_CODE_URL_SH_OLD(fileCommonConfig, i);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
                     }
                 }
 
-                if (TS_FileTmcrCodeUrlCompile.is_CODE_URL_LOCALHOST(fileCommonBall, i)) {
-                    var cmd = TS_FileTmcrCodeUrlCompile.compile_CODE_URL_LOCALHOST(anchor, fileCommonBall, i);
+                if (TS_FileTmcrCodeUrlCompile.is_CODE_URL_LOCALHOST(fileCommonConfig, i)) {
+                    var cmd = TS_FileTmcrCodeUrlCompile.compile_CODE_URL_LOCALHOST(anchor, fileCommonConfig, i);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -54,7 +54,7 @@ public class TS_FileTmcrParser {
             }
 
             d.ci("compileCode", "injecting...");
-            var cmd = TS_FileTmcrCodeInjectCompile.compile_CODE_INJECT_CODE(fileCommonBall);
+            var cmd = TS_FileTmcrCodeInjectCompile.compile_CODE_INJECT_CODE(fileCommonConfig);
             if (!cmd.value1) {
                 mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                 return null;
@@ -62,90 +62,90 @@ public class TS_FileTmcrParser {
 
             d.ci("compileCode", "compiling...");
             var filenameMode = false;
-            for (var i = 0; i < fileCommonBall.macroLines.size(); i++) {
-                var percent = 100 * (i + 1) / fileCommonBall.macroLines.size();
+            for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                var percent = 100 * (i + 1) / fileCommonConfig.macroLines.size();
                 if (progressUpdate_with_userDotTable_and_percentage != null) {
-                    progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, percent);
+                    progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, percent);
                 }
                 d.ci("compileCode", "percent", percent);
 
-                cmd = TS_FileTmcrParser_Tokenize.compile_TOKENIZE(fileCommonBall, i);
+                cmd = TS_FileTmcrParser_Tokenize.compile_TOKENIZE(fileCommonConfig, i);
                 if (!cmd.value1) {
                     mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                     return null;
                 }
-                d.ci("compileCode", "macroLine", fileCommonBall.macroLine);
+                d.ci("compileCode", "macroLine", fileCommonConfig.macroLine);
 
-                cmd = TS_FileTmcrCodeMapCompile.compile_CODE_MAPGET(fileCommonBall);
+                cmd = TS_FileTmcrCodeMapCompile.compile_CODE_MAPGET(fileCommonConfig);
                 if (!cmd.value1) {
                     mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                     return null;
                 } else {
-                    d.ci("compileCode", "AFTER_MAPGET.macroLines[" + i + "/" + fileCommonBall.macroLines.size() + "]-> [" + fileCommonBall.macroLines.get(i) + "]");
+                    d.ci("compileCode", "AFTER_MAPGET.macroLines[" + i + "/" + fileCommonConfig.macroLines.size() + "]-> [" + fileCommonConfig.macroLines.get(i) + "]");
                 }
 
-                if (TS_FileTmcrParser_WhiteSpace.is_WHITE_SPACE(fileCommonBall)) {
+                if (TS_FileTmcrParser_WhiteSpace.is_WHITE_SPACE(fileCommonConfig)) {
                     d.ci("compileCode", "***  COMMENT SKIPPED");
                     continue;
                 }
 
-                if (TS_FileTmcrCodeLabelCompile.is_SET_LABEL_ON_ERROR(fileCommonBall)) {//IF SPECIAL TAG: ERROR LABEL
+                if (TS_FileTmcrCodeLabelCompile.is_SET_LABEL_ON_ERROR(fileCommonConfig)) {//IF SPECIAL TAG: ERROR LABEL
                     d.ci("compileCode", "***  is_SET_LABEL ERROR found");
                     mifHandler.saveFile("is_SET_LABEL_ON_ERROR");
                     return null;
                 }
 
-                if (fileCommonBall.doFind_gotoLabel == null) {//LABEL HANDLER
-                    if (TS_FileTmcrCodeLabelCompile.is_GOTO_LABEL(fileCommonBall)) {//SET LABEL
-                        var s = TS_FileTmcrCodeLabelCompile.get_GOTO_LABEL(anchor, fileCommonBall);
+                if (fileCommonConfig.doFind_gotoLabel == null) {//LABEL HANDLER
+                    if (TS_FileTmcrCodeLabelCompile.is_GOTO_LABEL(fileCommonConfig)) {//SET LABEL
+                        var s = TS_FileTmcrCodeLabelCompile.get_GOTO_LABEL(anchor, fileCommonConfig);
                         if (TS_FileTmcrCodeLabelTags.ERROR().equals(s)) {
                             d.ci("compileCode", "***  GOTO_LABEL DETECTED AS ERROR");
                             mifHandler.saveFile("error_get_GOTO_LABEL_see_console");
                             return null;
                         }
                         d.ci("compileCode", "***  GOTO_LABEL DETECTED as " + s);
-                        fileCommonBall.doFind_gotoLabel = s;
+                        fileCommonConfig.doFind_gotoLabel = s;
                         continue;
                     }
-                    if (TS_FileTmcrCodeLabelCompile.is_SET_LABEL(fileCommonBall)) {//NO SEARCH
+                    if (TS_FileTmcrCodeLabelCompile.is_SET_LABEL(fileCommonConfig)) {//NO SEARCH
                         d.ci("compileCode", "***  is_SET_LABEL SKIPPED because acroGlobals.doFind_gotoLabel == null");
                         continue;
                     }
                 } else {//ON SEARCH
-                    if (TS_FileTmcrCodeLabelCompile.is_SET_LABEL_ON_SEARCH(fileCommonBall)) {
-                        d.ci("compileCode", "***  is_SET_LABEL SKIPPED -> fileCommonBall.doFind_gotoLabel set as null???");
-                        fileCommonBall.doFind_gotoLabel = null;//starts from the next macro line
+                    if (TS_FileTmcrCodeLabelCompile.is_SET_LABEL_ON_SEARCH(fileCommonConfig)) {
+                        d.ci("compileCode", "***  is_SET_LABEL SKIPPED -> fileCommonConfig.doFind_gotoLabel set as null???");
+                        fileCommonConfig.doFind_gotoLabel = null;//starts from the next macro line
                     }
                     continue;
                 }
 
-                if (TS_FileTmcrCodePageCompile.is_INSERT_PAGE(fileCommonBall)) {//PAGE HANDLER
-                    cmd = TS_FileTmcrCodePageCompile.compile_INSERT_PAGE(fileCommonBall, mifHandler);
+                if (TS_FileTmcrCodePageCompile.is_INSERT_PAGE(fileCommonConfig)) {//PAGE HANDLER
+                    cmd = TS_FileTmcrCodePageCompile.compile_INSERT_PAGE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
                     } else {
-                        fileCommonBall.insertPageTriggeredBefore = true;
+                        fileCommonConfig.insertPageTriggeredBefore = true;
                         continue;
                     }
                 }
 
-                if (!fileCommonBall.insertPageTriggeredBefore) {
-                    TS_FileTmcrCodePageCompile.createNewPageDefault(fileCommonBall, mifHandler);
+                if (!fileCommonConfig.insertPageTriggeredBefore) {
+                    TS_FileTmcrCodePageCompile.createNewPageDefault(fileCommonConfig, mifHandler);
                     mifHandler.saveFile("ERROR: First code should be new page! (try to download TMCR file to see macro code)");
                     return null;
                 }
 
-                if (TS_FileTmcrCodeImageCompile.is_INSERT_IMAGE(fileCommonBall)) {
+                if (TS_FileTmcrCodeImageCompile.is_INSERT_IMAGE(fileCommonConfig)) {
                     d.ci("compileCode", "is_INSERT_IMAGE");
-                    cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
-                        var fontColorBackup = fileCommonBall.fontColor;
-                        fileCommonBall.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
+                        var fontColorBackup = fileCommonConfig.fontColor;
+                        fileCommonConfig.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                         mifHandler.beginText(0);
                         mifHandler.addText(cmd.value0 + "->" + cmd.value2);
                         mifHandler.endText();
-                        fileCommonBall.fontColor = fontColorBackup;
+                        fileCommonConfig.fontColor = fontColorBackup;
 //                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
 //                        return;
 //                    } else {
@@ -153,9 +153,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTableCompile.is_BEGIN_TABLECELL(fileCommonBall)) {
+                if (TS_FileTmcrCodeTableCompile.is_BEGIN_TABLECELL(fileCommonConfig)) {
                     d.ci("compileCode", "is_BEGIN_TABLECELL");
-                    cmd = TS_FileTmcrCodeTableCompile.compile_BEGIN_TABLECELL(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTableCompile.compile_BEGIN_TABLECELL(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -163,9 +163,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTableCompile.is_END_TABLECELL(fileCommonBall)) {
+                if (TS_FileTmcrCodeTableCompile.is_END_TABLECELL(fileCommonConfig)) {
                     d.ci("compileCode", "is_END_TABLECELL");
-                    cmd = TS_FileTmcrCodeTableCompile.compile_END_TABLECELL(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTableCompile.compile_END_TABLECELL(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -173,9 +173,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTableCompile.is_TABLECELL_BORDER(fileCommonBall)) {
+                if (TS_FileTmcrCodeTableCompile.is_TABLECELL_BORDER(fileCommonConfig)) {
                     d.ci("compileCode", "is_TABLECELL_BORDER");
-                    cmd = TS_FileTmcrCodeTableCompile.compile_TABLECELL_BORDER(fileCommonBall);
+                    cmd = TS_FileTmcrCodeTableCompile.compile_TABLECELL_BORDER(fileCommonConfig);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -183,9 +183,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTableCompile.is_BEGIN_TABLE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTableCompile.is_BEGIN_TABLE(fileCommonConfig)) {
                     d.ci("compileCode", "is_BEGIN_TABLE");
-                    cmd = TS_FileTmcrCodeTableCompile.compile_BEGIN_TABLE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTableCompile.compile_BEGIN_TABLE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -193,9 +193,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTableCompile.is_END_TABLE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTableCompile.is_END_TABLE(fileCommonConfig)) {
                     d.ci("compileCode", "is_END_TABLE");
-                    cmd = TS_FileTmcrCodeTableCompile.compile_END_TABLE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTableCompile.compile_END_TABLE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -203,9 +203,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_BEGIN_TEXT(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_BEGIN_TEXT(fileCommonConfig)) {
                     d.ci("compileCode", "is_BEGIN_TEXT");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_BEGIN_TEXT(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_BEGIN_TEXT(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -213,9 +213,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_END_TEXT(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_END_TEXT(fileCommonConfig)) {
                     d.ci("compileCode", "is_END_TEXT");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_END_TEXT(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_END_TEXT(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -223,9 +223,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT(fileCommonBall, mifHandler, filenameMode);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT(fileCommonConfig, mifHandler, filenameMode);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -233,9 +233,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_HTML(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_HTML(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_HTML");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_HTML(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_HTML(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -243,9 +243,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_CREATE_DATE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_CREATE_DATE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_CREATE_DATE");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_DATE(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_DATE(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -253,9 +253,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_CREATE_USER(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_CREATE_USER(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_CREATE_USER");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_USER(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_USER(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -263,9 +263,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_DATE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_DATE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_REVLST_DATE");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_DATE(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_DATE(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -273,9 +273,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_USER(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_USER(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_REVLST_USER");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_USER(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_USER(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -283,9 +283,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_NO(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_NO(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_REVLST_NO");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_NO(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_NO(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -293,9 +293,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_USER(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_USER(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_USER");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_USER(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_USER(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -303,9 +303,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_NEWLINE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_NEWLINE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_NEWLINE");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_NEWLINE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_NEWLINE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -313,9 +313,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_SPC(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_SPC(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_SPC");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_SPC(fileCommonBall, mifHandler, filenameMode);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_SPC(fileCommonConfig, mifHandler, filenameMode);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -323,9 +323,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_TIME(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_TIME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_TIME");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_TIME(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_TIME(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -333,9 +333,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_DATE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_DATE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_DATE");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_DATE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_DATE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -343,9 +343,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_HR(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_HR(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_HR");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_HR(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_HR(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -353,9 +353,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_FUNCNAME(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_FUNCNAME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_FUNCNAME");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_FUNCNAME(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_FUNCNAME(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -363,9 +363,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROM_SQLQUERY(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROM_SQLQUERY(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROM_SQLQUERY");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROM_SQLQUERY(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROM_SQLQUERY(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -373,9 +373,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_CW(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_CW(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_CW");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_CW(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_CW(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -383,9 +383,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeMapCompile.is_MAPADD_FROMSQL(fileCommonBall)) {
+                if (TS_FileTmcrCodeMapCompile.is_MAPADD_FROMSQL(fileCommonConfig)) {
                     d.ci("compileCode", "is_MAPADD_FROMSQL");
-                    cmd = TS_FileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -393,9 +393,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(anchor, fileCommonBall, mifHandler, filenameMode);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(anchor, fileCommonConfig, mifHandler, filenameMode);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -403,9 +403,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_TABNAME(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_TABNAME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_TABNAME");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_TABNAME(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_TABNAME(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -413,9 +413,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_COLNAME(fileCommonBall)) {
+                if (TS_FileTmcrCodeTextCompile.is_ADD_TEXT_COLNAME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_COLNAME");
-                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_COLNAME(anchor, fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeTextCompile.compile_ADD_TEXT_COLNAME(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -423,9 +423,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeFontCompile.is_SET_FONT_COLOR(fileCommonBall)) {
+                if (TS_FileTmcrCodeFontCompile.is_SET_FONT_COLOR(fileCommonConfig)) {
                     d.ci("compileCode", "is_SET_FONT_COLOR");
-                    cmd = TS_FileTmcrCodeFontCompile.compile_SET_FONT_COLOR(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeFontCompile.compile_SET_FONT_COLOR(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -433,9 +433,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeFontCompile.is_SET_FONT_SIZE(fileCommonBall)) {
+                if (TS_FileTmcrCodeFontCompile.is_SET_FONT_SIZE(fileCommonConfig)) {
                     d.ci("compileCode", "is_SET_FONT_SIZE");
-                    cmd = TS_FileTmcrCodeFontCompile.compile_SET_FONT_SIZE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeFontCompile.compile_SET_FONT_SIZE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -443,9 +443,9 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeFontCompile.is_SET_FONT_STYLE(fileCommonBall)) {
+                if (TS_FileTmcrCodeFontCompile.is_SET_FONT_STYLE(fileCommonConfig)) {
                     d.ci("compileCode", "is_SET_FONT_STYLE");
-                    cmd = TS_FileTmcrCodeFontCompile.compile_SET_FONT_STYLE(fileCommonBall, mifHandler);
+                    cmd = TS_FileTmcrCodeFontCompile.compile_SET_FONT_STYLE(fileCommonConfig, mifHandler);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -453,68 +453,68 @@ public class TS_FileTmcrParser {
                     continue;
                 }
 
-                if (TS_FileTmcrCodeFileNameCompile.is_FILENAME_START(fileCommonBall)) {
+                if (TS_FileTmcrCodeFileNameCompile.is_FILENAME_START(fileCommonConfig)) {
                     d.ci("compileCode", "is_FILENAME_START");
                     filenameMode = true;
                     continue;
                 }
-                if (TS_FileTmcrCodeFileNameCompile.is_FILENAME_END(fileCommonBall)) {
+                if (TS_FileTmcrCodeFileNameCompile.is_FILENAME_END(fileCommonConfig)) {
                     d.ci("compileCode", "is_FILENAME_END");
                     filenameMode = false;
                     continue;
                 }
-                TGS_UnSafe.thrw(d.className, "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonBall.macroLine + "}");
+                TGS_UnSafe.thrw(d.className, "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
             }
             d.ci("compileCode", "for.macroLines.done.");
             return null;
         }, ex -> ex);
         if (e != null) {
-            compileCode_failed(fileCommonBall, mifHandler, e, progressUpdate_with_userDotTable_and_percentage);
+            compileCode_failed(fileCommonConfig, mifHandler, e, progressUpdate_with_userDotTable_and_percentage);
             return;
         }
-        compileCode_completed(fileCommonBall, mifHandler, progressUpdate_with_userDotTable_and_percentage);
+        compileCode_completed(fileCommonConfig, mifHandler, progressUpdate_with_userDotTable_and_percentage);
     }
 
-    private static void compileCode_completed(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         d.ci("compileCode_completed", "SAVE EXPORT FILES");
         if (progressUpdate_with_userDotTable_and_percentage != null) {
-            progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, CLEAR_PERCENTAGES());
+            progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
         }
 
         d.ci("compileCode_completed", "ADDING DEBUG FN FOOTER");
         if (d.infoEnable) {//DEBUG
-            var fontColorBackup = fileCommonBall.fontColor;
-            fileCommonBall.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY();
+            var fontColorBackup = fileCommonConfig.fontColor;
+            fileCommonConfig.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY();
             mifHandler.setFontColor();
             mifHandler.beginText(0);
-            //mifHandler.addText("DEBUG.prefferedFilename->[" + fileCommonBall.prefferedFileNameLabel + "]");
+            //mifHandler.addText("DEBUG.prefferedFilename->[" + fileCommonConfig.prefferedFileNameLabel + "]");
             mifHandler.endText();
-            fileCommonBall.fontColor = fontColorBackup;
+            fileCommonConfig.fontColor = fontColorBackup;
             mifHandler.setFontColor();
         }
 //        mifHandler.mifHandler.saveFile(null);
-        fileCommonBall.runReport = true;
+        fileCommonConfig.runReport = true;
         d.ci("compileCode_completed", "FIN");
     }
 
-    private static void compileCode_failed(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, Exception e, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
-        addMacro_Lines_ErrorText(fileCommonBall, mifHandler, e);
-        fileCommonBall.runReport = true;
+    private static void compileCode_failed(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, Exception e, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+        addMacro_Lines_ErrorText(fileCommonConfig, mifHandler, e);
+        fileCommonConfig.runReport = true;
         if (progressUpdate_with_userDotTable_and_percentage != null) {
-            progressUpdate_with_userDotTable_and_percentage.run(fileCommonBall.userDotTablename, CLEAR_PERCENTAGES());
-//                TS_LibRepSGEProgress.clearPercentages(fileCommonBall.userDotTablename);
+            progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
+//                TS_LibRepSGEProgress.clearPercentages(fileCommonConfig.userDotTablename);
         }
         mifHandler.saveFile("compileCode_failed." + e.getMessage());
     }
 
-    public static void addMacro_Lines_ErrorText(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, String text) {
-        d.ce("addMacro_Lines_ErrorText", "SKIP: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonBall.macroLine + "}", false);
+    public static void addMacro_Lines_ErrorText(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, String text) {
+        d.ce("addMacro_Lines_ErrorText", "SKIP: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}", false);
         mifHandler.beginText(0);
         mifHandler.addText(text);
         mifHandler.endText();
     }
 
-    public static void addMacro_Lines_ErrorText(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, Throwable t) {
+    public static void addMacro_Lines_ErrorText(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, Throwable t) {
         if (t == null) {
             d.ce("addMacro_Lines_ErrorText", "WHY T is null!!!");
         }

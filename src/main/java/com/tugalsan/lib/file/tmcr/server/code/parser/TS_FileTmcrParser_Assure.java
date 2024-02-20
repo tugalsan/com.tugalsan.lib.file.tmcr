@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 import com.tugalsan.lib.rql.buffer.server.*;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.log.server.*;
@@ -20,41 +20,41 @@ public class TS_FileTmcrParser_Assure {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrParser_Assure.class);
 
-    public static boolean checkTokenSize(TS_FileCommonBall fileCommonBall, int tokenSize) {
-        if (fileCommonBall.macroLineTokens.size() != tokenSize) {
-            d.ce("fileCommonBall.macroLine: [", fileCommonBall.macroLine, "] should have ", tokenSize, " tokens error!");
-            d.ce(TGS_StringUtils.toString_ln(fileCommonBall.macroLineTokens));
+    public static boolean checkTokenSize(TS_FileCommonConfig fileCommonConfig, int tokenSize) {
+        if (fileCommonConfig.macroLineTokens.size() != tokenSize) {
+            d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have ", tokenSize, " tokens error!");
+            d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
             return false;
         }
         return true;
     }
 
-    public static boolean checkTokenSize(TS_FileCommonBall fileCommonBall, int[] tokenSizes) {
-        var macroTokenSize = fileCommonBall.macroLineTokens.size();
+    public static boolean checkTokenSize(TS_FileCommonConfig fileCommonConfig, int[] tokenSizes) {
+        var macroTokenSize = fileCommonConfig.macroLineTokens.size();
         for (var tsi : tokenSizes) {
             if (macroTokenSize == tsi) {
                 return true;
             }
         }
-        d.ce("fileCommonBall.macroLine: [", fileCommonBall.macroLine, "] should have [", TGS_StringUtils.toString(tokenSizes, ","), "] tokens error!");
-        d.ce(TGS_StringUtils.toString_ln(fileCommonBall.macroLineTokens));
+        d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have [", TGS_StringUtils.toString(tokenSizes, ","), "] tokens error!");
+        d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
         return false;
     }
 
-    public static TGS_LibRqlTbl getTable(TS_FileCommonBall fileCommonBall, String tableName) {
+    public static TGS_LibRqlTbl getTable(TS_FileCommonConfig fileCommonConfig, String tableName) {
         var table = TS_LibRqlBufferUtils.get(tableName);
         if (table == null) {
-            d.ce(fileCommonBall.macroLine, " -> tablename: [", tableName, "] sniff table not worked as expected!");
+            d.ce(fileCommonConfig.macroLine, " -> tablename: [", tableName, "] sniff table not worked as expected!");
             return null;
         }
         return table;
     }
 
-    public static String[] splitTableDotColname(TS_FileCommonBall fileCommonBall, int tableDotColnameIdx) {
-        var tableDotColname = fileCommonBall.macroLineTokens.get(tableDotColnameIdx);
+    public static String[] splitTableDotColname(TS_FileCommonConfig fileCommonConfig, int tableDotColnameIdx) {
+        var tableDotColname = fileCommonConfig.macroLineTokens.get(tableDotColnameIdx);
         var dividerIdx = tableDotColname.indexOf(".");
         if (dividerIdx == -1) {
-            d.ce(fileCommonBall.macroLine, ".token[", tableDotColnameIdx, "] = [", tableDotColname, "] should have . in it!");
+            d.ce(fileCommonConfig.macroLine, ".token[", tableDotColnameIdx, "] = [", tableDotColname, "] should have . in it!");
             return null;
         }
         return new String[]{
@@ -63,29 +63,29 @@ public class TS_FileTmcrParser_Assure {
         };
     }
 
-    public static Integer getColumnIndex(TS_FileCommonBall fileCommonBall, TGS_LibRqlTbl table, String colname) {
+    public static Integer getColumnIndex(TS_FileCommonConfig fileCommonConfig, TGS_LibRqlTbl table, String colname) {
         var colIdx = TGS_LibRqlTblUtils.colIdx(table, colname);
         if (colIdx == -1) {
             var tn = table.nameSql;
-            d.ce(fileCommonBall.macroLine, " getColumnIdex table:", tn, ", colname:[", colname, "]");
+            d.ce(fileCommonConfig.macroLine, " getColumnIdex table:", tn, ", colname:[", colname, "]");
         }
         return colIdx;
     }
 
-    public static Long getId(TS_FileCommonBall fileCommonBall, TS_FileTmcrFileHandler mifHandler, int idIdx) {
+    public static Long getId(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, int idIdx) {
         Long id;
-        var token = fileCommonBall.macroLineTokens.get(idIdx);
+        var token = fileCommonConfig.macroLineTokens.get(idIdx);
         if (token.equals(TS_FileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
-            id = fileCommonBall.selectedId;
+            id = fileCommonConfig.selectedId;
             if (id == null) {
-                var errText = TGS_StringUtils.concat("HATA: SATIR SEÇİLMEDİ HATASI! fileCommonBall.macroLine: [", fileCommonBall.macroLine, "].tokenAsId[", String.valueOf(idIdx), "]: [", token, "] requires you select a row from the table!");
+                var errText = TGS_StringUtils.concat("HATA: SATIR SEÇİLMEDİ HATASI! fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "]: [", token, "] requires you select a row from the table!");
                 d.ce(errText, false);
                 mifHandler.saveFile(errText);
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonBall.macroLineTokens.get(idIdx));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(idIdx));
             if (id == null) {
-                var errText = TGS_StringUtils.concat("HATA: ID BULUNAMADI!fileCommonBall.macroLine: [", fileCommonBall.macroLine, "].tokenAsId[", String.valueOf(idIdx), "] should be a number!");
+                var errText = TGS_StringUtils.concat("HATA: ID BULUNAMADI!fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "] should be a number!");
                 d.ce(errText, false);
                 mifHandler.saveFile(errText);
             }
@@ -93,7 +93,7 @@ public class TS_FileTmcrParser_Assure {
         return id;
     }
 
-    public static String sniffCellSimple(TS_SQLConnAnchor anchor, TS_FileCommonBall fileCommonBall, TGS_LibRqlTbl table, long id, int colIdx) {
+    public static String sniffCellSimple(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TGS_LibRqlTbl table, long id, int colIdx) {
         if (d.infoEnable) {
             var tn = table.nameSql;
             d.ci("sniffCellSimple.table:", tn);
@@ -103,7 +103,7 @@ public class TS_FileTmcrParser_Assure {
         var data = TS_LibRqlTxtRowUtils.get(anchor, table, id, colIdx);
         if (data == null && id == 0) {
             d.ci("sniffCellSimple.process.fixed[id==0 and sniffCell().getData() == null]");
-            d.ci(fileCommonBall.macroLine + " fixed for lng value 0");
+            d.ci(fileCommonConfig.macroLine + " fixed for lng value 0");
             data = "0";
         } else if (data == null) {
             var tn = table.nameSql;
@@ -112,8 +112,8 @@ public class TS_FileTmcrParser_Assure {
             d.ce("sniffCellSimple.id:", id);
             d.ce("sniffCellSimple.colIdx:", colIdx);
             d.ce("sniffCellSimple.process.error:[data == null]");
-            d.ce(fileCommonBall.macroLine + ".sniffCell() == null");
-            data = "HATA: linecode(" + fileCommonBall.macroLine + ") -> sniffCellSimple.data==null";
+            d.ce(fileCommonConfig.macroLine + ".sniffCell() == null");
+            data = "HATA: linecode(" + fileCommonConfig.macroLine + ") -> sniffCellSimple.data==null";
         } else {
             d.ci("sniffCellSimple.process.ok");
         }
@@ -128,7 +128,7 @@ public class TS_FileTmcrParser_Assure {
         return text;
     }
 
-    public static String[] getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileCommonBall fileCommonBall,
+    public static String[] getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig,
             CharSequence tableName, TGS_LibRqlCol column, String inputData) {
         String outputData;
         Long subId = null;
@@ -157,28 +157,28 @@ public class TS_FileTmcrParser_Assure {
         } else if (tc.typeLngLnk()) {
             var datas = TS_StringUtils.toList_spc(inputData);
             if (datas == null) {
-                var errorText = fileCommonBall.macroLine + ".TK_GWTGeneralUtils.parseTokenGWT == null";
+                var errorText = fileCommonConfig.macroLine + ".TK_GWTGeneralUtils.parseTokenGWT == null";
                 d.ce("getVisibleTextAndSubId:", errorText);
                 return null;
             } else if (datas.isEmpty()) {
-                var errorText = fileCommonBall.macroLine + ".TK_GWTGeneralUtils.parseTokenGWT.size == 0";
+                var errorText = fileCommonConfig.macroLine + ".TK_GWTGeneralUtils.parseTokenGWT.size == 0";
                 d.ce("getVisibleTextAndSubId:", errorText);
                 return null;
             }
             subId = TGS_CastUtils.toLong(datas.get(0));
             if (subId == null) {
-                var errorText = fileCommonBall.macroLine + ".subId == null";
+                var errorText = fileCommonConfig.macroLine + ".subId == null";
                 d.ce("getVisibleTextAndSubId:", errorText);
                 return null;
             }
             {
                 var ra = TS_LibRqlLinkUtils.get(TS_LibRqlBufferUtils.items, anchor, tableName, column.getDataString1_LnkTargetTableName(), subId);
                 if (ra == null) {
-                    var errorText = fileCommonBall.macroLine + ".getLNGLINKText() == null";
+                    var errorText = fileCommonConfig.macroLine + ".getLNGLINKText() == null";
                     d.ce("getVisibleTextAndSubId:", errorText);
                     return null;
                 } else if (ra.errTxt != null) {
-                    var errorText = fileCommonBall.macroLine + ".getLNGLINKText().getErrorText(): " + ra.errTxt;
+                    var errorText = fileCommonConfig.macroLine + ".getLNGLINKText().getErrorText(): " + ra.errTxt;
                     d.ce("getVisibleTextAndSubId:", errorText);
                     return null;
                 }

@@ -9,7 +9,7 @@ import com.tugalsan.api.unsafe.client.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import static com.tugalsan.lib.file.tmcr.server.code.inject.TS_FileTmcrCodeInjectTags.CODE_INJECT_CODE;
-import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 //import com.tugalsan.lib.route.client.*;
 import java.util.stream.*;
 
@@ -17,14 +17,14 @@ public class TS_FileTmcrCodeInjectCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeInjectCompile.class);
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileCommonBall fileCommonBall) {
+    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileCommonConfig fileCommonConfig) {
         var result = d.createFuncBoolean("compile_CODE_INJECT_CODE");
         d.ci("compile_CODE_INJECT_CODE", "welcome");
         return TGS_UnSafe.call(() -> {
             var injectCheckEnable = false;
-            d.ci("compile_CODE_INJECT_CODE", "entered inject while with lineCount " + fileCommonBall.macroLines.size());
-            for (var i = 0; i < fileCommonBall.macroLines.size(); i++) {
-                var macroLine = TGS_StringUtils.removeConsecutive(fileCommonBall.macroLines.get(i).trim(), " ");
+            d.ci("compile_CODE_INJECT_CODE", "entered inject while with lineCount " + fileCommonConfig.macroLines.size());
+            for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                var macroLine = TGS_StringUtils.removeConsecutive(fileCommonConfig.macroLines.get(i).trim(), " ");
                 d.ci("compile_CODE_INJECT_CODE", "macroLine", macroLine);
                 var macroLineUpperCase = TGS_CharSetCast.toLocaleUpperCase(macroLine);
                 d.ci("compile_CODE_INJECT_CODE", "macroLineUpperCase", macroLineUpperCase);
@@ -35,8 +35,8 @@ public class TS_FileTmcrCodeInjectCompile {
                     d.ci("compile_CODE_INJECT_CODE", "url detected as ", url);
 
                     {//ADD TABLENAME AND SID IF NOT EXISTS
-                        if (fileCommonBall.manipulateInjectCode != null) {
-                            url = fileCommonBall.manipulateInjectCode.call(url);
+                        if (fileCommonConfig.manipulateInjectCode != null) {
+                            url = fileCommonConfig.manipulateInjectCode.call(url);
                         }
                     }
                     d.ci("url parameter-ed as ", url);
@@ -52,22 +52,22 @@ public class TS_FileTmcrCodeInjectCompile {
                         return d.returnError(result, "ERROR: macroLines2 == null @compile_CODE_INJECT_CODE4");
                     }
                     d.ci("compile_CODE_INJECT_CODE", "Injection content.size: " + macroLines2.size());
-                    fileCommonBall.macroLines.remove(i);
+                    fileCommonConfig.macroLines.remove(i);
 
                     var offsetMacroLines = i;
-                    d.ci("compile_CODE_INJECT_CODE", "Before Injection: " + fileCommonBall.macroLines.size());
-                    IntStream.range(0, macroLines2.size()).forEachOrdered(i2 -> fileCommonBall.macroLines.add(offsetMacroLines + i2, macroLines2.get(i2)));
-                    d.ci("compile_CODE_INJECT_CODE", "After Injection: " + fileCommonBall.macroLines.size());
+                    d.ci("compile_CODE_INJECT_CODE", "Before Injection: " + fileCommonConfig.macroLines.size());
+                    IntStream.range(0, macroLines2.size()).forEachOrdered(i2 -> fileCommonConfig.macroLines.add(offsetMacroLines + i2, macroLines2.get(i2)));
+                    d.ci("compile_CODE_INJECT_CODE", "After Injection: " + fileCommonConfig.macroLines.size());
                     break;
                 }
             }
             if (injectCheckEnable) {
-                d.ci("compile_CODE_INJECT_CODE", "recursive inject loop" + fileCommonBall.macroLines.size());
-                return compile_CODE_INJECT_CODE(fileCommonBall);
+                d.ci("compile_CODE_INJECT_CODE", "recursive inject loop" + fileCommonConfig.macroLines.size());
+                return compile_CODE_INJECT_CODE(fileCommonConfig);
             }
-            d.ci("compile_CODE_INJECT_CODE", "exit inject loop" + fileCommonBall.macroLines.size());
+            d.ci("compile_CODE_INJECT_CODE", "exit inject loop" + fileCommonConfig.macroLines.size());
             if (d.infoEnable) {
-                IntStream.range(0, fileCommonBall.macroLines.size()).forEachOrdered(i -> d.ci("compile_CODE_INJECT_CODE.AFTER_INJECT.macroLines[", i, "/", fileCommonBall.macroLines.size(), "]-> [", fileCommonBall.macroLines.get(i), "]"));
+                IntStream.range(0, fileCommonConfig.macroLines.size()).forEachOrdered(i -> d.ci("compile_CODE_INJECT_CODE.AFTER_INJECT.macroLines[", i, "/", fileCommonConfig.macroLines.size(), "]-> [", fileCommonConfig.macroLines.get(i), "]"));
             }
             return d.returnTrue(result);
         }, e -> {

@@ -1,10 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 
 public class TS_FileTmcrParser_WhiteSpace {
 
-    public static boolean is_WHITE_SPACE(TS_FileCommonBall fileCommonBall) {
-        return fileCommonBall.macroLine.startsWith("//") || fileCommonBall.macroLine.isEmpty();
+    public static boolean is_WHITE_SPACE(TS_FileCommonConfig fileCommonConfig) {
+        return fileCommonConfig.macroLine.startsWith("//") || fileCommonConfig.macroLine.isEmpty();
     }
 }

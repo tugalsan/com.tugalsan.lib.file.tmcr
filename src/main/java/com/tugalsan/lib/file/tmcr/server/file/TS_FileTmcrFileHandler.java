@@ -6,8 +6,8 @@ import com.tugalsan.api.coronator.client.TGS_Coronator;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import com.tugalsan.api.file.html.server.TS_FileHtml;
-import com.tugalsan.api.file.common.server.TS_FileCommonInterface;
-import com.tugalsan.api.file.common.server.TS_FileCommonBall;
+import com.tugalsan.api.file.common.server.TS_FileCommonAbstract;
+import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import com.tugalsan.api.file.docx.server.TS_FileDocx;
 import com.tugalsan.api.file.xlsx.server.TS_FileXlsx;
@@ -36,11 +36,11 @@ public class TS_FileTmcrFileHandler {
     final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
-    public TS_FileCommonBall fileCommonBall;
-    final public List<TS_FileCommonInterface> files;
+    public TS_FileCommonConfig fileCommonConfig;
+    final public List<TS_FileCommonAbstract> files;
 
     public boolean isZipFileRequested() {
-        return fileCommonBall.requestedFileTypes.stream()
+        return fileCommonConfig.requestedFileTypes.stream()
                 .filter(type -> Objects.equals(type, TGS_FileTmcrTypes.FILE_TYPE_ZIP()))
                 .findAny().isPresent();
     }
@@ -64,8 +64,8 @@ public class TS_FileTmcrFileHandler {
         return remoteFiles;
     }
 
-    private TS_FileTmcrFileHandler(TS_FileCommonBall fileCommonBall, Path localfileZIP, TGS_Url remotefileZIP, TS_FileCommonInterface... files) {
-        this.fileCommonBall = fileCommonBall;
+    private TS_FileTmcrFileHandler(TS_FileCommonConfig fileCommonConfig, Path localfileZIP, TGS_Url remotefileZIP, TS_FileCommonAbstract... files) {
+        this.fileCommonConfig = fileCommonConfig;
         this.localfileZIP = localfileZIP;
         this.remotefileZIP = remotefileZIP;
         this.files = TGS_StreamUtils.toLst(Arrays.stream(files));
@@ -73,24 +73,24 @@ public class TS_FileTmcrFileHandler {
     public Path localfileZIP;
     public TGS_Url remotefileZIP;
 
-    public static boolean use(TS_FileCommonBall fileCommonBall, TS_SQLConnAnchor anchor,
+    public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage
     ) {
-        return use(fileCommonBall, anchor, progressUpdate_with_userDotTable_and_percentage, null);
+        return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null);
     }
 
-    public static boolean use(TS_FileCommonBall fileCommonBall, TS_SQLConnAnchor anchor,
+    public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler
     ) {
         d.ci("use", "running macro code...");
         var _fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
-            TS_FileTmcrFileHandler.use_do(fileCommonBall, __fileHandler -> {
+            TS_FileTmcrFileHandler.use_do(fileCommonConfig, __fileHandler -> {
                 holdForAWhile.value0 = __fileHandler;
 
                 d.ci("use", "compileCode");
-                TS_FileTmcrParser.compileCode(anchor, fileCommonBall, __fileHandler, (userDotTable, percentage) -> {
+                TS_FileTmcrParser.compileCode(anchor, fileCommonConfig, __fileHandler, (userDotTable, percentage) -> {
                     if (progressUpdate_with_userDotTable_and_percentage != null) {
                         progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
                     }
@@ -98,17 +98,17 @@ public class TS_FileTmcrFileHandler {
             });
             return holdForAWhile.value0;
         });
-        d.ci("use", "RENAME LOCAL FILES", "prefferedFileNameLabel", fileCommonBall.prefferedFileNameLabel);
-        if (!fileCommonBall.prefferedFileNameLabel.isEmpty()) {
-            if (TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_TURKISH) {
-                fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(fileCommonBall.prefferedFileNameLabel);
+        d.ci("use", "RENAME LOCAL FILES", "prefferedFileNameLabel", fileCommonConfig.prefferedFileNameLabel);
+        if (!fileCommonConfig.prefferedFileNameLabel.isEmpty()) {
+            if (TS_FileCommonAbstract.FILENAME_CHAR_SUPPORT_TURKISH) {
+                fileCommonConfig.prefferedFileNameLabel = TGS_FileUtilsTur.toSafe(fileCommonConfig.prefferedFileNameLabel);
             } else {
-                fileCommonBall.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(fileCommonBall.prefferedFileNameLabel);
+                fileCommonConfig.prefferedFileNameLabel = TGS_FileUtilsEng.toSafe(fileCommonConfig.prefferedFileNameLabel);
             }
-            if (!TS_FileCommonInterface.FILENAME_CHAR_SUPPORT_SPACE) {
-                fileCommonBall.prefferedFileNameLabel = fileCommonBall.prefferedFileNameLabel.replace(" ", "_");
+            if (!TS_FileCommonAbstract.FILENAME_CHAR_SUPPORT_SPACE) {
+                fileCommonConfig.prefferedFileNameLabel = fileCommonConfig.prefferedFileNameLabel.replace(" ", "_");
             }
-            _fileHandler.files.forEach(file -> TS_FileTmcrFilePrefferedFileName.renameFiles_ifEnabled(file, fileCommonBall));
+            _fileHandler.files.forEach(file -> TS_FileTmcrFilePrefferedFileName.renameFiles_ifEnabled(file, fileCommonConfig));
         }
         if (_fileHandler.isZipFileRequested()) {
             var zipableFiles = _fileHandler.zipableFiles();
@@ -121,53 +121,53 @@ public class TS_FileTmcrFileHandler {
                 d.ce("use", "!TS_FileUtils.isExistFile", _fileHandler.localfileZIP);
                 return false;
             }
-            TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonBall, _fileHandler);
+            TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonConfig, _fileHandler);
             if (fileHandler != null) {
                 fileHandler.run(_fileHandler);
             }
         }
-        return fileCommonBall.runReport;
+        return fileCommonConfig.runReport;
     }
 
-    private static void use_do(TS_FileCommonBall fileCommonBall, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
+    private static void use_do(TS_FileCommonConfig fileCommonConfig, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
         var webHTMBase64 = true;
-        var enableTMCR = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_TMCR());
-        var enableHTML = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTML());
-        var enableHTM = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTM());
-        var enablePDF = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_PDF());
-        var enableXLSX = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_XLSX());
-        var enableDOCX = fileCommonBall.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_DOCX());
-        var fileNameFullZIP = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_ZIP();
-        var fileNameFullTMCR = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_TMCR();
-        var fileNameFullHTML = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTML();
-        var fileNameFullHTM = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTM();
-        var fileNameFullPDF = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
-        var fileNameFullXLSX = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
-        var fileNameFullDOCX = fileCommonBall.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
-        var localfileZIP = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullZIP);
-        var localfileTMCR = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullTMCR);
-        var localfileHTML = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullHTML);
-        var localfileHTM = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullHTM);
-        var localfilePDF = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullPDF);
-        var localfileXLSX = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullXLSX);
-        var localfileDOCX = TS_FileTmcrFileSetName.path(fileCommonBall, fileNameFullDOCX);
-        var remotefileZIP = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullZIP, true);
-        var remotefileTMCR = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullTMCR, true);
-        var remotefileHTML = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullHTML, false);
-        var remotefileHTM = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullHTM, true);
-        var remotefilePDF = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullPDF, true);
-        var remotefileXLSX = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullXLSX, true);
-        var remotefileDOCX = TS_FileTmcrFileSetName.urlUser(fileCommonBall, fileNameFullDOCX, true);
-        TS_FileTmcrFileTMCR.use(enableTMCR, fileCommonBall, localfileTMCR, remotefileTMCR, tmcr -> {
-            TS_FileHtml.use(enableHTML, fileCommonBall, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_FileTmcrFileSetName.urlFromPath(fileCommonBall, imageLoc), webHTML -> {
-                TS_FileHtml.use(enableHTM, fileCommonBall, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_FileTmcrFileSetName.urlFromPath(fileCommonBall, imageLoc), webHTM -> {
-                    TS_FilePdf.use(enablePDF, fileCommonBall, localfilePDF, remotefilePDF, pdf -> {
-                        TS_FileXlsx.use(enableXLSX, fileCommonBall, localfileXLSX, remotefileXLSX, xlsx -> {
-                            TS_FileDocx.use(enableDOCX, fileCommonBall, localfileDOCX, remotefileDOCX, docx -> {
-                                var instance = new TS_FileTmcrFileHandler(fileCommonBall, localfileZIP, remotefileZIP,
+        var enableTMCR = fileCommonConfig.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_TMCR());
+        var enableHTML = fileCommonConfig.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTML());
+        var enableHTM = fileCommonConfig.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_HTM());
+        var enablePDF = fileCommonConfig.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_PDF());
+        var enableXLSX = fileCommonConfig.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_XLSX());
+        var enableDOCX = fileCommonConfig.requestedFileTypes.contains(TGS_FileTmcrTypes.FILE_TYPE_DOCX());
+        var fileNameFullZIP = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_ZIP();
+        var fileNameFullTMCR = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_TMCR();
+        var fileNameFullHTML = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTML();
+        var fileNameFullHTM = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_HTM();
+        var fileNameFullPDF = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_PDF();
+        var fileNameFullXLSX = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_XLSX();
+        var fileNameFullDOCX = fileCommonConfig.fileNameLabel + TGS_FileTmcrTypes.FILE_TYPE_DOCX();
+        var localfileZIP = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullZIP);
+        var localfileTMCR = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullTMCR);
+        var localfileHTML = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullHTML);
+        var localfileHTM = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullHTM);
+        var localfilePDF = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullPDF);
+        var localfileXLSX = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullXLSX);
+        var localfileDOCX = TS_FileTmcrFileSetName.path(fileCommonConfig, fileNameFullDOCX);
+        var remotefileZIP = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullZIP, true);
+        var remotefileTMCR = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullTMCR, true);
+        var remotefileHTML = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullHTML, false);
+        var remotefileHTM = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullHTM, true);
+        var remotefilePDF = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullPDF, true);
+        var remotefileXLSX = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullXLSX, true);
+        var remotefileDOCX = TS_FileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullDOCX, true);
+        TS_FileTmcrFileTMCR.use(enableTMCR, fileCommonConfig, localfileTMCR, remotefileTMCR, tmcr -> {
+            TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_FileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
+                TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_FileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
+                    TS_FilePdf.use(enablePDF, fileCommonConfig, localfilePDF, remotefilePDF, pdf -> {
+                        TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
+                            TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
+                                var instance = new TS_FileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
                                         tmcr, webHTML, webHTM, pdf, xlsx, docx
                                 );
                                 fileHandler.run(instance);
@@ -184,7 +184,7 @@ public class TS_FileTmcrFileHandler {
     public boolean saveFile(String errorSource) {
         TGS_UnSafe.run(() -> {
             if (errorSource != null) {
-                fileCommonBall.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
+                fileCommonConfig.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                 beginText(0);
                 addText(errorSource);
                 endText();
@@ -199,7 +199,7 @@ public class TS_FileTmcrFileHandler {
                 }
             }, e -> d.ct("saveFile", e));
         });
-        return fileCommonBall.runReport = true;
+        return fileCommonConfig.runReport = true;
     }
 
     public boolean createNewPage(int pageSizeAX, boolean landscape, Integer marginLeft, Integer marginRight, Integer marginTop, Integer marginBottom) {
@@ -393,8 +393,8 @@ public class TS_FileTmcrFileHandler {
             var plainText = plainArr.get(plainArr_i);
             d.ci("addText2.mainText.plainText[" + plainArr_i + "]:[" + plainText + "]");
             if (plainArr_i != 0) {
-                fileCommonBall.fontItalic = false;
-                fileCommonBall.fontBold = false;
+                fileCommonConfig.fontItalic = false;
+                fileCommonConfig.fontBold = false;
                 var b = setFontStyle();
                 if (!b) {
                     result.value0 = false;
@@ -405,7 +405,7 @@ public class TS_FileTmcrFileHandler {
                 var boldText = boldArr.get(boldArr_i);
                 d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "]:[" + boldText + "]");
                 if (boldArr_i != 0) {
-                    fileCommonBall.fontBold = true;
+                    fileCommonConfig.fontBold = true;
                     var b = setFontStyle();
                     if (!b) {
                         result.value0 = false;
@@ -416,7 +416,7 @@ public class TS_FileTmcrFileHandler {
                     var italicText = italicArr.get(italicArr_i);
                     d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "]:[" + italicText + "]");
                     if (italicArr_i != 0) {
-                        fileCommonBall.fontItalic = true;
+                        fileCommonConfig.fontItalic = true;
                         var b = setFontStyle();
                         if (!b) {
                             result.value0 = false;
@@ -435,7 +435,7 @@ public class TS_FileTmcrFileHandler {
                                 var found = false;
                                 for (var cti = 0; cti < colors.size(); cti++) {
                                     if (colors.get(cti).equals(fontColor)) {
-                                        fileCommonBall.fontColor = colors.get(cti);
+                                        fileCommonConfig.fontColor = colors.get(cti);
                                         var b = setFontColor();
                                         if (!b) {
                                             result.value0 = false;
@@ -446,7 +446,7 @@ public class TS_FileTmcrFileHandler {
                                 }
                                 if (!found) {
                                     d.ci("addText2.fontColorText[" + fontColor + "] cannot be processed. BLACK will be used isntead");
-                                    fileCommonBall.fontColor = colors.get(0);
+                                    fileCommonConfig.fontColor = colors.get(0);
                                     var b = setFontColor();
                                     if (!b) {
                                         result.value0 = false;
@@ -467,14 +467,14 @@ public class TS_FileTmcrFileHandler {
                                     if (fsInt == null) {
                                         d.ci("addText2.fontHeight[" + fontHeight + "] cannot be processed. 10 will be used instead.");
                                         fontHeightText = fontHeightText.substring(i + 1);
-                                        fileCommonBall.fontHeight = 10;
+                                        fileCommonConfig.fontHeight = 10;
                                         var b = setFontHeight();
                                         if (!b) {
                                             result.value0 = false;
                                         }
                                     } else {
                                         fontHeightText = fontHeightText.substring(i + 1);
-                                        fileCommonBall.fontHeight = fsInt;
+                                        fileCommonConfig.fontHeight = fsInt;
                                         var b = setFontHeight();
                                         if (!b) {
                                             result.value0 = false;
