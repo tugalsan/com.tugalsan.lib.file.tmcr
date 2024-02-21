@@ -122,9 +122,9 @@ public class TS_FileTmcrFileHandler {
                 return false;
             }
             TS_FileTmcrFilePrefferedFileName.renameZip(fileCommonConfig, _fileHandler);
-            if (fileHandler != null) {
-                fileHandler.run(_fileHandler);
-            }
+        }
+        if (fileHandler != null) {
+            fileHandler.run(_fileHandler);
         }
         return fileCommonConfig.runReport;
     }
