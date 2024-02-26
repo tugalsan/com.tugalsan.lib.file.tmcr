@@ -343,7 +343,7 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    @Deprecated //TODO PAN UNICODE HADLEING NOT WORKING
+    @Deprecated //TODO PAN-UNICODE HANDLING NOT WORKING
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             return true;
