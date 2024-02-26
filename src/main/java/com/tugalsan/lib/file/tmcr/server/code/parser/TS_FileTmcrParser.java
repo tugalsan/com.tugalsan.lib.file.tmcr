@@ -28,7 +28,7 @@ public class TS_FileTmcrParser {
         return -1;
     }
 
-    public static void compileCode(TS_SQLConnAnchor anchor,  TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         var e = TGS_UnSafe.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -472,27 +472,14 @@ public class TS_FileTmcrParser {
             compileCode_failed(fileCommonConfig, mifHandler, e, progressUpdate_with_userDotTable_and_percentage);
             return;
         }
-        compileCode_completed(fileCommonConfig, mifHandler, progressUpdate_with_userDotTable_and_percentage);
+        compileCode_completed(fileCommonConfig, progressUpdate_with_userDotTable_and_percentage);
     }
 
-    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         d.ci("compileCode_completed", "SAVE EXPORT FILES");
         if (progressUpdate_with_userDotTable_and_percentage != null) {
             progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
         }
-
-        d.ci("compileCode_completed", "ADDING DEBUG FN FOOTER");
-        if (d.infoEnable) {//DEBUG
-            var fontColorBackup = fileCommonConfig.fontColor;
-            fileCommonConfig.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_LIGHT_GRAY();
-            mifHandler.setFontColor();
-            mifHandler.beginText(0);
-            //mifHandler.addText("DEBUG.prefferedFilename->[" + fileCommonConfig.prefferedFileNameLabel + "]");
-            mifHandler.endText();
-            fileCommonConfig.fontColor = fontColorBackup;
-            mifHandler.setFontColor();
-        }
-//        mifHandler.mifHandler.saveFile(null);
         fileCommonConfig.runReport = true;
         d.ci("compileCode_completed", "FIN");
     }

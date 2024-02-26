@@ -56,12 +56,11 @@ public class TS_FileTmcrFileHandler {
     }
 
     public List<String> getRemoteFiles() {
-        List<String> remoteFiles = TGS_StreamUtils.toLst(
+        return TGS_StreamUtils.toLst(
                 files.stream()
                         .filter(mif -> mif.isEnabled())
                         .map(f -> f.getRemoteFileName().url.toString())
         );
-        return remoteFiles;
     }
 
     private TS_FileTmcrFileHandler(TS_FileCommonConfig fileCommonConfig, Path localfileZIP, TGS_Url remotefileZIP, TS_FileCommonAbstract... files) {
@@ -344,18 +343,75 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    public boolean addText(String mainText) {
+    public boolean addText(String fullText) {
+        return addText_fonted(fullText);
+        //WHY BELOW CODE NOT WORKING :(. It would be grate to see UTF8Symbols on pdf
+//        if (fullText.isEmpty()) {
+//            return true;
+//        }
+//        var codePoints = fullText.codePoints().toArray();
+//        fileCommonConfig.fontPanUnicodeActive = false;
+//        var sb = new StringBuilder();
+//        var offset = 0;
+//        for (var i = 0; i < codePoints.length; i++) {
+//            var codePoint = codePoints[i];
+//            var isPanNeeded = fileCommonConfig.isPanNeeded(codePoint);
+//            if (i == 0) {
+//                fileCommonConfig.fontPanUnicodeActive = isPanNeeded;
+//                continue;
+//            }
+//            if (fileCommonConfig.fontPanUnicodeActive == false && !isPanNeeded) {
+//                continue;
+//            }
+//            if (fileCommonConfig.fontPanUnicodeActive == true && isPanNeeded) {
+//                continue;
+//            }
+//            if (fileCommonConfig.fontPanUnicodeActive == false && isPanNeeded) {
+//                sb.setLength(0);
+//                IntStream.range(offset, i)
+//                        .map(idx -> codePoints[idx])
+//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
+//                var r = addText_fonted(sb.toString());
+//                if (!r) {
+//                    return false;
+//                }
+//                offset = i;
+//                fileCommonConfig.fontPanUnicodeActive = true;
+//                continue;
+//            }
+//            if (fileCommonConfig.fontPanUnicodeActive == true && !isPanNeeded) {
+//                sb.setLength(0);
+//                IntStream.range(offset, i)
+//                        .map(idx -> codePoints[idx])
+//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
+//                var r = addText_fonted(sb.toString());
+//                if (!r) {
+//                    return false;
+//                }
+//                offset = i;
+//                fileCommonConfig.fontPanUnicodeActive = false;
+//                continue;
+//            }
+//        }
+//        sb.setLength(0);
+//        IntStream.range(offset, codePoints.length)
+//                .map(idx -> codePoints[idx])
+//                .forEachOrdered(cp -> sb.appendCodePoint(cp));
+//        return addText_fonted(sb.toString());
+    }
+
+    public boolean addText_fonted(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var tokens = TS_StringUtils.toList(mainText, "\n");
+        var tokens = TS_StringUtils.toList(fullText, "\n");
         IntStream.range(0, tokens.size()).forEachOrdered(i -> {
-            var text = tokens.get(i);
-            if (!text.isEmpty()) {
-                var b = addText2(text);
+            var lineText = tokens.get(i);
+            if (!lineText.isEmpty()) {
+                var b = addText_line(lineText);
                 if (!b) {
                     result.value0 = false;
                 }
             }
-            if (i != tokens.size() - 1 || mainText.endsWith("\n")) {
+            if (i != tokens.size() - 1 || fullText.endsWith("\n")) {
                 var b = addLineBreak();
                 if (!b) {
                     result.value0 = false;
@@ -365,8 +421,8 @@ public class TS_FileTmcrFileHandler {
         return result.value0;
     }
 
-    private boolean addText2(String mainText) {
-        d.ci("addText2", "mainText", mainText);
+    private boolean addText_line(String lineText) {
+        d.ci("addText_line", "lineText", lineText);
         if (colors.isEmpty()) {
             colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK());
             colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED());
@@ -382,16 +438,16 @@ public class TS_FileTmcrFileHandler {
             colors.add(TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_MAGENTA());
         }
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        mainText = mainText.replace("{fc_", "{FC_");
-        mainText = mainText.replace("{fh_", "{FH_");
-        mainText = mainText.replace("{b}", "{B}");
-        mainText = mainText.replace("{p}", "{P}");
-        mainText = mainText.replace("{i}", "{I}");
-        d.ci("addText2.mainText:[" + mainText + "]");
-        var plainArr = TS_StringUtils.toList(mainText, "{P}");
+        lineText = lineText.replace("{fc_", "{FC_");
+        lineText = lineText.replace("{fh_", "{FH_");
+        lineText = lineText.replace("{b}", "{B}");
+        lineText = lineText.replace("{p}", "{P}");
+        lineText = lineText.replace("{i}", "{I}");
+        d.ci("addText_line.lineText:[" + lineText + "]");
+        var plainArr = TS_StringUtils.toList(lineText, "{P}");
         for (var plainArr_i = 0; plainArr_i < plainArr.size(); plainArr_i++) {
             var plainText = plainArr.get(plainArr_i);
-            d.ci("addText2.mainText.plainText[" + plainArr_i + "]:[" + plainText + "]");
+            d.ci("addText_line.lineText.plainText[" + plainArr_i + "]:[" + plainText + "]");
             if (plainArr_i != 0) {
                 fileCommonConfig.fontItalic = false;
                 fileCommonConfig.fontBold = false;
@@ -403,7 +459,7 @@ public class TS_FileTmcrFileHandler {
             var boldArr = TS_StringUtils.toList(plainText, "{B}");
             for (var boldArr_i = 0; boldArr_i < boldArr.size(); boldArr_i++) {
                 var boldText = boldArr.get(boldArr_i);
-                d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "]:[" + boldText + "]");
+                d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "]:[" + boldText + "]");
                 if (boldArr_i != 0) {
                     fileCommonConfig.fontBold = true;
                     var b = setFontStyle();
@@ -414,7 +470,7 @@ public class TS_FileTmcrFileHandler {
                 var italicArr = TS_StringUtils.toList(boldText, "{I}");
                 for (var italicArr_i = 0; italicArr_i < italicArr.size(); italicArr_i++) {
                     var italicText = italicArr.get(italicArr_i);
-                    d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "]:[" + italicText + "]");
+                    d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "]:[" + italicText + "]");
                     if (italicArr_i != 0) {
                         fileCommonConfig.fontItalic = true;
                         var b = setFontStyle();
@@ -425,12 +481,12 @@ public class TS_FileTmcrFileHandler {
                     var fontColorArr = TS_StringUtils.toList(italicText, "{FC_");
                     for (var fontColorArr_i = 0; fontColorArr_i < fontColorArr.size(); fontColorArr_i++) {
                         var fontColorText = fontColorArr.get(fontColorArr_i);
-                        d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "].colorText[" + fontColorArr_i + "]:[" + fontColorText + "]");
+                        d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "].colorText[" + fontColorArr_i + "]:[" + fontColorText + "]");
                         if (fontColorArr_i != 0) {
                             var i = fontColorText.indexOf("}");
                             if (i != -1) {
                                 var fontColor = TGS_CharSetCast.toLocaleUpperCase(fontColorText.substring(0, i));
-                                d.ci("addText2.fontColor to be parsed: [" + fontColor + "]");
+                                d.ci("addText_line.fontColor to be parsed: [" + fontColor + "]");
                                 fontColorText = fontColorText.substring(i + 1);
                                 var found = false;
                                 for (var cti = 0; cti < colors.size(); cti++) {
@@ -445,7 +501,7 @@ public class TS_FileTmcrFileHandler {
                                     }
                                 }
                                 if (!found) {
-                                    d.ci("addText2.fontColorText[" + fontColor + "] cannot be processed. BLACK will be used isntead");
+                                    d.ci("addText_line.fontColorText[" + fontColor + "] cannot be processed. BLACK will be used instead");
                                     fileCommonConfig.fontColor = colors.get(0);
                                     var b = setFontColor();
                                     if (!b) {
@@ -457,15 +513,15 @@ public class TS_FileTmcrFileHandler {
                         var fontHeightArr = TS_StringUtils.toList(fontColorText, "{FH_");
                         for (var fontHeightArr_i = 0; fontHeightArr_i < fontHeightArr.size(); fontHeightArr_i++) {
                             var fontHeightText = fontHeightArr.get(fontHeightArr_i);
-                            d.ci("addText2.mainText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "].colorText[" + fontColorArr_i + "].fontHeightText[" + fontHeightArr_i + "]:[" + fontHeightText + "]");
+                            d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "].colorText[" + fontColorArr_i + "].fontHeightText[" + fontHeightArr_i + "]:[" + fontHeightText + "]");
                             if (fontHeightArr_i != 0) {
                                 var i = fontHeightText.indexOf("}");
                                 if (i != -1) {
                                     var fontHeight = fontHeightText.substring(0, i);
-                                    d.ci("addText2.fontHeight to be parsed: [" + fontHeight + "]");
+                                    d.ci("addText_line.fontHeight to be parsed: [" + fontHeight + "]");
                                     var fsInt = TGS_CastUtils.toInteger(fontHeight);
                                     if (fsInt == null) {
-                                        d.ci("addText2.fontHeight[" + fontHeight + "] cannot be processed. 10 will be used instead.");
+                                        d.ci("addText_line.fontHeight[" + fontHeight + "] cannot be processed. 10 will be used instead.");
                                         fontHeightText = fontHeightText.substring(i + 1);
                                         fileCommonConfig.fontHeight = 10;
                                         var b = setFontHeight();
@@ -482,7 +538,7 @@ public class TS_FileTmcrFileHandler {
                                     }
                                 }
                             }
-                            result.value0 = result.value0 && addText3(fontHeightText);
+                            result.value0 = result.value0 && addText_do(fontHeightText);
                         }
                     }
                 }
@@ -491,7 +547,7 @@ public class TS_FileTmcrFileHandler {
         return result.value0;
     }
 
-    private boolean addText3(String text) {
+    private boolean addText_do(String text) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var stream = PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
@@ -501,7 +557,7 @@ public class TS_FileTmcrFileHandler {
             }
         });
         if (!result.value0) {
-            d.ce("addText3.CODE_ADD_TEXT HAD ERRORS.");
+            d.ce("addText_do.CODE_ADD_TEXT HAD ERRORS.");
             return false;
         }
         d.ci("  processed.");
