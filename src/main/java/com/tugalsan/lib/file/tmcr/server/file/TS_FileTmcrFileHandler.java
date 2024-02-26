@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
+    final public static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
     public TS_FileCommonConfig fileCommonConfig;
@@ -343,6 +343,7 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
+    @Deprecated //TODO PAN UNICODE HADLEING NOT WORKING
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             return true;
@@ -351,13 +352,21 @@ public class TS_FileTmcrFileHandler {
             return addText_fonted(fullText);
         }
         var codePoints = fullText.codePoints().toArray();
-        fileCommonConfig.fontPanUnicodeActive = false;
+        if (fileCommonConfig.fontPanUnicodeActive) {
+            fileCommonConfig.fontPanUnicodeActive = false;
+            setFontStyle();
+        }
         var sb = new StringBuilder();
         var offset = 0;
-        for (var i = 0; i < codePoints.length; i++) {
-            var codePoint = codePoints[i];
+        for (var idx = 0; idx < codePoints.length; idx++) {
+            var codePoint = codePoints[idx];
             var isPanNeeded = fileCommonConfig.isPanNeeded(codePoint);
-            if (i == 0) {
+            if (d.infoEnable) {
+                sb.setLength(0);
+                sb.appendCodePoint(codePoint);
+                d.ci("addText", idx, codePoint, sb.toString(), isPanNeeded);
+            }
+            if (idx == 0) {
                 fileCommonConfig.fontPanUnicodeActive = isPanNeeded;
                 continue;
             }
@@ -369,31 +378,34 @@ public class TS_FileTmcrFileHandler {
             }
             if (fileCommonConfig.fontPanUnicodeActive == false && isPanNeeded) {
                 sb.setLength(0);
-                IntStream.range(offset, i)
-                        .map(idx -> codePoints[idx])
+                IntStream.range(offset, idx)
+                        .map(_idx -> codePoints[_idx])
                         .forEachOrdered(cp -> sb.appendCodePoint(cp));
                 var r = addText_fonted(sb.toString());
                 if (!r) {
                     return false;
                 }
-                offset = i;
+                offset = idx;
                 fileCommonConfig.fontPanUnicodeActive = true;
+                setFontStyle();
                 continue;
             }
             if (fileCommonConfig.fontPanUnicodeActive == true && !isPanNeeded) {
                 sb.setLength(0);
-                IntStream.range(offset, i)
-                        .map(idx -> codePoints[idx])
+                IntStream.range(offset, idx)
+                        .map(_idx -> codePoints[_idx])
                         .forEachOrdered(cp -> sb.appendCodePoint(cp));
                 var r = addText_fonted(sb.toString());
                 if (!r) {
                     return false;
                 }
-                offset = i;
+                offset = idx;
                 fileCommonConfig.fontPanUnicodeActive = false;
+                setFontStyle();
                 continue;
             }
         }
+        setFontStyle();
         sb.setLength(0);
         IntStream.range(offset, codePoints.length)
                 .map(idx -> codePoints[idx])
