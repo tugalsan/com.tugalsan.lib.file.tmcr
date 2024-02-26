@@ -344,61 +344,63 @@ public class TS_FileTmcrFileHandler {
     private final static List<String> colors = TGS_ListUtils.of();
 
     public boolean addText(String fullText) {
-        return addText_fonted(fullText);
-        //WHY BELOW CODE NOT WORKING :(. It would be grate to see UTF8Symbols on pdf
-//        if (fullText.isEmpty()) {
-//            return true;
-//        }
-//        var codePoints = fullText.codePoints().toArray();
-//        fileCommonConfig.fontPanUnicodeActive = false;
-//        var sb = new StringBuilder();
-//        var offset = 0;
-//        for (var i = 0; i < codePoints.length; i++) {
-//            var codePoint = codePoints[i];
-//            var isPanNeeded = fileCommonConfig.isPanNeeded(codePoint);
-//            if (i == 0) {
-//                fileCommonConfig.fontPanUnicodeActive = isPanNeeded;
-//                continue;
-//            }
-//            if (fileCommonConfig.fontPanUnicodeActive == false && !isPanNeeded) {
-//                continue;
-//            }
-//            if (fileCommonConfig.fontPanUnicodeActive == true && isPanNeeded) {
-//                continue;
-//            }
-//            if (fileCommonConfig.fontPanUnicodeActive == false && isPanNeeded) {
-//                sb.setLength(0);
-//                IntStream.range(offset, i)
-//                        .map(idx -> codePoints[idx])
-//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
-//                var r = addText_fonted(sb.toString());
-//                if (!r) {
-//                    return false;
-//                }
-//                offset = i;
-//                fileCommonConfig.fontPanUnicodeActive = true;
-//                continue;
-//            }
-//            if (fileCommonConfig.fontPanUnicodeActive == true && !isPanNeeded) {
-//                sb.setLength(0);
-//                IntStream.range(offset, i)
-//                        .map(idx -> codePoints[idx])
-//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
-//                var r = addText_fonted(sb.toString());
-//                if (!r) {
-//                    return false;
-//                }
-//                offset = i;
-//                fileCommonConfig.fontPanUnicodeActive = false;
-//                continue;
-//            }
-//        }
-//        sb.setLength(0);
-//        IntStream.range(offset, codePoints.length)
-//                .map(idx -> codePoints[idx])
-//                .forEachOrdered(cp -> sb.appendCodePoint(cp));
-//        return addText_fonted(sb.toString());
+        if (fullText.isEmpty()) {
+            return true;
+        }
+        if (!enablePreviewPanLetters) {
+            return addText_fonted(fullText);
+        }
+        var codePoints = fullText.codePoints().toArray();
+        fileCommonConfig.fontPanUnicodeActive = false;
+        var sb = new StringBuilder();
+        var offset = 0;
+        for (var i = 0; i < codePoints.length; i++) {
+            var codePoint = codePoints[i];
+            var isPanNeeded = fileCommonConfig.isPanNeeded(codePoint);
+            if (i == 0) {
+                fileCommonConfig.fontPanUnicodeActive = isPanNeeded;
+                continue;
+            }
+            if (fileCommonConfig.fontPanUnicodeActive == false && !isPanNeeded) {
+                continue;
+            }
+            if (fileCommonConfig.fontPanUnicodeActive == true && isPanNeeded) {
+                continue;
+            }
+            if (fileCommonConfig.fontPanUnicodeActive == false && isPanNeeded) {
+                sb.setLength(0);
+                IntStream.range(offset, i)
+                        .map(idx -> codePoints[idx])
+                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
+                var r = addText_fonted(sb.toString());
+                if (!r) {
+                    return false;
+                }
+                offset = i;
+                fileCommonConfig.fontPanUnicodeActive = true;
+                continue;
+            }
+            if (fileCommonConfig.fontPanUnicodeActive == true && !isPanNeeded) {
+                sb.setLength(0);
+                IntStream.range(offset, i)
+                        .map(idx -> codePoints[idx])
+                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
+                var r = addText_fonted(sb.toString());
+                if (!r) {
+                    return false;
+                }
+                offset = i;
+                fileCommonConfig.fontPanUnicodeActive = false;
+                continue;
+            }
+        }
+        sb.setLength(0);
+        IntStream.range(offset, codePoints.length)
+                .map(idx -> codePoints[idx])
+                .forEachOrdered(cp -> sb.appendCodePoint(cp));
+        return addText_fonted(sb.toString());
     }
+    public static boolean enablePreviewPanLetters = false;
 
     public boolean addText_fonted(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
