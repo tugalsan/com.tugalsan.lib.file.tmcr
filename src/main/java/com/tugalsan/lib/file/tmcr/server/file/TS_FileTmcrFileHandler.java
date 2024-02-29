@@ -35,6 +35,7 @@ public class TS_FileTmcrFileHandler {
 
     final public static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
+    public static boolean ENABLE_PREVIEW_PAN_LETTERS = false;
 
     public TS_FileCommonConfig fileCommonConfig;
     final public List<TS_FileCommonAbstract> files;
@@ -348,7 +349,7 @@ public class TS_FileTmcrFileHandler {
         if (fullText.isEmpty()) {
             return true;
         }
-        if (!enablePreviewPanLetters) {
+        if (!ENABLE_PREVIEW_PAN_LETTERS) {
             return addText_fonted(fullText);
         }
         var codePoints = fullText.codePoints().toArray();
@@ -412,7 +413,6 @@ public class TS_FileTmcrFileHandler {
                 .forEachOrdered(cp -> sb.appendCodePoint(cp));
         return addText_fonted(sb.toString());
     }
-    public static boolean enablePreviewPanLetters = false;
 
     public boolean addText_fonted(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
