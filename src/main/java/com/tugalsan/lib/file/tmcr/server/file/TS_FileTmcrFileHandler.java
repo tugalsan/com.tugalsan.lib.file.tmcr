@@ -23,6 +23,7 @@ import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.runnable.client.TGS_RunnableType2;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
+import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
@@ -343,16 +344,20 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
+    @Deprecated
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             d.ci("fullText", "fullText.isEmpty");
             return true;
         }
         var restText = fullText;
+        if (true) {//TODO SMART FONT SELECTOR
+            return addText_fonted(restText);
+        }
         for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
             d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "restText", restText);
             var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(restText);
-            if (canDisplayUpToIdx == 0) {
+            if (canDisplayUpToIdx == -1) {
                 d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == 0");
                 continue;
             }
@@ -366,8 +371,8 @@ public class TS_FileTmcrFileHandler {
                 d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "returned false");
                 return false;
             }
-            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "new restText", restText);
             restText = restText.substring(canDisplayUpToIdx);
+            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "new restText", restText);
         }
         return true;
     }
