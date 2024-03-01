@@ -343,74 +343,26 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    @Deprecated //TODO PAN-UNICODE HANDLING NOT WORKING
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             return true;
         }
-//        if (fileCommonConfig.fontFamilyFonts.size() == 1) {
-            return addText_fonted(fullText);
-//        }
-//        var codePoints = fullText.codePoints().toArray();
-//        if (fileCommonConfig.fontFamiliesOtherIdx != -1) {
-//            fileCommonConfig.fontFamiliesOtherIdx = -1;
-//            setFontStyle();
-//        }
-//        var sb = new StringBuilder();
-//        var offset = 0;
-//        for (var idx = 0; idx < codePoints.length; idx++) {
-//            var codePoint = codePoints[idx];
-//            var canDisplay = fileCommonConfig.canDisplay(codePoint);
-//            if (d.infoEnable) {
-//                sb.setLength(0);
-//                sb.appendCodePoint(codePoint);
-//                d.ci("addText", idx, codePoint, sb.toString(), canDisplay);
-//            }
-//            if (idx == 0) {
-//                fileCommonConfig.fontFamiliesOtherIdx = canDisplay ? -1 : 0;
-//                continue;
-//            }
-//            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && !canDisplay) {
-//                continue;
-//            }
-//            if (fileCommonConfig.fontFamiliesOtherIdx != -1 && canDisplay) {
-//                continue;
-//            }
-//            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && canDisplay) {
-//                sb.setLength(0);
-//                IntStream.range(offset, idx)
-//                        .map(_idx -> codePoints[_idx])
-//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
-//                var r = addText_fonted(sb.toString());
-//                if (!r) {
-//                    return false;
-//                }
-//                offset = idx;
-//                fileCommonConfig.fontFamiliesOtherIdx = 0;
-//                setFontStyle();
-//                continue;
-//            }
-//            if (fileCommonConfig.fontFamiliesOtherIdx == 0 && !canDisplay) {
-//                sb.setLength(0);
-//                IntStream.range(offset, idx)
-//                        .map(_idx -> codePoints[_idx])
-//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
-//                var r = addText_fonted(sb.toString());
-//                if (!r) {
-//                    return false;
-//                }
-//                offset = idx;
-//                fileCommonConfig.fontFamiliesOtherIdx = -1;
-//                setFontStyle();
-//                continue;
-//            }
-//        }
-//        setFontStyle();
-//        sb.setLength(0);
-//        IntStream.range(offset, codePoints.length)
-//                .map(idx -> codePoints[idx])
-//                .forEachOrdered(cp -> sb.appendCodePoint(cp));
-//        return addText_fonted(sb.toString());
+        var restText = fullText;
+        for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
+            var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(restText);
+            if (canDisplayUpToIdx == 0) {
+                continue;
+            }
+            if (canDisplayUpToIdx == restText.codePoints().count()) {
+                return addText_fonted(restText);
+            }
+            var canDisplayPartedText = restText.substring(0, canDisplayUpToIdx);
+            if (!addText_fonted(canDisplayPartedText)) {
+                return false;
+            }
+            restText = restText.substring(canDisplayUpToIdx);
+        }
+        return true;
     }
 
     public boolean addText_fonted(String fullText) {
