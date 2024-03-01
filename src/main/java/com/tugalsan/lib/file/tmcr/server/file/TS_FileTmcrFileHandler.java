@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
 
-    final public static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
+    final public static TS_Log d = TS_Log.of(true, TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
     public TS_FileCommonConfig fileCommonConfig;
@@ -345,21 +345,28 @@ public class TS_FileTmcrFileHandler {
 
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
+            d.ci("fullText", "fullText.isEmpty");
             return true;
         }
         var restText = fullText;
         for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
+            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "restText", restText);
             var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(restText);
             if (canDisplayUpToIdx == 0) {
+                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == 0");
                 continue;
             }
             if (canDisplayUpToIdx == restText.codePoints().count()) {
+                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == restText.codePoints().count()");
                 return addText_fonted(restText);
             }
             var canDisplayPartedText = restText.substring(0, canDisplayUpToIdx);
+            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayPartedText", canDisplayPartedText);
             if (!addText_fonted(canDisplayPartedText)) {
+                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "returned false");
                 return false;
             }
+            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "new restText", restText);
             restText = restText.substring(canDisplayUpToIdx);
         }
         return true;
