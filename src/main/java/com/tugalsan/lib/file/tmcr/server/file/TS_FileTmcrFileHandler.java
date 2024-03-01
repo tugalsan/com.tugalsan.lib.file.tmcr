@@ -351,33 +351,42 @@ public class TS_FileTmcrFileHandler {
             return true;
         }
         var restText = fullText;
-        if (true) {//TODO SMART FONT SELECTOR
-            return addText_fonted(restText);
-        }
-        for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
-            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "restText", restText);
-            var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(restText);
-            if (canDisplayUpToIdx == -1) {
-                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == 0");
-                continue;
-            }
-            if (canDisplayUpToIdx == restText.codePoints().count()) {
-                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == restText.codePoints().count()");
-                return addText_fonted(restText);
-            }
-            var canDisplayPartedText = restText.substring(0, canDisplayUpToIdx);
-            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayPartedText", canDisplayPartedText);
-            if (!addText_fonted(canDisplayPartedText)) {
-                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "returned false");
-                return false;
-            }
-            restText = restText.substring(canDisplayUpToIdx);
-            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "new restText", restText);
-        }
-        return true;
+//        fileCommonConfig.fontFamilyIdx = 0;
+//        return addText_parsedFont(new StringBuilder(fullText));
+////        if (true) {//TODO SMART FONT SELECTOR
+            return addText_canDisplay(restText);
+//        }
+//        for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
+//            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "restText", restText);
+//            var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(restText);
+//            if (canDisplayUpToIdx == -1) {
+//                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == 0");
+//                continue;
+//            }
+//            if (canDisplayUpToIdx == restText.codePoints().count()) {
+//                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == restText.codePoints().count()");
+//                return addText_canDisplay(restText);
+//            }
+//            var canDisplayPartedText = restText.substring(0, canDisplayUpToIdx);
+//            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayPartedText", canDisplayPartedText);
+//            if (!addText_canDisplay(canDisplayPartedText)) {
+//                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "returned false");
+//                return false;
+//            }
+//            restText = restText.substring(canDisplayUpToIdx);
+//            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "new restText", restText);
+//        }
+//        return true;
     }
+    
+//    private boolean addText_parsedFont(StringBuilder fullText) {
+//        var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(fullText.toString());
+//        if (canDisplayUpToIdx == -1){
+//            
+//        }
+//    }
 
-    public boolean addText_fonted(String fullText) {
+    private boolean addText_canDisplay(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var tokens = TS_StringUtils.toList(fullText, "\n");
         IntStream.range(0, tokens.size()).forEachOrdered(i -> {
