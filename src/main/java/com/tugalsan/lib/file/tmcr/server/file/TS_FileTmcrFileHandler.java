@@ -348,69 +348,69 @@ public class TS_FileTmcrFileHandler {
         if (fullText.isEmpty()) {
             return true;
         }
-        if (fileCommonConfig.fontFamiliesFontOther.isEmpty()) {
+//        if (fileCommonConfig.fontFamilyFonts.size() == 1) {
             return addText_fonted(fullText);
-        }
-        var codePoints = fullText.codePoints().toArray();
-        if (fileCommonConfig.fontFamiliesOtherIdx != -1) {
-            fileCommonConfig.fontFamiliesOtherIdx = -1;
-            setFontStyle();
-        }
-        var sb = new StringBuilder();
-        var offset = 0;
-        for (var idx = 0; idx < codePoints.length; idx++) {
-            var codePoint = codePoints[idx];
-            var canDisplay = fileCommonConfig.canDisplay(codePoint);
-            if (d.infoEnable) {
-                sb.setLength(0);
-                sb.appendCodePoint(codePoint);
-                d.ci("addText", idx, codePoint, sb.toString(), canDisplay);
-            }
-            if (idx == 0) {
-                fileCommonConfig.fontFamiliesOtherIdx = canDisplay ? -1 : 0;
-                continue;
-            }
-            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && !canDisplay) {
-                continue;
-            }
-            if (fileCommonConfig.fontFamiliesOtherIdx != -1 && canDisplay) {
-                continue;
-            }
-            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && canDisplay) {
-                sb.setLength(0);
-                IntStream.range(offset, idx)
-                        .map(_idx -> codePoints[_idx])
-                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
-                var r = addText_fonted(sb.toString());
-                if (!r) {
-                    return false;
-                }
-                offset = idx;
-                fileCommonConfig.fontFamiliesOtherIdx = 0;
-                setFontStyle();
-                continue;
-            }
-            if (fileCommonConfig.fontFamiliesOtherIdx == 0 && !canDisplay) {
-                sb.setLength(0);
-                IntStream.range(offset, idx)
-                        .map(_idx -> codePoints[_idx])
-                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
-                var r = addText_fonted(sb.toString());
-                if (!r) {
-                    return false;
-                }
-                offset = idx;
-                fileCommonConfig.fontFamiliesOtherIdx = -1;
-                setFontStyle();
-                continue;
-            }
-        }
-        setFontStyle();
-        sb.setLength(0);
-        IntStream.range(offset, codePoints.length)
-                .map(idx -> codePoints[idx])
-                .forEachOrdered(cp -> sb.appendCodePoint(cp));
-        return addText_fonted(sb.toString());
+//        }
+//        var codePoints = fullText.codePoints().toArray();
+//        if (fileCommonConfig.fontFamiliesOtherIdx != -1) {
+//            fileCommonConfig.fontFamiliesOtherIdx = -1;
+//            setFontStyle();
+//        }
+//        var sb = new StringBuilder();
+//        var offset = 0;
+//        for (var idx = 0; idx < codePoints.length; idx++) {
+//            var codePoint = codePoints[idx];
+//            var canDisplay = fileCommonConfig.canDisplay(codePoint);
+//            if (d.infoEnable) {
+//                sb.setLength(0);
+//                sb.appendCodePoint(codePoint);
+//                d.ci("addText", idx, codePoint, sb.toString(), canDisplay);
+//            }
+//            if (idx == 0) {
+//                fileCommonConfig.fontFamiliesOtherIdx = canDisplay ? -1 : 0;
+//                continue;
+//            }
+//            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && !canDisplay) {
+//                continue;
+//            }
+//            if (fileCommonConfig.fontFamiliesOtherIdx != -1 && canDisplay) {
+//                continue;
+//            }
+//            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && canDisplay) {
+//                sb.setLength(0);
+//                IntStream.range(offset, idx)
+//                        .map(_idx -> codePoints[_idx])
+//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
+//                var r = addText_fonted(sb.toString());
+//                if (!r) {
+//                    return false;
+//                }
+//                offset = idx;
+//                fileCommonConfig.fontFamiliesOtherIdx = 0;
+//                setFontStyle();
+//                continue;
+//            }
+//            if (fileCommonConfig.fontFamiliesOtherIdx == 0 && !canDisplay) {
+//                sb.setLength(0);
+//                IntStream.range(offset, idx)
+//                        .map(_idx -> codePoints[_idx])
+//                        .forEachOrdered(cp -> sb.appendCodePoint(cp));
+//                var r = addText_fonted(sb.toString());
+//                if (!r) {
+//                    return false;
+//                }
+//                offset = idx;
+//                fileCommonConfig.fontFamiliesOtherIdx = -1;
+//                setFontStyle();
+//                continue;
+//            }
+//        }
+//        setFontStyle();
+//        sb.setLength(0);
+//        IntStream.range(offset, codePoints.length)
+//                .map(idx -> codePoints[idx])
+//                .forEachOrdered(cp -> sb.appendCodePoint(cp));
+//        return addText_fonted(sb.toString());
     }
 
     public boolean addText_fonted(String fullText) {
