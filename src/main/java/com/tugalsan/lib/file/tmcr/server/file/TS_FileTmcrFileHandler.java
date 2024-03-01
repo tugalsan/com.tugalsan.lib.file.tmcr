@@ -35,7 +35,6 @@ public class TS_FileTmcrFileHandler {
 
     final public static TS_Log d = TS_Log.of(TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
-    public static boolean ENABLE_PREVIEW_PAN_LETTERS = false;
 
     public TS_FileCommonConfig fileCommonConfig;
     final public List<TS_FileCommonAbstract> files;
@@ -349,35 +348,35 @@ public class TS_FileTmcrFileHandler {
         if (fullText.isEmpty()) {
             return true;
         }
-        if (!ENABLE_PREVIEW_PAN_LETTERS) {
+        if (fileCommonConfig.fontFamiliesFontOther.isEmpty()) {
             return addText_fonted(fullText);
         }
         var codePoints = fullText.codePoints().toArray();
-        if (fileCommonConfig.fontPanUnicodeActive) {
-            fileCommonConfig.fontPanUnicodeActive = false;
+        if (fileCommonConfig.fontFamiliesOtherIdx != -1) {
+            fileCommonConfig.fontFamiliesOtherIdx = -1;
             setFontStyle();
         }
         var sb = new StringBuilder();
         var offset = 0;
         for (var idx = 0; idx < codePoints.length; idx++) {
             var codePoint = codePoints[idx];
-            var isPanNeeded = fileCommonConfig.isPanNeeded(codePoint);
+            var canDisplay = fileCommonConfig.canDisplay(codePoint);
             if (d.infoEnable) {
                 sb.setLength(0);
                 sb.appendCodePoint(codePoint);
-                d.ci("addText", idx, codePoint, sb.toString(), isPanNeeded);
+                d.ci("addText", idx, codePoint, sb.toString(), canDisplay);
             }
             if (idx == 0) {
-                fileCommonConfig.fontPanUnicodeActive = isPanNeeded;
+                fileCommonConfig.fontFamiliesOtherIdx = canDisplay ? -1 : 0;
                 continue;
             }
-            if (fileCommonConfig.fontPanUnicodeActive == false && !isPanNeeded) {
+            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && !canDisplay) {
                 continue;
             }
-            if (fileCommonConfig.fontPanUnicodeActive == true && isPanNeeded) {
+            if (fileCommonConfig.fontFamiliesOtherIdx != -1 && canDisplay) {
                 continue;
             }
-            if (fileCommonConfig.fontPanUnicodeActive == false && isPanNeeded) {
+            if (fileCommonConfig.fontFamiliesOtherIdx == -1 && canDisplay) {
                 sb.setLength(0);
                 IntStream.range(offset, idx)
                         .map(_idx -> codePoints[_idx])
@@ -387,11 +386,11 @@ public class TS_FileTmcrFileHandler {
                     return false;
                 }
                 offset = idx;
-                fileCommonConfig.fontPanUnicodeActive = true;
+                fileCommonConfig.fontFamiliesOtherIdx = 0;
                 setFontStyle();
                 continue;
             }
-            if (fileCommonConfig.fontPanUnicodeActive == true && !isPanNeeded) {
+            if (fileCommonConfig.fontFamiliesOtherIdx == 0 && !canDisplay) {
                 sb.setLength(0);
                 IntStream.range(offset, idx)
                         .map(_idx -> codePoints[_idx])
@@ -401,7 +400,7 @@ public class TS_FileTmcrFileHandler {
                     return false;
                 }
                 offset = idx;
-                fileCommonConfig.fontPanUnicodeActive = false;
+                fileCommonConfig.fontFamiliesOtherIdx = -1;
                 setFontStyle();
                 continue;
             }
