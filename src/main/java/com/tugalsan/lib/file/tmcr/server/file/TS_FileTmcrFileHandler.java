@@ -344,7 +344,7 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    @Deprecated
+    @Deprecated//TODO font selection acc. canDisplay
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             d.ci("fullText", "fullText.isEmpty");
