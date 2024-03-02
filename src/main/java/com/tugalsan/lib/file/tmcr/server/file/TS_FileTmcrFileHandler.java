@@ -19,17 +19,18 @@ import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.file.pdf.server.TS_FilePdf;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
+import com.tugalsan.api.font.server.TS_FontUtils;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.runnable.client.TGS_RunnableType2;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
-import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
+import java.awt.Font;
 import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
@@ -344,17 +345,57 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
+    private Font getFont(int idx) {
+        if (fileCommonConfig.fontBold && fileCommonConfig.fontItalic) {
+            return fileCommonConfig.fontFamilyFonts.get(idx).boldItalic();
+        }
+        if (fileCommonConfig.fontBold) {
+            return fileCommonConfig.fontFamilyFonts.get(idx).bold();
+        }
+        if (fileCommonConfig.fontItalic) {
+            return fileCommonConfig.fontFamilyFonts.get(idx).italic();
+        }
+        return fileCommonConfig.fontFamilyFonts.get(idx).regular();
+    }
+
     @Deprecated//TODO font selection acc. canDisplay
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             d.ci("fullText", "fullText.isEmpty");
             return true;
         }
-        var restText = fullText;
+//        if (TS_FontUtils.canDisplay(getFont(0), fullText)) {
+            return addText_canDisplay(fullText);
+//        }
+//        var fontFamilySize = fileCommonConfig.fontFamilyFonts.size();
+//        var codePointsSize = (int) fullText.codePoints().count();
+//        List<Integer> sbIdx = TGS_StreamUtils.toLst(
+//                IntStream.range(0, codePointsSize)
+//                        .map(cpIdx -> 0)
+//        );
+//        IntStream.range(0, codePointsSize).forEachOrdered(cpIdx -> {
+//            var cp = fullText.codePointAt(cpIdx);
+//            for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
+//                var font = getFont(fontFamilyIdx);
+//                if (TS_FontUtils.canDisplay(font, cp)) {
+//                    sbIdx.set(cpIdx, fontFamilyIdx);
+//                }
+//            }
+//        });
+//        for (var cpIdx = 0; cpIdx < codePointsSize; cpIdx++) {
+//            if (cpIdx == 0){
+//                return;
+//            }
+//        }
+
+
+        //OLD CODE
+//        var restText = fullText;
+
 //        fileCommonConfig.fontFamilyIdx = 0;
 //        return addText_parsedFont(new StringBuilder(fullText));
 ////        if (true) {//TODO SMART FONT SELECTOR
-            return addText_canDisplay(restText);
+//        return addText_canDisplay(restText);
 //        }
 //        for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
 //            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "restText", restText);
@@ -378,14 +419,13 @@ public class TS_FileTmcrFileHandler {
 //        }
 //        return true;
     }
-    
+
 //    private boolean addText_parsedFont(StringBuilder fullText) {
 //        var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(fullText.toString());
 //        if (canDisplayUpToIdx == -1){
 //            
 //        }
 //    }
-
     private boolean addText_canDisplay(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var tokens = TS_StringUtils.toList(fullText, "\n");

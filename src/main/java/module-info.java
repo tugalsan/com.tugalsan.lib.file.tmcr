@@ -5,6 +5,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.coronator;
     requires com.tugalsan.api.callable;
     requires com.tugalsan.api.file;
+    requires com.tugalsan.api.font;
     requires com.tugalsan.api.file.common;
     requires com.tugalsan.api.file.docx;
     requires com.tugalsan.api.file.xlsx;
