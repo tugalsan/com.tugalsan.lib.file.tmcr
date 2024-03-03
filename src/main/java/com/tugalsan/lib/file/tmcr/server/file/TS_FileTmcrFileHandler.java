@@ -31,6 +31,9 @@ import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
 import java.awt.Font;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
+import java.text.StringCharacterIterator;
 import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
@@ -345,28 +348,65 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    private Font getFont(int idx) {
-        if (fileCommonConfig.fontBold && fileCommonConfig.fontItalic) {
-            return fileCommonConfig.fontFamilyFonts.get(idx).boldItalic();
-        }
-        if (fileCommonConfig.fontBold) {
-            return fileCommonConfig.fontFamilyFonts.get(idx).bold();
-        }
-        if (fileCommonConfig.fontItalic) {
-            return fileCommonConfig.fontFamilyFonts.get(idx).italic();
-        }
-        return fileCommonConfig.fontFamilyFonts.get(idx).regular();
+    private void setFontIdx(Font font) {
+        var foundIdx = IntStream.range(0, fileCommonConfig.fontFamilyPaths.size())
+                .filter(fonFamilyIdx -> getFont(fonFamilyIdx).equals(font))
+                .findAny().orElse(-1);
+        fileCommonConfig.fontFamilyIdx = foundIdx == -1 ? 0 : foundIdx;
     }
 
-    @Deprecated//TODO font selection acc. canDisplay
+    private Font getFont(int fontFamilyIdx) {
+        if (fileCommonConfig.fontBold && fileCommonConfig.fontItalic) {
+            return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).boldItalic();
+        }
+        if (fileCommonConfig.fontBold) {
+            return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).bold();
+        }
+        if (fileCommonConfig.fontItalic) {
+            return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).italic();
+        }
+        return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).regular();
+    }
+    
+    //https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
+    private AttributedString fontedIterator(String text) {
+        var attrText = new AttributedString(text);
+        var charSize = text.length();
+        var charRunStartIdx = 0;
+        var charIterator = new StringCharacterIterator(text);
+        while (charRunStartIdx >= 0) {
+            Font matchingFont = null;
+            for (var fontFamilyIdx = 0; fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fontFamilyIdx++) {
+                var font = getFont(fontFamilyIdx);
+                var charRunEndIdx = font.canDisplayUpTo(charIterator, charRunStartIdx, charSize);
+                if (charRunEndIdx != charRunStartIdx) {
+                    matchingFont = getFont(fontFamilyIdx);
+                    attrText.addAttribute(TextAttribute.FONT, matchingFont,
+                            charRunStartIdx, charRunEndIdx >= 0 ? charRunEndIdx : charSize);
+                    charRunStartIdx = charRunEndIdx;
+                    break;
+                }
+            }
+            if (matchingFont == null) {
+                var index = charIterator.getIndex();
+                throw new IllegalArgumentException(String.format(
+                        "Character at index %d (U+%04X) "
+                        + "cannot be displayed by any of %s",
+                        index, text.codePointAt(index), fileCommonConfig.fontFamilyFonts));
+            }
+        }
+        return attrText;
+    }
+
+    @Deprecated//TODO font selection acc. canDisplay not tested
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             d.ci("fullText", "fullText.isEmpty");
             return true;
         }
-//        if (TS_FontUtils.canDisplay(getFont(0), fullText)) {
+        if (TS_FontUtils.canDisplay(getFont(0), fullText)) {
             return addText_canDisplay(fullText);
-//        }
+        }
 //        var fontFamilySize = fileCommonConfig.fontFamilyFonts.size();
 //        var codePointsSize = (int) fullText.codePoints().count();
 //        List<Integer> sbIdx = TGS_StreamUtils.toLst(
@@ -388,44 +428,21 @@ public class TS_FileTmcrFileHandler {
 //            }
 //        }
 
-
-        //OLD CODE
-//        var restText = fullText;
-
-//        fileCommonConfig.fontFamilyIdx = 0;
-//        return addText_parsedFont(new StringBuilder(fullText));
-////        if (true) {//TODO SMART FONT SELECTOR
-//        return addText_canDisplay(restText);
-//        }
-//        for (fileCommonConfig.fontFamilyIdx = 0; fileCommonConfig.fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fileCommonConfig.fontFamilyIdx++) {
-//            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "restText", restText);
-//            var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(restText);
-//            if (canDisplayUpToIdx == -1) {
-//                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == 0");
-//                continue;
-//            }
-//            if (canDisplayUpToIdx == restText.codePoints().count()) {
-//                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayUpToIdx == restText.codePoints().count()");
-//                return addText_canDisplay(restText);
-//            }
-//            var canDisplayPartedText = restText.substring(0, canDisplayUpToIdx);
-//            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "canDisplayPartedText", canDisplayPartedText);
-//            if (!addText_canDisplay(canDisplayPartedText)) {
-//                d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "returned false");
-//                return false;
-//            }
-//            restText = restText.substring(canDisplayUpToIdx);
-//            d.ci("fullText", "fontFamilyIdx", fileCommonConfig.fontFamilyIdx, "new restText", restText);
-//        }
-//        return true;
+        var attributedCharIterator = fontedIterator(fullText).getIterator();
+        while (attributedCharIterator.getIndex() < attributedCharIterator.getEndIndex()) {
+            var runLimit = attributedCharIterator.getRunLimit();
+            var runText = fullText.substring(attributedCharIterator.getIndex(), runLimit);
+            var font = (Font) attributedCharIterator.getAttribute(TextAttribute.FONT);
+            setFontIdx(font);
+            var result = addText_canDisplay(runText);
+            if (!result) {
+                return false;
+            }
+            attributedCharIterator.setIndex(runLimit);
+        }
+        return true;
     }
 
-//    private boolean addText_parsedFont(StringBuilder fullText) {
-//        var canDisplayUpToIdx = fileCommonConfig.canDisplayUpTo(fullText.toString());
-//        if (canDisplayUpToIdx == -1){
-//            
-//        }
-//    }
     private boolean addText_canDisplay(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
         var tokens = TS_StringUtils.toList(fullText, "\n");
