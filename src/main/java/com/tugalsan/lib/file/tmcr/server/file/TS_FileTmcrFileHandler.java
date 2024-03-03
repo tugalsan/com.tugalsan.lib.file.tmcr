@@ -367,7 +367,7 @@ public class TS_FileTmcrFileHandler {
         }
         return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).regular();
     }
-    
+
     //https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
     private AttributedString fontedIterator(String text) {
         var attrText = new AttributedString(text);
@@ -428,15 +428,16 @@ public class TS_FileTmcrFileHandler {
 
         var attributedCharIterator = fontedIterator(fullText).getIterator();
         while (attributedCharIterator.getIndex() < attributedCharIterator.getEndIndex()) {
-            var runLimit = attributedCharIterator.getRunLimit();
-            var runText = fullText.substring(attributedCharIterator.getIndex(), runLimit);
+            var runCharIdxCurrent = attributedCharIterator.getIndex();
+            var runCharIdxLimit = attributedCharIterator.getRunLimit();
+            var runText = fullText.substring(runCharIdxCurrent, runCharIdxLimit);
             var font = (Font) attributedCharIterator.getAttribute(TextAttribute.FONT);
             setFontIdx(font);
             var result = addText_canDisplay(runText);
             if (!result) {
                 return false;
             }
-            attributedCharIterator.setIndex(runLimit);
+            attributedCharIterator.setIndex(runCharIdxLimit);
         }
         return true;
     }
