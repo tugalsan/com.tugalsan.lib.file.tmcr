@@ -418,7 +418,7 @@ public class TS_FileTmcrFileHandler {
 //            for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
 //                var font = getFont(fontFamilyIdx);
 //                if (TS_FontUtils.canDisplay(font, cp)) {
-//                    sbIdx.set(cpIdx, fontFamilyIdx);
+//                    sbIdx.set(cpIdx, fontFamilyIdx);return;
 //                }
 //            }
 //        });
