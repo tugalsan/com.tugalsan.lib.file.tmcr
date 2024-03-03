@@ -423,9 +423,7 @@ public class TS_FileTmcrFileHandler {
 //            }
 //        });
 //        for (var cpIdx = 0; cpIdx < codePointsSize; cpIdx++) {
-//            if (cpIdx == 0){
-//                return;
-//            }
+//            //TODO...
 //        }
 
         var attributedCharIterator = fontedIterator(fullText).getIterator();
