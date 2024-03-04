@@ -392,7 +392,7 @@ public class TS_FileTmcrFileHandler {
         var codePointsSize = (int) fullTextThatCanBeDisplayed.codePoints().count();
         IntStream.range(0, codePointsSize).forEachOrdered(cpIdx -> {
             var cp = fullTextThatCanBeDisplayed.codePointAt(cpIdx);
-            var decidedFontFamilyIdx = TGS_Coronator.ofInt().coronateAs(__ -> {//devide fontIdx
+            var decidedFontFamilyIdx = TGS_Coronator.ofInt().coronateAs(__ -> {
                 for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
                     if (TS_FontUtils.canDisplay(getFont(fontFamilyIdx), cp)) {
                         return fontFamilyIdx;
