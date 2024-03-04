@@ -31,9 +31,6 @@ import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
 import java.awt.Font;
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
-import java.text.StringCharacterIterator;
 import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
@@ -348,13 +345,12 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-    private void setFontIdx(Font font) {
-        var foundIdx = IntStream.range(0, fileCommonConfig.fontFamilyPaths.size())
-                .filter(fonFamilyIdx -> getFont(fonFamilyIdx).equals(font))
-                .findAny().orElse(-1);
-        fileCommonConfig.fontFamilyIdx = foundIdx == -1 ? 0 : foundIdx;
-    }
-
+//    private void setFontIdx(Font font) {
+//        var foundIdx = IntStream.range(0, fileCommonConfig.fontFamilyPaths.size())
+//                .filter(fonFamilyIdx -> getFont(fonFamilyIdx).equals(font))
+//                .findAny().orElse(-1);
+//        fileCommonConfig.fontFamilyIdx = foundIdx == -1 ? 0 : foundIdx;
+//    }
     private Font getFont(int fontFamilyIdx) {
         if (fileCommonConfig.fontBold && fileCommonConfig.fontItalic) {
             return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).boldItalic();
@@ -368,36 +364,35 @@ public class TS_FileTmcrFileHandler {
         return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).regular();
     }
 
-    //https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
-    private AttributedString fontedIterator(String text) {
-        var attrText = new AttributedString(text);
-        var charSize = text.length();
-        var charRunStartIdx = 0;
-        var charIterator = new StringCharacterIterator(text);
-        while (charRunStartIdx >= 0) {
-            Font matchingFont = null;
-            for (var fontFamilyIdx = 0; fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fontFamilyIdx++) {
-                var font = getFont(fontFamilyIdx);
-                var charRunEndIdx = font.canDisplayUpTo(charIterator, charRunStartIdx, charSize);
-                if (charRunEndIdx != charRunStartIdx) {
-                    matchingFont = getFont(fontFamilyIdx);
-                    attrText.addAttribute(TextAttribute.FONT, matchingFont,
-                            charRunStartIdx, charRunEndIdx >= 0 ? charRunEndIdx : charSize);
-                    charRunStartIdx = charRunEndIdx;
-                    break;
-                }
-            }
-            if (matchingFont == null) {
-                var index = charIterator.getIndex();
-                throw new IllegalArgumentException(String.format(
-                        "Character at index %d (U+%04X) "
-                        + "cannot be displayed by any of %s",
-                        index, text.codePointAt(index), fileCommonConfig.fontFamilyFonts));
-            }
-        }
-        return attrText;
-    }
-
+//    //https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
+//    private AttributedString fontedIterator(String text) {
+//        var attrText = new AttributedString(text);
+//        var charSize = text.length();
+//        var charRunStartIdx = 0;
+//        var charIterator = new StringCharacterIterator(text);
+//        while (charRunStartIdx >= 0) {
+//            Font matchingFont = null;
+//            for (var fontFamilyIdx = 0; fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fontFamilyIdx++) {
+//                var font = getFont(fontFamilyIdx);
+//                var charRunEndIdx = font.canDisplayUpTo(charIterator, charRunStartIdx, charSize);
+//                if (charRunEndIdx != charRunStartIdx) {
+//                    matchingFont = getFont(fontFamilyIdx);
+//                    attrText.addAttribute(TextAttribute.FONT, matchingFont,
+//                            charRunStartIdx, charRunEndIdx >= 0 ? charRunEndIdx : charSize);
+//                    charRunStartIdx = charRunEndIdx;
+//                    break;
+//                }
+//            }
+//            if (matchingFont == null) {
+//                var index = charIterator.getIndex();
+//                throw new IllegalArgumentException(String.format(
+//                        "Character at index %d (U+%04X) "
+//                        + "cannot be displayed by any of %s",
+//                        index, text.codePointAt(index), fileCommonConfig.fontFamilyFonts));
+//            }
+//        }
+//        return attrText;
+//    }
     @Deprecated//TODO font selection acc. canDisplay not tested
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
@@ -407,38 +402,73 @@ public class TS_FileTmcrFileHandler {
         if (TS_FontUtils.canDisplay(getFont(0), fullText)) {
             return addText_canDisplay(fullText);
         }
-//        var fontFamilySize = fileCommonConfig.fontFamilyFonts.size();
-//        var codePointsSize = (int) fullText.codePoints().count();
-//        List<Integer> sbIdx = TGS_StreamUtils.toLst(
-//                IntStream.range(0, codePointsSize)
-//                        .map(cpIdx -> 0)
-//        );
-//        IntStream.range(0, codePointsSize).forEachOrdered(cpIdx -> {
-//            var cp = fullText.codePointAt(cpIdx);
-//            for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
-//                var font = getFont(fontFamilyIdx);
-//                if (TS_FontUtils.canDisplay(font, cp)) {
-//                    sbIdx.set(cpIdx, fontFamilyIdx);return;
-//                }
-//            }
-//        });
-//        for (var cpIdx = 0; cpIdx < codePointsSize; cpIdx++) {
-//            //TODO...
-//        }
-
-        var attributedCharIterator = fontedIterator(fullText).getIterator();
-        while (attributedCharIterator.getIndex() < attributedCharIterator.getEndIndex()) {
-            var runCharIdxCurrent = attributedCharIterator.getIndex();
-            var runCharIdxLimit = attributedCharIterator.getRunLimit();
-            var runText = fullText.substring(runCharIdxCurrent, runCharIdxLimit);
-            var font = (Font) attributedCharIterator.getAttribute(TextAttribute.FONT);
-            setFontIdx(font);
-            var result = addText_canDisplay(runText);
-            if (!result) {
-                return false;
-            }
-            attributedCharIterator.setIndex(runCharIdxLimit);
+        var fontFamilySize = fileCommonConfig.fontFamilyFonts.size();
+        var fullTextThatCanBeDisplayed = TGS_Coronator.ofStr().coronateAs(__ -> {//change unsupported codePoints to '?'
+            var codePointUnsupported = "?".codePointAt(0);
+            TGS_Tuple1<Boolean> codePointUnsupportedFound = TGS_Tuple1.of(false);
+            var sb = new StringBuilder();
+            fullText.codePoints().map(cp -> {
+                for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
+                    var font = getFont(fontFamilyIdx);
+                    if (TS_FontUtils.canDisplay(font, cp)) {
+                        return cp;
+                    }
+                }
+                codePointUnsupportedFound.value0 = true;
+                return codePointUnsupported;
+            }).forEachOrdered(cp -> sb.appendCodePoint(cp));
+            return codePointUnsupportedFound.value0 ? sb.toString() : fullText;
+        });
+        {//prepare init font
+            fileCommonConfig.fontFamilyIdx = 0;
+            setFontStyle();
         }
+        //decide fontidx and send text to addText_canDisplay
+        var sb = new StringBuilder();
+        var codePointsSize = (int) fullTextThatCanBeDisplayed.codePoints().count();
+        IntStream.range(0, codePointsSize).forEachOrdered(cpIdx -> {
+            var cp = fullTextThatCanBeDisplayed.codePointAt(cpIdx);
+            var decidedFontFamilyIdx = TGS_Coronator.ofInt().coronateAs(__ -> {//devide fontIdx
+                for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
+                    if (TS_FontUtils.canDisplay(getFont(fontFamilyIdx), cp)) {
+                        return fontFamilyIdx;
+                    }
+                }
+                return 0;
+            });
+            if (decidedFontFamilyIdx != fileCommonConfig.fontFamilyIdx) {//If new font detected
+                if (!sb.isEmpty()) {//send previous data to addText_canDisplay
+                    addText_canDisplay(sb.toString());
+                    sb.setLength(0);
+                }
+                {//prepare new font
+                    fileCommonConfig.fontFamilyIdx = decidedFontFamilyIdx;
+                    setFontStyle();
+                }
+            }
+            sb.appendCodePoint(cp);//buffer to be sent later time
+        });
+        addText_canDisplay(sb.toString());//send the last batch
+        {//prepare default font before exiting func
+            fileCommonConfig.fontFamilyIdx = 0;
+            setFontStyle();
+        }
+
+//        {//https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
+//            var attributedCharIterator = fontedIterator(fullText).getIterator();
+//            while (attributedCharIterator.getIndex() < attributedCharIterator.getEndIndex()) {
+//                var runCharIdxCurrent = attributedCharIterator.getIndex();
+//                var runCharIdxLimit = attributedCharIterator.getRunLimit();
+//                var runText = fullText.substring(runCharIdxCurrent, runCharIdxLimit);
+//                var font = (Font) attributedCharIterator.getAttribute(TextAttribute.FONT);
+//                setFontIdx(font);
+//                var result = addText_canDisplay(runText);
+//                if (!result) {
+//                    return false;
+//                }
+//                attributedCharIterator.setIndex(runCharIdxLimit);
+//            }
+//        }
         return true;
     }
 
