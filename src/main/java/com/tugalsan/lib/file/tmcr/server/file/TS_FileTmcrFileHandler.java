@@ -345,12 +345,6 @@ public class TS_FileTmcrFileHandler {
 
     private final static List<String> colors = TGS_ListUtils.of();
 
-//    private void setFontIdx(Font font) {
-//        var foundIdx = IntStream.range(0, fileCommonConfig.fontFamilyPaths.size())
-//                .filter(fonFamilyIdx -> getFont(fonFamilyIdx).equals(font))
-//                .findAny().orElse(-1);
-//        fileCommonConfig.fontFamilyIdx = foundIdx == -1 ? 0 : foundIdx;
-//    }
     private Font getFont(int fontFamilyIdx) {
         if (fileCommonConfig.fontBold && fileCommonConfig.fontItalic) {
             return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).boldItalic();
@@ -364,36 +358,6 @@ public class TS_FileTmcrFileHandler {
         return fileCommonConfig.fontFamilyFonts.get(fontFamilyIdx).regular();
     }
 
-//    //https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
-//    private AttributedString fontedIterator(String text) {
-//        var attrText = new AttributedString(text);
-//        var charSize = text.length();
-//        var charRunStartIdx = 0;
-//        var charIterator = new StringCharacterIterator(text);
-//        while (charRunStartIdx >= 0) {
-//            Font matchingFont = null;
-//            for (var fontFamilyIdx = 0; fontFamilyIdx < fileCommonConfig.fontFamilyFonts.size(); fontFamilyIdx++) {
-//                var font = getFont(fontFamilyIdx);
-//                var charRunEndIdx = font.canDisplayUpTo(charIterator, charRunStartIdx, charSize);
-//                if (charRunEndIdx != charRunStartIdx) {
-//                    matchingFont = getFont(fontFamilyIdx);
-//                    attrText.addAttribute(TextAttribute.FONT, matchingFont,
-//                            charRunStartIdx, charRunEndIdx >= 0 ? charRunEndIdx : charSize);
-//                    charRunStartIdx = charRunEndIdx;
-//                    break;
-//                }
-//            }
-//            if (matchingFont == null) {
-//                var index = charIterator.getIndex();
-//                throw new IllegalArgumentException(String.format(
-//                        "Character at index %d (U+%04X) "
-//                        + "cannot be displayed by any of %s",
-//                        index, text.codePointAt(index), fileCommonConfig.fontFamilyFonts));
-//            }
-//        }
-//        return attrText;
-//    }
-    @Deprecated//TODO font selection acc. canDisplay not tested
     public boolean addText(String fullText) {
         if (fullText.isEmpty()) {
             d.ci("fullText", "fullText.isEmpty");
@@ -453,22 +417,6 @@ public class TS_FileTmcrFileHandler {
             fileCommonConfig.fontFamilyIdx = 0;
             setFontStyle();
         }
-
-//        {//https://stackoverflow.com/questions/78094522/in-java-how-to-fragment-string-according-to-font-candisplay-method
-//            var attributedCharIterator = fontedIterator(fullText).getIterator();
-//            while (attributedCharIterator.getIndex() < attributedCharIterator.getEndIndex()) {
-//                var runCharIdxCurrent = attributedCharIterator.getIndex();
-//                var runCharIdxLimit = attributedCharIterator.getRunLimit();
-//                var runText = fullText.substring(runCharIdxCurrent, runCharIdxLimit);
-//                var font = (Font) attributedCharIterator.getAttribute(TextAttribute.FONT);
-//                setFontIdx(font);
-//                var result = addText_canDisplay(runText);
-//                if (!result) {
-//                    return false;
-//                }
-//                attributedCharIterator.setIndex(runCharIdxLimit);
-//            }
-//        }
         return true;
     }
 
