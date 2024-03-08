@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
 
-    final public static TS_Log d = TS_Log.of(true, TS_FileTmcrFileHandler.class);
+    final public static TS_Log d = TS_Log.of(false, TS_FileTmcrFileHandler.class);
     final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
     public TS_FileCommonConfig fileCommonConfig;
