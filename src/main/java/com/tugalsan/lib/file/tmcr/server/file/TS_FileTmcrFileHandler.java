@@ -31,6 +31,7 @@ import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_FileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser;
 import java.awt.Font;
+import java.time.Duration;
 import java.util.stream.IntStream;
 
 public class TS_FileTmcrFileHandler {
@@ -75,14 +76,15 @@ public class TS_FileTmcrFileHandler {
     public TGS_Url remotefileZIP;
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage
+            TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            Duration timeout
     ) {
-        return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null);
+        return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null,timeout);
     }
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler
+            TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler, Duration timeout
     ) {
         d.ci("use", "running macro code...");
         var _fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
@@ -95,7 +97,7 @@ public class TS_FileTmcrFileHandler {
                     if (progressUpdate_with_userDotTable_and_percentage != null) {
                         progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
                     }
-                });
+                }, timeout);
             });
             return holdForAWhile.value0;
         });

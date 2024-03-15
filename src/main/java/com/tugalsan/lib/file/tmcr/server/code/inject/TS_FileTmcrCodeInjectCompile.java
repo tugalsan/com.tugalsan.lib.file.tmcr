@@ -10,6 +10,7 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import static com.tugalsan.lib.file.tmcr.server.code.inject.TS_FileTmcrCodeInjectTags.CODE_INJECT_CODE;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import java.time.Duration;
 //import com.tugalsan.lib.route.client.*;
 import java.util.stream.*;
 
@@ -17,7 +18,7 @@ public class TS_FileTmcrCodeInjectCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeInjectCompile.class);
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileCommonConfig fileCommonConfig) {
+    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileCommonConfig fileCommonConfig, Duration timeout) {
         var result = d.createFuncBoolean("compile_CODE_INJECT_CODE");
         d.ci("compile_CODE_INJECT_CODE", "welcome");
         return TGS_UnSafe.call(() -> {
@@ -42,7 +43,7 @@ public class TS_FileTmcrCodeInjectCompile {
                     d.ci("url parameter-ed as ", url);
 
                     d.ci("getting html context of", url);
-                    var htmlCodeContent = TS_UrlDownloadUtils.toText(url);
+                    var htmlCodeContent = TS_UrlDownloadUtils.toText(url, timeout);
                     if (htmlCodeContent == null) {
                         return d.returnError(result, "ERROR: htmlCodeContent return null. check " + url + " @compile_CODE_INJECT_CODE3");
                     }
@@ -63,7 +64,7 @@ public class TS_FileTmcrCodeInjectCompile {
             }
             if (injectCheckEnable) {
                 d.ci("compile_CODE_INJECT_CODE", "recursive inject loop" + fileCommonConfig.macroLines.size());
-                return compile_CODE_INJECT_CODE(fileCommonConfig);
+                return compile_CODE_INJECT_CODE(fileCommonConfig, timeout);
             }
             d.ci("compile_CODE_INJECT_CODE", "exit inject loop" + fileCommonConfig.macroLines.size());
             if (d.infoEnable) {

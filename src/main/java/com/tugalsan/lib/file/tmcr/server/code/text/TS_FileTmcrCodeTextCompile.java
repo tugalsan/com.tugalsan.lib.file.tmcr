@@ -42,6 +42,7 @@ import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.rql.buffer.server.*;
 import com.tugalsan.lib.rql.client.*;
 import com.tugalsan.lib.rql.rev.server.*;
+import java.time.Duration;
 import java.util.*;
 
 public class TS_FileTmcrCodeTextCompile {
@@ -110,11 +111,11 @@ public class TS_FileTmcrCodeTextCompile {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_HTML());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_HTML(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler) {
+    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_HTML(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, Duration timeout) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_HTML");
         var urls = fileCommonConfig.macroLine.substring(CODE_ADD_TEXT_HTML().length() + 1).trim();
         d.ci("url detected as " + urls);
-        var text = TS_UrlDownloadUtils.toText(TGS_Url.of(urls));
+        var text = TS_UrlDownloadUtils.toText(TGS_Url.of(urls), timeout);
         if (text == null) {
             return d.returnError(result, "ERROR: htmlContent return null. check your internet connection!!!");
         }
