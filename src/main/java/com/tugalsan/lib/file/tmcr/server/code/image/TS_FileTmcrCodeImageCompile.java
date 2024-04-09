@@ -228,8 +228,8 @@ public class TS_FileTmcrCodeImageCompile {
             var ref = fileCommonConfig.macroLineTokens.get(6);
             d.ci(result.value0, "fromUrl", "ref.init", ref);
             var u_preImageLoc = TS_PathUtils.toPathOrError(ref);
-            if (u_preImageLoc.isError()) {
-                return d.returnError(result, "ERROR: preImageLoc ->  fromUrl(1) -> u_preImageLoc.isError() -> ref :[" + ref + "], e:" + u_preImageLoc.excuse().getMessage());
+            if (u_preImageLoc.isExcuse()) {
+                return d.returnError(result, "ERROR: preImageLoc ->  fromUrl(1) -> u_preImageLoc.isExcuse() -> ref :[" + ref + "], e:" + u_preImageLoc.excuse().getMessage());
             }
             preImageLoc = u_preImageLoc.value();
             d.ci(result.value0, "fromUrl", "preImageLoc.try", preImageLoc);
@@ -253,8 +253,8 @@ public class TS_FileTmcrCodeImageCompile {
             }
             fileCommonConfig.macroLineTokens.set(6, ref);
             u_preImageLoc = TS_PathUtils.toPathOrError(ref);
-            if (u_preImageLoc.isError()) {
-                return d.returnError(result, "ERROR: preImageLoc ->  fromUrl(2) -> u_preImageLoc.isError() -> ref :[" + ref + "], e:" + u_preImageLoc.excuse().getMessage());
+            if (u_preImageLoc.isExcuse()) {
+                return d.returnError(result, "ERROR: preImageLoc ->  fromUrl(2) -> u_preImageLoc.isExcuse() -> ref :[" + ref + "], e:" + u_preImageLoc.excuse().getMessage());
             }
             preImageLoc = u_preImageLoc.value();
             d.ci(result.value0, "fromUrl", "preImageLoc.updated", preImageLoc);
