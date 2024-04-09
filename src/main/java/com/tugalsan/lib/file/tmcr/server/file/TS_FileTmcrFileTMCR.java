@@ -25,9 +25,6 @@ public class TS_FileTmcrFileTMCR extends TS_FileCommonAbstract {
         try {
             instance.use_init(fileCommonConfig);
             tmcr.run(instance);
-        } catch (Exception e) {
-            instance.saveFile(e.getMessage());
-            throw e;
         } finally {
             instance.saveFile(null);
         }

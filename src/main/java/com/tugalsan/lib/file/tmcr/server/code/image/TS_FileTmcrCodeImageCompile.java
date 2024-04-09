@@ -9,7 +9,6 @@ import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.random.server.TS_RandomUtils;
 import com.tugalsan.api.shape.client.*;
 import com.tugalsan.api.string.client.*;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
@@ -228,7 +227,11 @@ public class TS_FileTmcrCodeImageCompile {
         } else {//FROM URL
             var ref = fileCommonConfig.macroLineTokens.get(6);
             d.ci(result.value0, "fromUrl", "ref.init", ref);
-            preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
+            var u_preImageLoc = TS_PathUtils.toPathOrError(ref);
+            if (u_preImageLoc.isError()) {
+                return d.returnError(result, "ERROR: preImageLoc ->  fromUrl(1) -> u_preImageLoc.isError() -> ref :[" + ref + "], e:" + u_preImageLoc.excuse().getMessage());
+            }
+            preImageLoc = u_preImageLoc.value();
             d.ci(result.value0, "fromUrl", "preImageLoc.try", preImageLoc);
             if (preImageLoc == null) {//FIX: TRY TO DOWNLOAD URL TO TEMP
                 var idxLastSlash = ref.lastIndexOf("/");
@@ -249,7 +252,11 @@ public class TS_FileTmcrCodeImageCompile {
                 d.ci(result.value0, "fromUrl", "ref.updated", ref);
             }
             fileCommonConfig.macroLineTokens.set(6, ref);
-            preImageLoc = TS_PathUtils.toPathOrError(ref).value0;
+            u_preImageLoc = TS_PathUtils.toPathOrError(ref);
+            if (u_preImageLoc.isError()) {
+                return d.returnError(result, "ERROR: preImageLoc ->  fromUrl(2) -> u_preImageLoc.isError() -> ref :[" + ref + "], e:" + u_preImageLoc.excuse().getMessage());
+            }
+            preImageLoc = u_preImageLoc.value();
             d.ci(result.value0, "fromUrl", "preImageLoc.updated", preImageLoc);
         }
 
@@ -262,18 +269,9 @@ public class TS_FileTmcrCodeImageCompile {
         }
 
         //GET preImage
-        BufferedImage preImage;
-        try {
-            preImage = TS_FileImageUtils.toImage(preImageLoc);
-            if (preImage == null) {
-                return d.returnError(result, "ERROR: preImage == null @ preImageLoc:" + preImageLoc);
-            }
-        } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
-            mifHandler.addText("ERROR: preImage == e @ preImageLoc:" + preImageLoc + ", e:" + e.getMessage());
-            d.ci(result.value0, "  processed.");
-            d.ci(result.value0, "compile_INSERT_IMAGE_COMMON  processed. ");
-            return d.returnTrue(result);
+        var preImage = TS_FileImageUtils.toImage(preImageLoc);
+        if (preImage == null) {
+            return d.returnError(result, "ERROR: preImage == null @ preImageLoc:" + preImageLoc);
         }
 
         //INIT W and H
