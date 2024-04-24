@@ -1,7 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
 import com.tugalsan.api.cast.client.TGS_CastUtils;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.coronator.client.TGS_Coronator;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
@@ -505,7 +505,7 @@ public class TS_FileTmcrFileHandler {
                         if (fontColorArr_i != 0) {
                             var i = fontColorText.indexOf("}");
                             if (i != -1) {
-                                var fontColor = TGS_CharSetCast.toLocaleUpperCase(fontColorText.substring(0, i));
+                                var fontColor = TGS_CharSet.cmn().languageDefault().toUpperCase(fontColorText.substring(0, i));
                                 d.ci("addText_line.fontColor to be parsed: [" + fontColor + "]");
                                 fontColorText = fontColorText.substring(i + 1);
                                 var found = false;

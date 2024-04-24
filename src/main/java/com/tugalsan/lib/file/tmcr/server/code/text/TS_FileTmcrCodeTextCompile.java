@@ -1,7 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.text;
 
 import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.sql.col.typed.client.*;
@@ -59,7 +59,7 @@ public class TS_FileTmcrCodeTextCompile {
             return d.returnError(result, "token size not 2");
         }
         int allign_Left0_center1_right2_just3;
-        var allignText = TGS_CharSetCast.toLocaleUpperCase(fileCommonConfig.macroLineTokens.get(1));
+        var allignText = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
         if (Objects.equals(allignText, CODE_TOKEN_LEFT())) {
             allign_Left0_center1_right2_just3 = 0;
         } else if (Objects.equals(allignText, CODE_TOKEN_LEFT())) {
@@ -482,7 +482,7 @@ public class TS_FileTmcrCodeTextCompile {
         }
 
         var nullTag = fileCommonConfig.macroLineTokens.get(2);
-        if (TGS_CharSetCast.equalsLocaleIgnoreCase("null", nullTag)) {
+        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase("null", nullTag)) {
             if (mifHandler.addText("NULL")) {
                 return d.returnTrue(result);
             } else {

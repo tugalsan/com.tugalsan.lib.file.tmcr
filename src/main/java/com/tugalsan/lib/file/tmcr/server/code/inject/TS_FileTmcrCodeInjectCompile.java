@@ -27,7 +27,7 @@ public class TS_FileTmcrCodeInjectCompile {
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
                 var macroLine = TGS_StringUtils.removeConsecutive(fileCommonConfig.macroLines.get(i).trim(), " ");
                 d.ci("compile_CODE_INJECT_CODE", "macroLine", macroLine);
-                var macroLineUpperCase = TGS_CharSetCast.toLocaleUpperCase(macroLine);
+                var macroLineUpperCase = TGS_CharSet.cmn().languageDefault().toUpperCase(macroLine);
                 d.ci("compile_CODE_INJECT_CODE", "macroLineUpperCase", macroLineUpperCase);
                 if (macroLineUpperCase.startsWith(CODE_INJECT_CODE())) {
                     d.ci("compile_CODE_INJECT_CODE", "inject found");

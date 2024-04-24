@@ -1,7 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.label;
 
 import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.string.client.*;
@@ -27,7 +27,7 @@ public class TS_FileTmcrCodeLabelCompile {
     }
 
     public static boolean is_SET_LABEL_ON_SEARCH(TS_FileCommonConfig fileCommonConfig) {
-        if (TGS_CharSetCast.equalsLocaleIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel)) {
+        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel)) {
             d.ci("is_SET_LABEL_ON_SEARCH", CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel + " found");
             return true;
         } else {
@@ -36,7 +36,7 @@ public class TS_FileTmcrCodeLabelCompile {
     }
 
     public static boolean is_SET_LABEL_ON_ERROR(TS_FileCommonConfig fileCommonConfig) {
-        if (TGS_CharSetCast.equalsLocaleIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + ERROR())) {
+        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + ERROR())) {
             d.ci("is_SET_LABEL_ON_ERROR", CODE_SET_LABEL() + " " + ERROR() + " found");
             return true;
         } else {

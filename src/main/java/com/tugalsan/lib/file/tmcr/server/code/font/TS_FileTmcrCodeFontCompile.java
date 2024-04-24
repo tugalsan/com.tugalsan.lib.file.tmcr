@@ -27,7 +27,7 @@ public class TS_FileTmcrCodeFontCompile {
         if (!TS_FileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
             return d.returnError(result, "token size not 2");
         }
-        fileCommonConfig.fontColor = TGS_CharSetCast.toLocaleUpperCase(fileCommonConfig.macroLineTokens.get(1));
+        fileCommonConfig.fontColor = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
         var comparison = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK().equals(fileCommonConfig.fontColor)
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLUE().equals(fileCommonConfig.fontColor)
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_DARK_GRAY().equals(fileCommonConfig.fontColor)
@@ -74,7 +74,7 @@ public class TS_FileTmcrCodeFontCompile {
             return d.returnError(result, "Error: Tokensize is not 2!");
         }
         fileCommonConfig.fontUnderlined = false;
-        var code = TGS_CharSetCast.toLocaleUpperCase(fileCommonConfig.macroLineTokens.get(1));
+        var code = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
         if (Objects.equals(code, TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLD())) {
             fileCommonConfig.fontBold = true;
             fileCommonConfig.fontItalic = false;

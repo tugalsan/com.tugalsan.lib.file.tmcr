@@ -1,7 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.map;
 
 import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.sql.conn.server.*;
@@ -53,7 +53,7 @@ public class TS_FileTmcrCodeMapCompile {
         var sb = new StringBuilder();
         fileCommonConfig.macroLineTokens.stream().forEachOrdered(token -> sb.append(token).append(" "));
         fileCommonConfig.macroLine = sb.toString().trim();
-        fileCommonConfig.macroLineUpperCase = TGS_CharSetCast.toLocaleUpperCase(fileCommonConfig.macroLine);
+        fileCommonConfig.macroLineUpperCase = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLine);
         return d.returnTrue(result);
     }
 
