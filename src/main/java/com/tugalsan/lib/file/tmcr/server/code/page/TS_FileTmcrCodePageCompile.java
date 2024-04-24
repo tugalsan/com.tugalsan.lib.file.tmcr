@@ -57,7 +57,7 @@ public class TS_FileTmcrCodePageCompile {
             return d.returnError(result, "Token size not 7 error @[" + fileCommonConfig.macroLine + "]");
         }
         boolean land;
-        var landText = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(2));
+        var landText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(2));
         if (Objects.equals(landText, CODE_TOKEN_LAND())) {
             land = true;
         } else if (Objects.equals(landText, CODE_TOKEN_LAND())) {
@@ -87,7 +87,7 @@ public class TS_FileTmcrCodePageCompile {
             mb = DEFAULT_PAGE_MARGIN_BTM();
         }
         int pageSizeAX;
-        var pageSizeText = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
+        var pageSizeText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
         if (Objects.equals(pageSizeText, CODE_TOKEN_A0())) {
             pageSizeAX = 0;
         } else if (Objects.equals(pageSizeText, CODE_TOKEN_A1())) {

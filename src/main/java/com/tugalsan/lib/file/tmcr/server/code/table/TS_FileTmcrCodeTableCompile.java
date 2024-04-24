@@ -53,7 +53,7 @@ public class TS_FileTmcrCodeTableCompile {
         Integer rowSpan;
         Integer colSpan;
         Integer cellHeight = null;
-        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(1), CODE_TOKEN_NULL())) {
+        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(1), CODE_TOKEN_NULL())) {
             rowSpan = 1;
         } else {
             rowSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
@@ -61,7 +61,7 @@ public class TS_FileTmcrCodeTableCompile {
                 return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[1] error! rowSpan == null || rowSpan < 1");
             }
         }
-        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), CODE_TOKEN_NULL())) {
+        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), CODE_TOKEN_NULL())) {
             colSpan = 1;
         } else {
             colSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
@@ -69,7 +69,7 @@ public class TS_FileTmcrCodeTableCompile {
                 return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[2] error! colSpan == null || colSpan < 1");
             }
         }
-        if (!TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(3), CODE_TOKEN_NULL())) {
+        if (!TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(3), CODE_TOKEN_NULL())) {
             cellHeight = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3));
             if (cellHeight == null || cellHeight < 1) {
                 return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[3] error! cellHeight == null || cellHeight < 1");

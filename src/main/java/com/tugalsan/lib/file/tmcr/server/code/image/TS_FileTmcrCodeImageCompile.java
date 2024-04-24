@@ -75,7 +75,7 @@ public class TS_FileTmcrCodeImageCompile {
 
         //GET TEXTWRAP
         boolean textWrap;
-        var wrapText = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(5));
+        var wrapText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(5));
         if (Objects.equals(wrapText, TS_FileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP())) {
             textWrap = true;
         } else if (Objects.equals(wrapText, TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
@@ -87,7 +87,7 @@ public class TS_FileTmcrCodeImageCompile {
 
         //GET ALLIGN
         int left0_center1_right2;
-        var allignText = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(4));
+        var allignText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(4));
         if (Objects.equals(allignText, TS_FileTmcrCodeImageTags.CODE_TOKEN_LEFT())) {
             left0_center1_right2 = 0;
         } else if (Objects.equals(allignText, TS_FileTmcrCodeImageTags.CODE_TOKEN_CENTER())) {
@@ -101,21 +101,21 @@ public class TS_FileTmcrCodeImageCompile {
 
         //GET WIDTH
         var w = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
-        if (w == null && !TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(1), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
+        if (w == null && !TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(1), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
             return d.returnError(result, "ERROR: code token[1] error! width is : " + w);
         }
         d.ci(result.value0, "INFO: width is : " + w);
 
         //GET HEIGHT
         var h = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
-        if (h == null && !TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
+        if (h == null && !TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
             return d.returnError(result, "ERROR: code token[2] error! height is : " + h);
         }
         d.ci(result.value0, "INFO: height is : " + h);
 
         //GET RESPECT
         boolean respect;
-        var respectTXT = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(3));
+        var respectTXT = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(3));
         if (Objects.equals(respectTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_RESPECT())) {
             respect = true;
         } else if (Objects.equals(respectTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_RESPECT())) {
@@ -130,7 +130,7 @@ public class TS_FileTmcrCodeImageCompile {
         if (fromSQL) {//FROM SQL
             //GET CREATE
             boolean create;
-            var createTXT = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLineTokens.get(9));
+            var createTXT = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(9));
             if (Objects.equals(createTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_CREATE())) {
                 create = true;
             } else if (Objects.equals(createTXT, TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL())) {

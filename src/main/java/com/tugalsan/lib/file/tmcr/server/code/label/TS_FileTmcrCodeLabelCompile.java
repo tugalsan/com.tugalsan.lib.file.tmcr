@@ -27,7 +27,7 @@ public class TS_FileTmcrCodeLabelCompile {
     }
 
     public static boolean is_SET_LABEL_ON_SEARCH(TS_FileCommonConfig fileCommonConfig) {
-        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel)) {
+        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel)) {
             d.ci("is_SET_LABEL_ON_SEARCH", CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel + " found");
             return true;
         } else {
@@ -36,7 +36,7 @@ public class TS_FileTmcrCodeLabelCompile {
     }
 
     public static boolean is_SET_LABEL_ON_ERROR(TS_FileCommonConfig fileCommonConfig) {
-        if (TGS_CharSet.cmn().languageDefault().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + ERROR())) {
+        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + ERROR())) {
             d.ci("is_SET_LABEL_ON_ERROR", CODE_SET_LABEL() + " " + ERROR() + " found");
             return true;
         } else {

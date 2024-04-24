@@ -14,7 +14,7 @@ public class TS_FileTmcrParser_Tokenize {
     public static TGS_Tuple3<String, Boolean, String> compile_TOKENIZE(TS_FileCommonConfig fileCommonConfig, int i) {
         var result = d.createFuncBoolean("compile_TOKENIZE");
         fileCommonConfig.macroLine = TGS_StringUtils.removeConsecutive(fileCommonConfig.macroLines.get(i), " ").trim();
-        fileCommonConfig.macroLineUpperCase = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLine);
+        fileCommonConfig.macroLineUpperCase = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLine);
         d.ci(result.value0, "compileAll.After Tokenize.trim");
         fileCommonConfig.macroLineTokens = TS_StringUtils.toList(fileCommonConfig.macroLine, " ");
         d.ci(result.value0, "compileAll.After Tokenize.parse");

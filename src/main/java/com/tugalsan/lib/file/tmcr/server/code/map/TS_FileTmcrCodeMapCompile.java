@@ -53,7 +53,7 @@ public class TS_FileTmcrCodeMapCompile {
         var sb = new StringBuilder();
         fileCommonConfig.macroLineTokens.stream().forEachOrdered(token -> sb.append(token).append(" "));
         fileCommonConfig.macroLine = sb.toString().trim();
-        fileCommonConfig.macroLineUpperCase = TGS_CharSet.cmn().languageDefault().toUpperCase(fileCommonConfig.macroLine);
+        fileCommonConfig.macroLineUpperCase = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLine);
         return d.returnTrue(result);
     }
 
