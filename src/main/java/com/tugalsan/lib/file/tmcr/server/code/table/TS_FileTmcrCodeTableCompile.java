@@ -2,6 +2,7 @@ package com.tugalsan.lib.file.tmcr.server.code.table;
 
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.charset.client.TGS_CharSet;
+import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.coronator.client.TGS_Coronator;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.math.client.*;
