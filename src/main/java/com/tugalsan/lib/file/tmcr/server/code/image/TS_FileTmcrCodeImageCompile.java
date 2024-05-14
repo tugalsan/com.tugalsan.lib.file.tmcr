@@ -241,12 +241,11 @@ public class TS_FileTmcrCodeImageCompile {
                 var randomStr = TS_RandomUtils.nextString(10, true, true, false, false, null);
                 var fileTmp = fileCommonConfig.dirDatUsrTmp.resolve(randomStr + filename);
                 d.ci(result.value0, "fromUrl", "fileTmp", fileTmp);
-                var refTmp = TS_UrlDownloadUtils.toFile(TGS_Url.of(ref), fileTmp);
-                d.ci(result.value0, "fromUrl", "refTmp", refTmp);
-                if (refTmp == null) {
-                    return d.returnError(result, "ERROR: preImageLoc ->  refTmp == null -> fromFile.ref :[" + ref + "]");
+                var u_refTmp = TS_UrlDownloadUtils.toFile(TGS_Url.of(ref), fileTmp);
+                if (u_refTmp.isExcuse()) {
+                    return d.returnError(result, "ERROR: preImageLoc ->  refTmp says " + u_refTmp.excuse().getMessage() + " -> fromFile.ref :[" + ref + "]");
                 }
-                ref = refTmp.toString();
+                ref = fileTmp.toString();
                 d.ci(result.value0, "fromUrl", "ref.updated", ref);
             }
             fileCommonConfig.macroLineTokens.set(6, ref);
