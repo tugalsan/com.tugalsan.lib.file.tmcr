@@ -280,7 +280,7 @@ public class TS_FileTmcrCodeTextCompile {
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
             if (id == null) {
-                return d.returnError(result, CODE_ADD_TEXT_REVLST_USER() + ".token[2] should be a number!");
+                return d.returnError(result, CODE_ADD_TEXT_REVLST_NO() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_COUNT_3());
