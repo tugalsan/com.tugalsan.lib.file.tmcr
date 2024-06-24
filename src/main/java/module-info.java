@@ -25,7 +25,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.cast;
     requires com.tugalsan.api.validator;
     requires com.tugalsan.api.random;
-    requires com.tugalsan.api.runnable;
+    
     requires com.tugalsan.api.stream;
     requires com.tugalsan.api.math;
     requires com.tugalsan.api.url;

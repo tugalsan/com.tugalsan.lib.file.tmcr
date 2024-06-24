@@ -1,7 +1,8 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
+import com.tugalsan.api.callable.client.TGS_CallableType1Void;
+import com.tugalsan.api.callable.client.TGS_CallableType2Void;
 import com.tugalsan.api.cast.client.TGS_CastUtils;
-import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.coronator.client.TGS_Coronator;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
@@ -21,8 +22,6 @@ import com.tugalsan.api.file.pdf.server.TS_FilePdf;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
-import com.tugalsan.api.runnable.client.TGS_RunnableType1;
-import com.tugalsan.api.runnable.client.TGS_RunnableType2;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
@@ -77,15 +76,15 @@ public class TS_FileTmcrFileHandler {
     public TGS_Url remotefileZIP;
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            TGS_CallableType2Void<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout
     ) {
         return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null,timeout);
     }
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_RunnableType2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler, Duration timeout
+            TGS_CallableType2Void<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            TGS_CallableType1Void<TS_FileTmcrFileHandler> fileHandler, Duration timeout
     ) {
         d.ci("use", "running macro code...");
         var _fileHandler = TGS_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
@@ -133,7 +132,7 @@ public class TS_FileTmcrFileHandler {
         return fileCommonConfig.runReport;
     }
 
-    private static void use_do(TS_FileCommonConfig fileCommonConfig, TGS_RunnableType1<TS_FileTmcrFileHandler> fileHandler) {
+    private static void use_do(TS_FileCommonConfig fileCommonConfig, TGS_CallableType1Void<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
