@@ -119,13 +119,13 @@ public class TS_FileTmcrCodeTableCompile {
             }
             relColSizes[rcsi] = rcsf;
         }
-        d.ci("compile_BEGIN_TABLE.SNF relColSizes: " + TGS_StringUtils.toString(relColSizes, ", "));
+        d.ci("compile_BEGIN_TABLE.SNF relColSizes: " + TGS_StringUtils.cmn().toString(relColSizes, ", "));
         if (relColSizes.length == 1) {
             relColSizes = TS_RandomUtils.nextIntArray(relColSizes[0], 1, 1);
         }
-        d.ci("compile_BEGIN_TABLE.PRE relColSizes: " + TGS_StringUtils.toString(relColSizes, ", "));
+        d.ci("compile_BEGIN_TABLE.PRE relColSizes: " + TGS_StringUtils.cmn().toString(relColSizes, ", "));
         relColSizes = TGS_MathUtils.convertWeighted(relColSizes, 1, 100);
-        d.ci("compile_BEGIN_TABLE.FIX relColSizes: " + TGS_StringUtils.toString(relColSizes, ", "));
+        d.ci("compile_BEGIN_TABLE.FIX relColSizes: " + TGS_StringUtils.cmn().toString(relColSizes, ", "));
         if (!mifHandler.beginTable(relColSizes)) {
             return d.returnError(result, "fileCommonConfig.mifHandler.beginTable(relColSizes) == false");
         }

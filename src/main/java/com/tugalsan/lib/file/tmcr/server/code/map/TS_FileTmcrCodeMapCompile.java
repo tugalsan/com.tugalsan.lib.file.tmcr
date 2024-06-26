@@ -48,7 +48,7 @@ public class TS_FileTmcrCodeMapCompile {
                     }
                 }
                 fileCommonConfig.macroLineTokens.set(j, fileCommonConfig.mapVars.get(idx));
-                d.ci(result.value0 + ".change: " + TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+                d.ci(result.value0 + ".change: " + TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
             }
         }
         var sb = new StringBuilder();

@@ -1,7 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.text;
 
 import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.string.server.*;
+import com.tugalsan.api.string.client.*;
 import static com.tugalsan.lib.file.tmcr.server.code.text.TS_FileTmcrCodeTextTags.CODE_ADD_TEXT;
 import static com.tugalsan.lib.file.tmcr.server.code.text.TS_FileTmcrCodeTextTags.CODE_ADD_TEXT_COLNAME;
 import static com.tugalsan.lib.file.tmcr.server.code.text.TS_FileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_DATE;
@@ -57,7 +57,7 @@ public class TS_FileTmcrCodeTextWriter {
         if (text == null){
             return "";
         }
-        var lines = TS_StringUtils.toList(text, "\n");
+        var lines = TGS_StringUtils.jre().toList(text, "\n");
         var sb = new StringBuilder();
         IntStream.range(0, lines.size()).forEachOrdered(i -> {
             if (i != 0) {
@@ -69,7 +69,7 @@ public class TS_FileTmcrCodeTextWriter {
     }
 
     public static String ADD_TEXT_THAN_NEWLINE(CharSequence text) {
-        var lines = TS_StringUtils.toList(text, "\n");
+        var lines = TGS_StringUtils.jre().toList(text, "\n");
         var sb = new StringBuilder();
         lines.stream().forEachOrdered(l -> {
             sb.append(CODE_ADD_TEXT()).append(" ").append(l).append("\n");

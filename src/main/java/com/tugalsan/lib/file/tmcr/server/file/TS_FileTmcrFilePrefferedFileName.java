@@ -71,7 +71,7 @@ public class TS_FileTmcrFilePrefferedFileName {
     }
 
     public static void renameZip(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler fh) {
-        if (TGS_StringUtils.isNullOrEmpty(fileCommonConfig.prefferedFileNameLabel)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(fileCommonConfig.prefferedFileNameLabel)) {
             return;
         }
         var type = TGS_FileTmcrTypes.FILE_TYPE_ZIP();

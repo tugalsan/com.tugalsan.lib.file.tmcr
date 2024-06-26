@@ -4,7 +4,7 @@ import com.tugalsan.api.charset.client.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.string.client.*;
-import com.tugalsan.api.string.server.*;
+import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.unsafe.client.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
@@ -25,7 +25,7 @@ public class TS_FileTmcrCodeInjectCompile {
             var injectCheckEnable = false;
             d.ci("compile_CODE_INJECT_CODE", "entered inject while with lineCount " + fileCommonConfig.macroLines.size());
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
-                var macroLine = TGS_StringUtils.removeConsecutive(fileCommonConfig.macroLines.get(i).trim(), " ");
+                var macroLine = TGS_StringUtils.cmn().removeConsecutive(fileCommonConfig.macroLines.get(i).trim(), " ");
                 d.ci("compile_CODE_INJECT_CODE", "macroLine", macroLine);
                 var macroLineUpperCase = TGS_CharSetCast.current().toUpperCase(macroLine);
                 d.ci("compile_CODE_INJECT_CODE", "macroLineUpperCase", macroLineUpperCase);
@@ -48,7 +48,7 @@ public class TS_FileTmcrCodeInjectCompile {
                         return d.returnError(result, "ERROR: htmlCodeContent return null. check " + url + " @compile_CODE_INJECT_CODE3");
                     }
                     d.ci("parsing html context");
-                    var macroLines2 = TS_StringUtils.toList(htmlCodeContent, "\n");
+                    var macroLines2 = TGS_StringUtils.jre().toList(htmlCodeContent, "\n");
                     if (macroLines2 == null) {
                         return d.returnError(result, "ERROR: macroLines2 == null @compile_CODE_INJECT_CODE4");
                     }
@@ -72,7 +72,7 @@ public class TS_FileTmcrCodeInjectCompile {
             }
             return d.returnTrue(result);
         }, e -> {
-            return d.returnError(result, "ERROR: " + TGS_StringUtils.toString((Throwable) e) + " @compile_CODE_INJECT_CODE1");
+            return d.returnError(result, "ERROR: " + TGS_StringUtils.cmn().toString((Throwable) e) + " @compile_CODE_INJECT_CODE1");
         });
     }
 }

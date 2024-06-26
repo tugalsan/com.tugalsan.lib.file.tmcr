@@ -77,7 +77,7 @@ public class TS_FileTmcrCodeLabelCompile {
         d.ci("get_GOTO_LABEL", "IDX_1", label);
         d.ci("get_GOTO_LABEL", "IDX_2", ifVal);
         if (!ifVal.equals(CODE_TOKEN_IF_VAL())) {
-            d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+            d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
             d.ce("get_GOTO_LABEL", "ERROR: !parsedLineCodes.get(2).equals(CODE_IF_VAL) as '" + ifVal + "'");
             return ERROR();
         }
@@ -95,7 +95,7 @@ public class TS_FileTmcrCodeLabelCompile {
         } else if (Objects.equals(equalsText, CODE_TOKEN_NOT_EQUALS())) {
             ifValEquals = false;
         } else {
-            d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+            d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
             d.ce("get_GOTO_LABEL", "ERROR: parsedLineCodes.get(4) not recognized", equalsText);
             return ERROR();
         }
@@ -134,7 +134,7 @@ public class TS_FileTmcrCodeLabelCompile {
                     id = fileCommonConfig.selectedId;
                     if (id == null) {
                         d.ce(fileCommonConfig.macroLine + ".id requires you select a row from the table!");
-                        d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+                        d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
                         d.ce("HATA: SATIR SEÇİLMEDİ HATASI", false);
                         return ERROR();
                     }
@@ -142,7 +142,7 @@ public class TS_FileTmcrCodeLabelCompile {
                     id = TGS_CastUtils.toLong(ids);
                     if (id == null) {
                         d.ce(fileCommonConfig.macroLine + ".id should be a number, is it still mapget???");
-                        d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+                        d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
                         return ERROR();
                     }
                 }

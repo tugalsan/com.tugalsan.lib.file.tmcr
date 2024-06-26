@@ -24,7 +24,7 @@ import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
-import com.tugalsan.api.string.server.TS_StringUtils;
+import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.TGS_Url;
@@ -422,7 +422,7 @@ public class TS_FileTmcrFileHandler {
 
     private boolean addText_canDisplay(String fullText) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var tokens = TS_StringUtils.toList(fullText, "\n");
+        var tokens = TGS_StringUtils.jre().toList(fullText, "\n");
         IntStream.range(0, tokens.size()).forEachOrdered(i -> {
             var lineText = tokens.get(i);
             if (!lineText.isEmpty()) {
@@ -464,7 +464,7 @@ public class TS_FileTmcrFileHandler {
         lineText = lineText.replace("{p}", "{P}");
         lineText = lineText.replace("{i}", "{I}");
         d.ci("addText_line.lineText:[" + lineText + "]");
-        var plainArr = TS_StringUtils.toList(lineText, "{P}");
+        var plainArr = TGS_StringUtils.jre().toList(lineText, "{P}");
         for (var plainArr_i = 0; plainArr_i < plainArr.size(); plainArr_i++) {
             var plainText = plainArr.get(plainArr_i);
             d.ci("addText_line.lineText.plainText[" + plainArr_i + "]:[" + plainText + "]");
@@ -476,7 +476,7 @@ public class TS_FileTmcrFileHandler {
                     result.value0 = false;
                 }
             }
-            var boldArr = TS_StringUtils.toList(plainText, "{B}");
+            var boldArr = TGS_StringUtils.jre().toList(plainText, "{B}");
             for (var boldArr_i = 0; boldArr_i < boldArr.size(); boldArr_i++) {
                 var boldText = boldArr.get(boldArr_i);
                 d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "]:[" + boldText + "]");
@@ -487,7 +487,7 @@ public class TS_FileTmcrFileHandler {
                         result.value0 = false;
                     }
                 }
-                var italicArr = TS_StringUtils.toList(boldText, "{I}");
+                var italicArr = TGS_StringUtils.jre().toList(boldText, "{I}");
                 for (var italicArr_i = 0; italicArr_i < italicArr.size(); italicArr_i++) {
                     var italicText = italicArr.get(italicArr_i);
                     d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "]:[" + italicText + "]");
@@ -498,7 +498,7 @@ public class TS_FileTmcrFileHandler {
                             result.value0 = false;
                         }
                     }
-                    var fontColorArr = TS_StringUtils.toList(italicText, "{FC_");
+                    var fontColorArr = TGS_StringUtils.jre().toList(italicText, "{FC_");
                     for (var fontColorArr_i = 0; fontColorArr_i < fontColorArr.size(); fontColorArr_i++) {
                         var fontColorText = fontColorArr.get(fontColorArr_i);
                         d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "].colorText[" + fontColorArr_i + "]:[" + fontColorText + "]");
@@ -530,7 +530,7 @@ public class TS_FileTmcrFileHandler {
                                 }
                             }
                         }
-                        var fontHeightArr = TS_StringUtils.toList(fontColorText, "{FH_");
+                        var fontHeightArr = TGS_StringUtils.jre().toList(fontColorText, "{FH_");
                         for (var fontHeightArr_i = 0; fontHeightArr_i < fontHeightArr.size(); fontHeightArr_i++) {
                             var fontHeightText = fontHeightArr.get(fontHeightArr_i);
                             d.ci("addText_line.lineText.plainText[" + plainArr_i + "].boldText[" + boldArr_i + "].italicText[" + italicArr_i + "].colorText[" + fontColorArr_i + "].fontHeightText[" + fontHeightArr_i + "]:[" + fontHeightText + "]");

@@ -150,7 +150,7 @@ public class TS_FileTmcrCodeImageCompile {
                 if (tableAndColname == null) {
                     return d.returnError(result, "ERROR: fromSQL.code token[6] error! tableAndColname:" + fileCommonConfig.macroLineTokens.get(6));
                 }
-                d.ci(result.value0, "INFO: fromSQL.tableAndColname is : " + TGS_StringUtils.toString(tableAndColname, ","));
+                d.ci(result.value0, "INFO: fromSQL.tableAndColname is : " + TGS_StringUtils.cmn().toString(tableAndColname, ","));
 
                 imageTable = TS_FileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname[0]);
                 if (imageTable == null) {

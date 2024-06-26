@@ -7,7 +7,7 @@ import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.math.client.*;
 import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.string.client.*;
-import com.tugalsan.api.string.server.*;
+import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.time.client.*;
 import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
@@ -23,7 +23,7 @@ public class TS_FileTmcrParser_Assure {
     public static boolean checkTokenSize(TS_FileCommonConfig fileCommonConfig, int tokenSize) {
         if (fileCommonConfig.macroLineTokens.size() != tokenSize) {
             d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have ", tokenSize, " tokens error!");
-            d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+            d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
             return false;
         }
         return true;
@@ -36,8 +36,8 @@ public class TS_FileTmcrParser_Assure {
                 return true;
             }
         }
-        d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have [", TGS_StringUtils.toString(tokenSizes, ","), "] tokens error!");
-        d.ce(TGS_StringUtils.toString_ln(fileCommonConfig.macroLineTokens));
+        d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have [", TGS_StringUtils.cmn().toString(tokenSizes, ","), "] tokens error!");
+        d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
         return false;
     }
 
@@ -78,14 +78,14 @@ public class TS_FileTmcrParser_Assure {
         if (token.equals(TS_FileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
             id = fileCommonConfig.selectedId;
             if (id == null) {
-                var errText = TGS_StringUtils.concat("HATA: SATIR SEÇİLMEDİ HATASI! fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "]: [", token, "] requires you select a row from the table!");
+                var errText = TGS_StringUtils.cmn().concat("HATA: SATIR SEÇİLMEDİ HATASI! fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "]: [", token, "] requires you select a row from the table!");
                 d.ce(errText, false);
                 mifHandler.saveFile(errText);
             }
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(idIdx));
             if (id == null) {
-                var errText = TGS_StringUtils.concat("HATA: ID BULUNAMADI!fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "] should be a number!");
+                var errText = TGS_StringUtils.cmn().concat("HATA: ID BULUNAMADI!fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "] should be a number!");
                 d.ce(errText, false);
                 mifHandler.saveFile(errText);
             }
@@ -123,7 +123,7 @@ public class TS_FileTmcrParser_Assure {
 
     public static String reverse(String text) {
         d.ci("reverse.start.as", text);
-        text = TGS_Time.isDate(text) ? TGS_Time.reverseDate(text) : TGS_StringUtils.reverse(text);
+        text = TGS_Time.isDate(text) ? TGS_Time.reverseDate(text) : TGS_StringUtils.cmn().reverse(text);
         d.ci("reverse.end.as:", text);
         return text;
     }
@@ -155,7 +155,7 @@ public class TS_FileTmcrParser_Assure {
             outputData = sb.toString();
             d.ci("getVisibleTextAndSubId.cast2Double:" + outputData);
         } else if (tc.typeLngLnk()) {
-            var datas = TS_StringUtils.toList_spc(inputData);
+            var datas = TGS_StringUtils.jre().toList_spc(inputData);
             if (datas == null) {
                 var errorText = fileCommonConfig.macroLine + ".TK_GWTGeneralUtils.parseTokenGWT == null";
                 d.ce("getVisibleTextAndSubId:", errorText);
