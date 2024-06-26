@@ -2,7 +2,7 @@ module com.tugalsan.lib.file.tmcr {
     requires java.desktop;
     requires com.tugalsan.api.tuple;
     requires com.tugalsan.api.unsafe;
-    requires com.tugalsan.api.coronator;
+    
     requires com.tugalsan.api.callable;
     requires com.tugalsan.api.file;
     requires com.tugalsan.api.font;
@@ -23,7 +23,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.list;
     requires com.tugalsan.api.string;
     requires com.tugalsan.api.cast;
-    requires com.tugalsan.api.validator;
+    
     requires com.tugalsan.api.random;
     
     requires com.tugalsan.api.stream;
