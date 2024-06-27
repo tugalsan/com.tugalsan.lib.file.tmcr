@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.callable.client.TGS_CallableType2_Run;
+import com.tugalsan.api.function.client.TGS_Func_In2;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 import com.tugalsan.lib.file.tmcr.server.code.filename.TS_FileTmcrCodeFileNameCompile;
 import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
@@ -30,7 +30,7 @@ public class TS_FileTmcrParser {
         return -1;
     }
 
-    public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_CallableType2_Run<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout) {
+    public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout) {
         var e = TGS_UnSafe.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -477,7 +477,7 @@ public class TS_FileTmcrParser {
         compileCode_completed(fileCommonConfig, progressUpdate_with_userDotTable_and_percentage);
     }
 
-    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TGS_CallableType2_Run<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         d.ci("compileCode_completed", "SAVE EXPORT FILES");
         if (progressUpdate_with_userDotTable_and_percentage != null) {
             progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -486,7 +486,7 @@ public class TS_FileTmcrParser {
         d.ci("compileCode_completed", "FIN");
     }
 
-    private static void compileCode_failed(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, Exception e, TGS_CallableType2_Run<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    private static void compileCode_failed(TS_FileCommonConfig fileCommonConfig, TS_FileTmcrFileHandler mifHandler, Exception e, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         addMacro_Lines_ErrorText(fileCommonConfig, mifHandler, e);
         fileCommonConfig.runReport = true;
         if (progressUpdate_with_userDotTable_and_percentage != null) {

@@ -1,10 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.callable.client.TGS_CallableType1_Coronator;
-import com.tugalsan.api.callable.client.TGS_CallableType2_Run;
+import com.tugalsan.api.function.client.TGS_FuncEffectivelyFinal;
+import com.tugalsan.api.function.client.TGS_Func_In2;
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.callable.client.TGS_CallableType1_Run;
+import com.tugalsan.api.function.client.TGS_Func_In1;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import com.tugalsan.api.file.html.server.TS_FileHtml;
@@ -76,18 +76,18 @@ public class TS_FileTmcrFileHandler {
     public TGS_Url remotefileZIP;
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_CallableType2_Run<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout
     ) {
         return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null,timeout);
     }
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_CallableType2_Run<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            TGS_CallableType1_Run<TS_FileTmcrFileHandler> fileHandler, Duration timeout
+            TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            TGS_Func_In1<TS_FileTmcrFileHandler> fileHandler, Duration timeout
     ) {
         d.ci("use", "running macro code...");
-        var _fileHandler = TGS_CallableType1_Coronator.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
+        var _fileHandler = TGS_FuncEffectivelyFinal.of(TS_FileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_FileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
             TS_FileTmcrFileHandler.use_do(fileCommonConfig, __fileHandler -> {
                 holdForAWhile.value0 = __fileHandler;
@@ -132,7 +132,7 @@ public class TS_FileTmcrFileHandler {
         return fileCommonConfig.runReport;
     }
 
-    private static void use_do(TS_FileCommonConfig fileCommonConfig, TGS_CallableType1_Run<TS_FileTmcrFileHandler> fileHandler) {
+    private static void use_do(TS_FileCommonConfig fileCommonConfig, TGS_Func_In1<TS_FileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
@@ -369,7 +369,7 @@ public class TS_FileTmcrFileHandler {
             return addText_canDisplay(fullText);
         }
         var fontFamilySize = fileCommonConfig.fontFamilyFonts.size();
-        var fullTextThatCanBeDisplayed = TGS_CallableType1_Coronator.ofStr().coronateAs(__ -> {//change unsupported codePoints to '?'
+        var fullTextThatCanBeDisplayed = TGS_FuncEffectivelyFinal.ofStr().coronateAs(__ -> {//change unsupported codePoints to '?'
             var codePointUnsupported = "?".codePointAt(0);
             TGS_Tuple1<Boolean> codePointUnsupportedFound = TGS_Tuple1.of(false);
             var sb = new StringBuilder();
@@ -392,7 +392,7 @@ public class TS_FileTmcrFileHandler {
         //decide fontidx and send text to addText_canDisplay
         var sb = new StringBuilder();
         fullTextThatCanBeDisplayed.codePoints().forEachOrdered(cp -> {
-            var decidedFontFamilyIdx = TGS_CallableType1_Coronator.ofInt().coronateAs(__ -> {
+            var decidedFontFamilyIdx = TGS_FuncEffectivelyFinal.ofInt().coronateAs(__ -> {
                 for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
                     if (TS_FontUtils.canDisplay(getFont(fontFamilyIdx), cp)) {
                         return fontFamilyIdx;
