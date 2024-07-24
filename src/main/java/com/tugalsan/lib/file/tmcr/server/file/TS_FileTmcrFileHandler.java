@@ -22,6 +22,7 @@ import com.tugalsan.api.file.pdf.server.TS_FilePdf;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
+import com.tugalsan.api.function.client.TGS_Func;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.client.TGS_StringUtils;
@@ -193,7 +194,7 @@ public class TS_FileTmcrFileHandler {
                 endText();
                 d.ce("saveFile", "WARNING: error message added to files", errorSource);
             }
-        }, e -> TGS_StreamUtils.runNothing());
+        }, e -> TGS_Func.empty.run());
         var stream = PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             TGS_UnSafe.run(() -> {
