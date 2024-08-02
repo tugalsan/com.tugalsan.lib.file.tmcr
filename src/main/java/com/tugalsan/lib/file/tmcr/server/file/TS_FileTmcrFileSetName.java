@@ -25,7 +25,7 @@ public class TS_FileTmcrFileSetName {
             d.ci("convertLocalLocationToRemote", "nothing to do", imageLoc_pathOrUrl);
             return TGS_Url.of(imageLoc_pathOrUrl);
         }
-        var file = TS_PathUtils.toPathOrError(imageLoc_pathOrUrl).value0;
+        var file = TS_PathUtils.toPath(imageLoc_pathOrUrl).value();
         if (file == null) {
             d.ce("convertLocalLocationToRemote", "is it really path-able?", imageLoc_pathOrUrl);
             return null;
