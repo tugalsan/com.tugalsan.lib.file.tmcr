@@ -229,7 +229,12 @@ public class TS_FileTmcrCodeImageCompile {
         } else {//FROM URL
             var ref = fileCommonConfig.macroLineTokens.get(6);
             d.ci(result.value0, "fromUrl", "ref.init", ref);
-            preImageLoc = TS_PathUtils.toPath(ref).value();
+            var u_file = TS_PathUtils.toPath(ref);
+            if (u_file.isExcuse()) {
+                d.ce("convertLocalLocationToRemote", "is it really path-able?", ref, u_file.excuse().getMessage());
+                return null;
+            }
+            preImageLoc = u_file.value();
             d.ci(result.value0, "fromUrl", "preImageLoc.try", preImageLoc);
             if (preImageLoc == null) {//FIX: TRY TO DOWNLOAD URL TO TEMP
                 var idxLastSlash = ref.lastIndexOf("/");
@@ -249,7 +254,13 @@ public class TS_FileTmcrCodeImageCompile {
                 d.ci(result.value0, "fromUrl", "ref.updated", ref);
             }
             fileCommonConfig.macroLineTokens.set(6, ref);
-            preImageLoc = TS_PathUtils.toPath(ref).value();
+
+            u_file = TS_PathUtils.toPath(ref);
+            if (u_file.isExcuse()) {
+                d.ce("convertLocalLocationToRemote", "is it really path-able?", ref, u_file.excuse().getMessage());
+                return null;
+            }
+            preImageLoc = u_file.value();
             d.ci(result.value0, "fromUrl", "preImageLoc.updated", preImageLoc);
         }
 

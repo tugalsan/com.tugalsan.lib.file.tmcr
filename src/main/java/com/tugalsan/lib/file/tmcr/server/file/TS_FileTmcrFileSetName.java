@@ -25,11 +25,12 @@ public class TS_FileTmcrFileSetName {
             d.ci("convertLocalLocationToRemote", "nothing to do", imageLoc_pathOrUrl);
             return TGS_Url.of(imageLoc_pathOrUrl);
         }
-        var file = TS_PathUtils.toPath(imageLoc_pathOrUrl).value();
-        if (file == null) {
-            d.ce("convertLocalLocationToRemote", "is it really path-able?", imageLoc_pathOrUrl);
+        var u_file = TS_PathUtils.toPath(imageLoc_pathOrUrl);
+        if (u_file.isExcuse()) {
+            d.ce("convertLocalLocationToRemote", "is it really path-able?", imageLoc_pathOrUrl, u_file.excuse().getMessage());
             return null;
         }
+        var file = u_file.value();
 
         var dirPub = fileCommonConfig.dirDatPub;
         var dirUsr = fileCommonConfig.dirDatUsr;
