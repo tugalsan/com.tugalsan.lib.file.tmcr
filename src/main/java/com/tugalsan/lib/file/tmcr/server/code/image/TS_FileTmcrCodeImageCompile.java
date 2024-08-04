@@ -231,7 +231,7 @@ public class TS_FileTmcrCodeImageCompile {
             d.ci(result.value0, "fromUrl", "ref.init", ref);
             var u_file = TS_PathUtils.toPath(ref);
             if (u_file.isExcuse()) {
-                d.ce(result.value0, "warning", "convertLocalLocationToRemote#1", "is it really path-able?", ref, u_file.excuse().getMessage());
+                d.ci(result.value0, "warning", "convertLocalLocationToRemote#1", "is it really path-able?", ref, u_file.excuse().getMessage());
                 preImageLoc = null;
             } else {
                 preImageLoc = u_file.value();
