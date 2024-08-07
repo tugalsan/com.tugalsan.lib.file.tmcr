@@ -15,7 +15,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.file.pdf;
     requires com.tugalsan.api.file.img;
     requires com.tugalsan.api.log;
-    requires com.tugalsan.lib.acsrf;
     requires com.tugalsan.api.union;
     requires com.tugalsan.api.charset;
     requires com.tugalsan.api.thread;
