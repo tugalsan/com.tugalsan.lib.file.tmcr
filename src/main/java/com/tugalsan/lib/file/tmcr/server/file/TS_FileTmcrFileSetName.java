@@ -22,12 +22,12 @@ public class TS_FileTmcrFileSetName {
     public static TGS_Url urlFromPath(TS_FileCommonConfig fileCommonConfig, String imageLoc_pathOrUrl) {
         //IF URL, RETURN
         if (imageLoc_pathOrUrl.startsWith("http")) {
-            d.ci("convertLocalLocationToRemote", "nothing to do", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "nothing to do", imageLoc_pathOrUrl);
             return TGS_Url.of(imageLoc_pathOrUrl);
         }
         var u_file = TS_PathUtils.toPath(imageLoc_pathOrUrl);
         if (u_file.isExcuse()) {
-            d.ce("convertLocalLocationToRemote", "is it really path-able?", imageLoc_pathOrUrl, u_file.excuse().getMessage());
+            d.ce("urlFromPath", "is it really path-able?", imageLoc_pathOrUrl, u_file.excuse().getMessage());
             return null;
         }
         var file = u_file.value();
@@ -40,33 +40,33 @@ public class TS_FileTmcrFileSetName {
         var isUsrDir = file.startsWith(dirUsr);
         var isTblDir = file.startsWith(dirTbl);
         if (!isPubDir && !isUsrDir && !isTblDir) {
-            d.ce("convertLocalLocationToRemote", "!isPubDir && !isUsrDir && !isTblDir", imageLoc_pathOrUrl);
+            d.ce("urlFromPath", "!isPubDir && !isUsrDir && !isTblDir", imageLoc_pathOrUrl);
             return null;
         }
 
         if (isPubDir) {
-            d.ci("convertLocalLocationToRemote", "isPubDir", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "isPubDir", imageLoc_pathOrUrl);
             //??
             var path = file.toString().substring(dirPub.toString().length() + 1).replace("\\", "/");
-            d.ci("convertLocalLocationToRemote", "isPubDir", "path", path);
+            d.ci("urlFromPath", "isPubDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
             imageLoc_pathOrUrl = fileCommonConfig.libFileServletUtils_URL_SERVLET_FETCH_PUBLIC.call(pathSafe);
-            d.ci("convertLocalLocationToRemote", "isPubDir", "url", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "isPubDir", "url", imageLoc_pathOrUrl);
         } else if (isUsrDir) {
-            d.ci("convertLocalLocationToRemote", "isUsrDir", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "isUsrDir", imageLoc_pathOrUrl);
             var path = file.toString().substring(dirUsr.toString().length() + 1).replace("\\", "/");
-            d.ci("convertLocalLocationToRemote", "isUsrDir", "path", path);
+            d.ci("urlFromPath", "isUsrDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
             imageLoc_pathOrUrl = fileCommonConfig.libFileServletUtils_URL_SERVLET_FETCH_USER.call(pathSafe);
-            d.ci("convertLocalLocationToRemote", "isUsrDir", "url", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "isUsrDir", "url", imageLoc_pathOrUrl);
         } else {//isTblDir
-            d.ci("convertLocalLocationToRemote", "isTblDir", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "isTblDir", imageLoc_pathOrUrl);
             //D:\xampp_data\DAT\TBL\hamtedkart\STRFILEJPG_ID\540_r0_t20210120_s115610.JPG.135.150.270.true.80.JPG
             var path = file.toString().substring(dirTbl.toString().length() + 1).replace("\\", "/");
-            d.ci("convertLocalLocationToRemote", "isTblDir", "path", path);
+            d.ci("urlFromPath", "isTblDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
             imageLoc_pathOrUrl = fileCommonConfig.libTableServletUtils_URL_SERVLET_FETCH_TBL_FILE.call(pathSafe);
-            d.ci("convertLocalLocationToRemote", "isTblDir", "url", imageLoc_pathOrUrl);
+            d.ci("urlFromPath", "isTblDir", "url", imageLoc_pathOrUrl);
         }
         return TGS_Url.of(imageLoc_pathOrUrl);
     }
