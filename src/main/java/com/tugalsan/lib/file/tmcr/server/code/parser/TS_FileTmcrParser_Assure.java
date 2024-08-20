@@ -136,7 +136,7 @@ public class TS_FileTmcrParser_Assure {
         d.ci("getVisibleTextAndSubId.getType:" + column.getType());
         var tc = TGS_LibRqlColUtils.toSqlCol(column);
         if (tc.typeLngTime()) {
-            outputData = TGS_Time.toString_timeOnly(TGS_CastUtils.toLong(inputData));
+            outputData = TGS_Time.toString_timeOnly_simplified(TGS_CastUtils.toLong(inputData));
             d.ci("getVisibleTextAndSubId.cast2Time:" + outputData);
         } else if (tc.typeLngDate()) {
             outputData = TGS_Time.toString_dateOnly(TGS_CastUtils.toLong(inputData));
