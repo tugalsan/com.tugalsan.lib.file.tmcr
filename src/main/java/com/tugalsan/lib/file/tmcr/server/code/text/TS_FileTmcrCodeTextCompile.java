@@ -453,7 +453,8 @@ public class TS_FileTmcrCodeTextCompile {
         d.ci("compile_ADD_TEXT_CW.data_l: ", data_l);
         var date = TGS_Time.ofDate(data_l);
         d.ci("compile_ADD_TEXT_CW.data_d: ", date.toString_dateOnly());
-        var text = String.valueOf(date.getWeekNumber());
+        var text = String.valueOf(date.getWeekNumber().orElse(0));
+
         if (!mifHandler.addText(text)) {
             return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
         }
