@@ -61,7 +61,7 @@ public class TS_FileTmcrFileSetName {
             d.ci("urlFromPath", "isUsrDir", "url", imageLoc_pathOrUrl);
         } else {//isTblDir
             d.ci("urlFromPath", "isTblDir", imageLoc_pathOrUrl);
-            //D:\xampp_data\DAT\TBL\hamtedkart\STRFILEJPG_ID\540_r0_t20210120_s115610.JPG.135.150.270.true.80.JPG
+            //D:\dat\dat\tbl\hamtedkart\STRFILEJPG_ID\540_r0_t20210120_s115610.JPG.135.150.270.true.80.JPG
             var path = file.toString().substring(dirTbl.toString().length() + 1).replace("\\", "/");
             d.ci("urlFromPath", "isTblDir", "path", path);
             var pathSafe = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(path);
