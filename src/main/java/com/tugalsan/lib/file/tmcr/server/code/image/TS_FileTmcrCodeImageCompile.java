@@ -14,6 +14,7 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import com.tugalsan.api.thread.server.TS_ThreadWait;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_FileTmcrParser_SelectedId;
 import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
@@ -28,6 +29,8 @@ public class TS_FileTmcrCodeImageCompile {
     public static int DEFAULT_QUALITY() {
         return 80;
     }
+
+    public static float FULL_QUALITY_FILE_SIZE_THREASHOLD_AS_BYTES = 0.5f * 1024 * 1024;
 
     public static boolean is_INSERT_IMAGE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLine.startsWith(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
@@ -307,7 +310,7 @@ public class TS_FileTmcrCodeImageCompile {
             }
             d.ci(result.value0, "INFO: #2 w/h is : " + w + "/" + h);
 
-            //CHANGE W and H by rotate
+            d.ci(result.value0, "INFO: #4: CHANGE W and H by rotate", "w,h", w, h);
             if (r == 90 || r == 270) {//rotate
                 d.ci(result.value0, "INFO: #4.1 DETECTED r == 90 || r == 270");
                 Integer tmp = w;//var is problematic!!
@@ -315,29 +318,35 @@ public class TS_FileTmcrCodeImageCompile {
                 h = tmp;
             }
 
-            //CHANGE W and H by rotationIsLandscape
+            d.ci(result.value0, "INFO: #4: CHANGE W and H by rotationIsLandscape", "w,h", w, h);
             if (rotationIsLandscape && w < h) {
                 d.ci(result.value0, "INFO: #4.2 DETECTED rotationIsLandscape && w < h");
+                r = 90;
                 Integer tmp = w;//var is problematic!!
                 w = h;
                 h = tmp;
             }
 
-            //CHANGE W and H by rotationIsPortrait
+            d.ci(result.value0, "INFO: #4: CHANGE W and H by rotationIsPortrait", "w,h", w, h);
             if (rotationIsPortrait && w > h) {
                 d.ci(result.value0, "INFO: #4.3 DETECTED rotationIsPortrait && w > h");
+                r = 90;
                 Integer tmp = w;//var is problematic!!
                 w = h;
                 h = tmp;
             }
 
             //CHANGE W and H by cellHeight
+            d.ci(result.value0, "INFO: #5.0: CHANGE W and H by cellHeight", "w,h", w, h);
             if (fileCommonConfig.cellHeight == null) {
                 d.ci(result.value0, "INFO: #5.1 SKIP fileCommonConfig.cellHeight == null");
             } else if (fileCommonConfig.cellHeight >= h) {
-                d.ci(result.value0, "INFO: #5.2 SKIP fileCommonConfig.cellHeight >= h");
+                d.ci(result.value0, "INFO: #5.2 DETECTED fileCommonConfig.cellHeight >= h", "while cellHeight", fileCommonConfig.cellHeight);
+                var newImageWidth = 1d * fileCommonConfig.cellHeight * w / h;
+                w = (int) Math.round(newImageWidth);
+                h = fileCommonConfig.cellHeight;
             } else {
-                d.ci(result.value0, "INFO: #5.3 DETECTED fileCommonConfig.cellHeight < h");
+                d.ci(result.value0, "INFO: #5.3 DETECTED fileCommonConfig.cellHeight < h", "while cellHeight", fileCommonConfig.cellHeight);
                 var newImageWidth = 1d * fileCommonConfig.cellHeight * w / h;
                 w = (int) Math.round(newImageWidth);
                 h = fileCommonConfig.cellHeight;
@@ -361,7 +370,11 @@ public class TS_FileTmcrCodeImageCompile {
             w = pstImage.getWidth();
             h = pstImage.getHeight();
 //            System.out.println("AAAAAAAAA- AYARLI QUALITY:" + quality);
-            TS_FileImageUtils.toFile(pstImage, pstImageLoc, quality / 100f);
+            TS_FileImageUtils.toFile(pstImage, pstImageLoc, 1);
+            TS_ThreadWait.milliseconds200();
+            if (TS_FileUtils.getFileSizeInBytes(pstImageLoc) > FULL_QUALITY_FILE_SIZE_THREASHOLD_AS_BYTES) {
+                TS_FileImageUtils.toFile(pstImage, pstImageLoc, quality / 100f);
+            }
         }
         if (pstImage == null) {
             return d.returnError(result, "ERROR: pstImage == null @ pstImageLoc:" + pstImageLoc);

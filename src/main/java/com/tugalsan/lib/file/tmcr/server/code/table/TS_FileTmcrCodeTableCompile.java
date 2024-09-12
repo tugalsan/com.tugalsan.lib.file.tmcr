@@ -24,6 +24,10 @@ import com.tugalsan.lib.file.tmcr.server.file.TS_FileTmcrFileHandler;
 public class TS_FileTmcrCodeTableCompile {
 
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeTableCompile.class);
+    
+    public static int DEFAULT_CELL_HEIGHT(){
+        return 30;
+    }
 
     public static boolean is_BEGIN_TABLE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLine.startsWith(CODE_BEGIN_TABLE());
@@ -74,6 +78,8 @@ public class TS_FileTmcrCodeTableCompile {
             if (cellHeight == null || cellHeight < 1) {
                 return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[3] error! cellHeight == null || cellHeight < 1");
             }
+        } else {
+            cellHeight = DEFAULT_CELL_HEIGHT() * rowSpan;
         }
         fileCommonConfig.cellHeight = cellHeight;
         if (!mifHandler.beginTableCell(rowSpan, colSpan, cellHeight)) {
