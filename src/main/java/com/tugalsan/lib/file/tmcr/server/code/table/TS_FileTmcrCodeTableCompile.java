@@ -26,7 +26,7 @@ public class TS_FileTmcrCodeTableCompile {
     final private static TS_Log d = TS_Log.of(TS_FileTmcrCodeTableCompile.class);
     
     public static int DEFAULT_CELL_HEIGHT(){
-        return 30;
+        return 20;
     }
 
     public static boolean is_BEGIN_TABLE(TS_FileCommonConfig fileCommonConfig) {

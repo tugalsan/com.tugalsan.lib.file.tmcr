@@ -1,7 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.text;
 
 import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.tuple.client.*;
