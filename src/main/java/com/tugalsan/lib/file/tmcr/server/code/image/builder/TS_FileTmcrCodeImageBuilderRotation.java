@@ -58,7 +58,7 @@ public class TS_FileTmcrCodeImageBuilderRotation {
         return buildFromSql(tablename_dot_columnName, String.valueOf(id));
     }
 
-    private StringBuilder buildFromSql(String tablename_dot_columnName, String id) {
+    public StringBuilder buildFromSql(String tablename_dot_columnName, String id) {
         return buildFromSql_do(true, tablename_dot_columnName, id);
     }
 
