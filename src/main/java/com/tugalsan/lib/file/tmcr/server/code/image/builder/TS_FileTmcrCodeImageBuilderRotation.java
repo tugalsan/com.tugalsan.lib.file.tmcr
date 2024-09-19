@@ -1,5 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.image.builder;
 
+import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.server.code.image.TS_FileTmcrCodeImageTags;
 import java.nio.file.Path;
 
@@ -19,7 +20,15 @@ public class TS_FileTmcrCodeImageBuilderRotation {
     final int left0_right1_center2;
     final int rotation_0_90_180_270;
 
+    public StringBuilder buildFromUrl(TGS_Url url) {
+        return buildFromPathOrUrl_do(url.url);
+    }
+
     public StringBuilder buildFromPath(Path path) {
+        return buildFromPathOrUrl_do(path.toAbsolutePath().toString());
+    }
+
+    private StringBuilder buildFromPathOrUrl_do(CharSequence pathOrUrl) {
         var sb = new StringBuilder();
         sb.append(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
         sb.append(" ").append(maxWidthNullable == null ? TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL() : maxWidthNullable.toString());
@@ -34,7 +43,7 @@ public class TS_FileTmcrCodeImageBuilderRotation {
                 sb.append(" ").append(TS_FileTmcrCodeImageTags.CODE_TOKEN_LEFT());
         }
         sb.append(" ").append(textWrap ? TS_FileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP() : TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL());
-        sb.append(" ").append(path.toAbsolutePath().toString());
+        sb.append(" ").append(pathOrUrl);
         var fixedRotation = rotation_0_90_180_270;
         while (fixedRotation < 0) {
             fixedRotation += 360;
