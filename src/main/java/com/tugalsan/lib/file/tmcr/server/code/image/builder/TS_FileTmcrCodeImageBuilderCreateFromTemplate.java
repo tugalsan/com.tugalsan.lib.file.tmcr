@@ -63,7 +63,7 @@ public class TS_FileTmcrCodeImageBuilderCreateFromTemplate {
 
     public StringBuilder buildFromSql(String tablename_dot_columnName, String id) {
         var sb = new StringBuilder();
-        sb.append(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE());
+        sb.append(TS_FileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
         sb.append(" ").append(maxWidthNullable == null ? TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL() : maxWidthNullable.toString());
         sb.append(" ").append(maxHeightNullable == null ? TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL() : maxHeightNullable.toString());
         sb.append(" ").append(respectOrientation ? TS_FileTmcrCodeImageTags.CODE_TOKEN_RESPECT() : TS_FileTmcrCodeImageTags.CODE_TOKEN_NULL());

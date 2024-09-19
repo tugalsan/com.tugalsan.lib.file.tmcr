@@ -47,6 +47,7 @@ module com.tugalsan.lib.file.tmcr {
     exports com.tugalsan.lib.file.tmcr.server.code.filename;
     exports com.tugalsan.lib.file.tmcr.server.code.font;
     exports com.tugalsan.lib.file.tmcr.server.code.image;
+    exports com.tugalsan.lib.file.tmcr.server.code.image.builder;
     exports com.tugalsan.lib.file.tmcr.server.code.inject;
     exports com.tugalsan.lib.file.tmcr.server.code.label;
     exports com.tugalsan.lib.file.tmcr.server.code.map;
