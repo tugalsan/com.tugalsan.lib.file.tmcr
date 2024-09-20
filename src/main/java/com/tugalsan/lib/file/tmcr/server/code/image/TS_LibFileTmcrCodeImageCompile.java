@@ -24,7 +24,7 @@ import java.util.*;
 
 public class TS_LibFileTmcrCodeImageCompile {
 
-    final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeImageCompile.class);
+    final private static TS_Log d = TS_Log.of(true, TS_LibFileTmcrCodeImageCompile.class);
 
     public static int DEFAULT_QUALITY() {
         return 80;
@@ -108,6 +108,7 @@ public class TS_LibFileTmcrCodeImageCompile {
             return d.returnError(result, "ERROR: code token[1] error! width is : " + w);
         }
         d.ci(result.value0, "INFO: width is : " + w);
+        final var final_w = w;
 
         //GET HEIGHT
         var h = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
@@ -115,6 +116,7 @@ public class TS_LibFileTmcrCodeImageCompile {
             return d.returnError(result, "ERROR: code token[2] error! height is : " + h);
         }
         d.ci(result.value0, "INFO: height is : " + h);
+        final var final_h = h;
 
         //GET RESPECT
         boolean respect;
@@ -338,20 +340,24 @@ public class TS_LibFileTmcrCodeImageCompile {
 
             //CHANGE W and H by cellHeight
             d.ci(result.value0, "INFO: #5.0: CHANGE W and H by cellHeight", "w,h", w, h);
-            if (fileCommonConfig.cellHeight == null) {
-                d.ci(result.value0, "INFO: #5.1 SKIP fileCommonConfig.cellHeight == null");
-            } else if (fileCommonConfig.cellHeight >= h) {
-                d.ci(result.value0, "INFO: #5.2 DETECTED fileCommonConfig.cellHeight >= h", "while cellHeight", fileCommonConfig.cellHeight);
-                var newImageWidth = 1d * fileCommonConfig.cellHeight * w / h;
-                w = (int) Math.round(newImageWidth);
-                h = fileCommonConfig.cellHeight;
+            if (final_h == null && final_w == null) {
+                if (fileCommonConfig.cellHeight == null) {
+                    d.ci(result.value0, "INFO: #5.1 SKIP fileCommonConfig.cellHeight == null");
+                } else if (fileCommonConfig.cellHeight >= h) {
+                    d.ci(result.value0, "INFO: #5.2 DETECTED fileCommonConfig.cellHeight >= h", "while cellHeight", fileCommonConfig.cellHeight);
+                    var newImageWidth = 1d * fileCommonConfig.cellHeight * w / h;
+                    w = (int) Math.round(newImageWidth);
+                    h = fileCommonConfig.cellHeight;
+                } else {
+                    d.ci(result.value0, "INFO: #5.3 DETECTED fileCommonConfig.cellHeight < h", "while cellHeight", fileCommonConfig.cellHeight);
+                    var newImageWidth = 1d * fileCommonConfig.cellHeight * w / h;
+                    w = (int) Math.round(newImageWidth);
+                    h = fileCommonConfig.cellHeight;
+                }
+                d.ci(result.value0, "INFO: #5.4 w/h is : " + w + "/" + h);
             } else {
-                d.ci(result.value0, "INFO: #5.3 DETECTED fileCommonConfig.cellHeight < h", "while cellHeight", fileCommonConfig.cellHeight);
-                var newImageWidth = 1d * fileCommonConfig.cellHeight * w / h;
-                w = (int) Math.round(newImageWidth);
-                h = fileCommonConfig.cellHeight;
+                d.ci(result.value0, "INFO: #5.4 w/h is (skipped): " + w + "/" + h);
             }
-            d.ci(result.value0, "INFO: #5.4 w/h is : " + w + "/" + h);
 
             d.ci(result.value0, "INFO: #6 w/h is : " + w + "/" + h);
         }
