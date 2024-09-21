@@ -24,7 +24,7 @@ import java.util.*;
 
 public class TS_LibFileTmcrCodeImageCompile {
 
-    final private static TS_Log d = TS_Log.of(true, TS_LibFileTmcrCodeImageCompile.class);
+    final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeImageCompile.class);
 
     public static int DEFAULT_QUALITY() {
         return 80;
