@@ -340,7 +340,7 @@ public class TS_LibFileTmcrCodeImageCompile {
 
             //CHANGE W and H by cellHeight
             d.ci(result.value0, "INFO: #5.0: CHANGE W and H by cellHeight", "w,h", w, h);
-            if (final_h == null && final_w == null) {
+            if (final_h == null) {
                 if (fileCommonConfig.cellHeight == null) {
                     d.ci(result.value0, "INFO: #5.1 SKIP fileCommonConfig.cellHeight == null");
                 } else if (fileCommonConfig.cellHeight >= h) {
