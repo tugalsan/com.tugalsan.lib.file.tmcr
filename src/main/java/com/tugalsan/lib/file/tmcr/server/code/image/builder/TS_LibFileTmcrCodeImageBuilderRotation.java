@@ -1,5 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.image.builder;
 
+import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.server.code.image.TS_LibFileTmcrCodeImageTags;
 import java.nio.file.Path;
@@ -7,7 +8,7 @@ import java.nio.file.Path;
 public class TS_LibFileTmcrCodeImageBuilderRotation {
 
     protected TS_LibFileTmcrCodeImageBuilderRotation(Integer maxWidthNullable, Integer maxHeightNullable,
-            boolean respectOrientation, int left0_right1_center2, boolean textWrap, int rotation_0_90_180_270) {
+            boolean respectOrientation, int left0_right1_center2, boolean textWrap, String rotation_0_90_180_270) {
         this.maxWidthNullable = maxWidthNullable;
         this.maxHeightNullable = maxHeightNullable;
         this.respectOrientation = respectOrientation;
@@ -18,7 +19,7 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
     final Integer maxWidthNullable, maxHeightNullable;
     final boolean respectOrientation, textWrap;
     final int left0_right1_center2;
-    final int rotation_0_90_180_270;
+    final String rotation_0_90_180_270;
 
     public StringBuilder buildFromUrl(TGS_Url url) {
         return buildFromPathOrUrl_do(url.url);
@@ -44,21 +45,30 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
         }
         sb.append(" ").append(textWrap ? TS_LibFileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP() : TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL());
         sb.append(" ").append(pathOrUrl);
-        var fixedRotation = rotation_0_90_180_270;
-        while (fixedRotation < 0) {
-            fixedRotation += 360;
-        }
-        while (fixedRotation > 360) {
-            fixedRotation -= 360;
-        }
-        if (fixedRotation > 270) {
-            sb.append(" ").append(270);
-        } else if (fixedRotation > 180) {
-            sb.append(" ").append(180);
-        } else if (fixedRotation > 90) {
-            sb.append(" ").append(90);
+        if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_PORTRAIT().equals(rotation_0_90_180_270)) {
+            sb.append(" ").append(rotation_0_90_180_270);
+        } else if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE().equals(rotation_0_90_180_270)) {
+            sb.append(" ").append(rotation_0_90_180_270);
         } else {
-            sb.append(" ").append(0);
+            var rotation = TGS_CastUtils.toInteger(rotation_0_90_180_270);
+            if (rotation == null) {
+                sb.append(" ").append("CODE_ERROR_FOR_ROATATION_AS_").append(rotation_0_90_180_270);
+            }
+            while (rotation < 0) {
+                rotation += 360;
+            }
+            while (rotation > 360) {
+                rotation -= 360;
+            }
+            if (rotation > 270) {
+                sb.append(" ").append(270);
+            } else if (rotation > 180) {
+                sb.append(" ").append(180);
+            } else if (rotation > 90) {
+                sb.append(" ").append(90);
+            } else {
+                sb.append(" ").append(0);
+            }
         }
         return sb;
     }
@@ -93,21 +103,30 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
         sb.append(" ").append(textWrap ? TS_LibFileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP() : TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL());
         sb.append(" ").append(tablename_dot_columnName);
         sb.append(" ").append(id);
-        var fixedRotation = rotation_0_90_180_270;
-        while (fixedRotation < 0) {
-            fixedRotation += 360;
-        }
-        while (fixedRotation > 360) {
-            fixedRotation -= 360;
-        }
-        if (fixedRotation > 270) {
-            sb.append(" ").append(270);
-        } else if (fixedRotation > 180) {
-            sb.append(" ").append(180);
-        } else if (fixedRotation > 90) {
-            sb.append(" ").append(90);
+        if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_PORTRAIT().equals(rotation_0_90_180_270)) {
+            sb.append(" ").append(rotation_0_90_180_270);
+        } else if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE().equals(rotation_0_90_180_270)) {
+            sb.append(" ").append(rotation_0_90_180_270);
         } else {
-            sb.append(" ").append(0);
+            var rotation = TGS_CastUtils.toInteger(rotation_0_90_180_270);
+            if (rotation == null) {
+                sb.append(" ").append("CODE_ERROR_FOR_ROATATION_AS_").append(rotation_0_90_180_270);
+            }
+            while (rotation < 0) {
+                rotation += 360;
+            }
+            while (rotation > 360) {
+                rotation -= 360;
+            }
+            if (rotation > 270) {
+                sb.append(" ").append(270);
+            } else if (rotation > 180) {
+                sb.append(" ").append(180);
+            } else if (rotation > 90) {
+                sb.append(" ").append(90);
+            } else {
+                sb.append(" ").append(0);
+            }
         }
         sb.append(" ").append(ifNotExistsCreateFromTemplate ? TS_LibFileTmcrCodeImageTags.CODE_TOKEN_CREATE() : TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL());
         return sb;
