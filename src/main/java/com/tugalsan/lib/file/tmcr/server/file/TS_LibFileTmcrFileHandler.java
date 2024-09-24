@@ -18,7 +18,7 @@ import java.awt.image.*;
 import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.file.pdf.itext.server.TS_FilePdf;
+import com.tugalsan.api.file.pdf.itext.server.TS_FilePdfItext;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
@@ -167,7 +167,7 @@ public class TS_LibFileTmcrFileHandler {
         TS_LibFileTmcrFileTMCR.use(enableTMCR, fileCommonConfig, localfileTMCR, remotefileTMCR, tmcr -> {
             TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
                 TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
-                    TS_FilePdf.use(enablePDF, fileCommonConfig, localfilePDF, remotefilePDF, pdf -> {
+                    TS_FilePdfItext.use(enablePDF, fileCommonConfig, localfilePDF, remotefilePDF, pdf -> {
                         TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
                             TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
                                 var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
