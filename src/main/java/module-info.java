@@ -13,7 +13,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.file.html;
     requires com.tugalsan.api.file.txt;
     requires com.tugalsan.api.file.pdf.itext;
-    requires com.tugalsan.api.file.pdf.pdfbox3;
     requires com.tugalsan.api.file.img;
     requires com.tugalsan.api.log;
     requires com.tugalsan.api.union;
