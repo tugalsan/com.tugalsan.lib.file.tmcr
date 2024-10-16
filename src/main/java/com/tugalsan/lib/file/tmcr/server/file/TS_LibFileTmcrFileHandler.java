@@ -19,6 +19,7 @@ import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.file.pdf.itext.server.TS_FilePdfItext;
+import com.tugalsan.api.file.pdf.openpdf.server.TS_FilePdfOpenPdf;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
@@ -51,10 +52,10 @@ public class TS_LibFileTmcrFileHandler {
 
     public List<Path> zipableFiles() {
         return TGS_StreamUtils.toLst(files.stream()
-                        .filter(mif -> mif.isEnabled())
-                        .filter(mif -> !mif.getLocalFileName().toString().endsWith(TGS_LibFileTmcrTypes.FILE_TYPE_TMCR())
-                        && !mif.getLocalFileName().toString().endsWith(TGS_LibFileTmcrTypes.FILE_TYPE_HTML()))
-                        .map(mif -> mif.getLocalFileName())
+                .filter(mif -> mif.isEnabled())
+                .filter(mif -> !mif.getLocalFileName().toString().endsWith(TGS_LibFileTmcrTypes.FILE_TYPE_TMCR())
+                && !mif.getLocalFileName().toString().endsWith(TGS_LibFileTmcrTypes.FILE_TYPE_HTML()))
+                .map(mif -> mif.getLocalFileName())
         );
     }
 
@@ -79,7 +80,7 @@ public class TS_LibFileTmcrFileHandler {
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout
     ) {
-        return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null,timeout);
+        return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout);
     }
 
     public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
@@ -101,6 +102,10 @@ public class TS_LibFileTmcrFileHandler {
             });
             return holdForAWhile.value0;
         });
+        if (_fileHandler == null) {
+            d.ce("use", "cannot create _filehandler");
+            return false;
+        }
         d.ci("use", "RENAME LOCAL FILES", "prefferedFileNameLabel", fileCommonConfig.prefferedFileNameLabel);
         if (!fileCommonConfig.prefferedFileNameLabel.isEmpty()) {
             if (TS_FileCommonAbstract.FILENAME_CHAR_SUPPORT_TURKISH) {
@@ -148,6 +153,7 @@ public class TS_LibFileTmcrFileHandler {
         var fileNameFullHTML = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_HTML();
         var fileNameFullHTM = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_HTM();
         var fileNameFullPDF = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_PDF();
+//        var fileNameFullPDF_OPEN = fileCommonConfig.fileNameLabel + "_open" + TGS_LibFileTmcrTypes.FILE_TYPE_PDF();
         var fileNameFullXLSX = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_XLSX();
         var fileNameFullDOCX = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_DOCX();
         var localfileZIP = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullZIP);
@@ -162,20 +168,23 @@ public class TS_LibFileTmcrFileHandler {
         var remotefileHTML = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullHTML, false);
         var remotefileHTM = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullHTM, true);
         var remotefilePDF = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullPDF, true);
+//        var remotefilePDF_OPEN = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullPDF_OPEN, true);
         var remotefileXLSX = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullXLSX, true);
         var remotefileDOCX = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullDOCX, true);
         TS_LibFileTmcrFileTMCR.use(enableTMCR, fileCommonConfig, localfileTMCR, remotefileTMCR, tmcr -> {
             TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
                 TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
+//                    TS_FilePdfOpenPdf.use(enablePDF, fileCommonConfig, localfilePDF, remotefilePDF_OPEN, pdf_open -> {
                     TS_FilePdfItext.use(enablePDF, fileCommonConfig, localfilePDF, remotefilePDF, pdf -> {
                         TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
                             TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
                                 var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
-                                        tmcr, webHTML, webHTM, pdf, xlsx, docx
+                                        tmcr, webHTML, webHTM, /*pdf_open,*/ pdf, xlsx, docx
                                 );
                                 fileHandler.run(instance);
                             });
                         });
+//                        });
                     });
                 }
                 );
