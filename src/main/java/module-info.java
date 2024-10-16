@@ -2,7 +2,6 @@ module com.tugalsan.lib.file.tmcr {
     requires java.desktop;
     requires com.tugalsan.api.tuple;
     requires com.tugalsan.api.unsafe;
-    
     requires com.tugalsan.api.function;
     requires com.tugalsan.api.file;
     requires com.tugalsan.api.font;
@@ -13,6 +12,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.file.html;
     requires com.tugalsan.api.file.txt;
     requires com.tugalsan.api.file.pdf.itext;
+    requires com.tugalsan.api.file.pdf.openpdf;
     requires com.tugalsan.api.file.img;
     requires com.tugalsan.api.log;
     requires com.tugalsan.api.union;
@@ -23,9 +23,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.list;
     requires com.tugalsan.api.string;
     requires com.tugalsan.api.cast;
-    
     requires com.tugalsan.api.random;
-    
     requires com.tugalsan.api.stream;
     requires com.tugalsan.api.math;
     requires com.tugalsan.api.url;
