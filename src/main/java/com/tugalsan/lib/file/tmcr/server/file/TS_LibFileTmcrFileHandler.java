@@ -90,7 +90,7 @@ public class TS_LibFileTmcrFileHandler {
         d.ci("use", "running macro code...");
         var _fileHandler = TGS_FuncEffectivelyFinal.of(TS_LibFileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_LibFileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
-            TS_LibFileTmcrFileHandler.use_do(fileCommonConfig, __fileHandler -> {
+            TS_LibFileTmcrFileHandler.use_do(useOpendf, fileCommonConfig, __fileHandler -> {
                 holdForAWhile.value0 = __fileHandler;
 
                 d.ci("use", "compileCode");
@@ -137,7 +137,7 @@ public class TS_LibFileTmcrFileHandler {
         return fileCommonConfig.runReport;
     }
 
-    private static void use_do(TS_FileCommonConfig fileCommonConfig, TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler) {
+    private static void use_do(boolean useOpendf, TS_FileCommonConfig fileCommonConfig, TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
@@ -152,32 +152,28 @@ public class TS_LibFileTmcrFileHandler {
         var fileNameFullTMCR = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_TMCR();
         var fileNameFullHTML = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_HTML();
         var fileNameFullHTM = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_HTM();
-        var fileNameFullPDF_Itext = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_PDF();
-        var fileNameFullPDF_OpenPdf = fileCommonConfig.fileNameLabel + "_open" + TGS_LibFileTmcrTypes.FILE_TYPE_PDF();
+        var fileNameFullPDF = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_PDF();
         var fileNameFullXLSX = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_XLSX();
         var fileNameFullDOCX = fileCommonConfig.fileNameLabel + TGS_LibFileTmcrTypes.FILE_TYPE_DOCX();
         var localfileZIP = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullZIP);
         var localfileTMCR = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullTMCR);
         var localfileHTML = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullHTML);
         var localfileHTM = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullHTM);
-        var localfilePDF_Itext = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullPDF_Itext);
-        var localfilePDF_OpenPdf = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullPDF_OpenPdf);
-        d.cr("use_do", "localfilePDF_OpenPdf", localfilePDF_OpenPdf);
+        var localfilePDF = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullPDF);
         var localfileXLSX = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullXLSX);
         var localfileDOCX = TS_LibFileTmcrFileSetName.path(fileCommonConfig, fileNameFullDOCX);
         var remotefileZIP = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullZIP, true);
         var remotefileTMCR = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullTMCR, true);
         var remotefileHTML = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullHTML, false);
         var remotefileHTM = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullHTM, true);
-        var remotefilePDF_ItextPdf = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullPDF_Itext, true);
-        var remotefilePDF_OpenPdf = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullPDF_OpenPdf, true);
+        var remotefilePDF = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullPDF, true);
         var remotefileXLSX = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullXLSX, true);
         var remotefileDOCX = TS_LibFileTmcrFileSetName.urlUser(fileCommonConfig, fileNameFullDOCX, true);
         TS_LibFileTmcrFileTMCR.use(enableTMCR, fileCommonConfig, localfileTMCR, remotefileTMCR, tmcr -> {
             TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
                 TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
-                    TS_FilePdfOpenPdf.use(enablePDF, fileCommonConfig, localfilePDF_OpenPdf, remotefilePDF_OpenPdf, pdf_openPdf -> {
-                        TS_FilePdfItext.use(enablePDF, fileCommonConfig, localfilePDF_Itext, remotefilePDF_ItextPdf, pdf_iText -> {
+                    TS_FilePdfOpenPdf.use(enablePDF && useOpendf, fileCommonConfig, localfilePDF, remotefilePDF, pdf_openPdf -> {
+                        TS_FilePdfItext.use(enablePDF && !useOpendf, fileCommonConfig, localfilePDF, remotefilePDF, pdf_iText -> {
                             TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
                                 TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
                                     var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
