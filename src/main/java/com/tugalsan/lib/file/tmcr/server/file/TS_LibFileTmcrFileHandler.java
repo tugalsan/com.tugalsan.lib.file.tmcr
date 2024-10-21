@@ -76,14 +76,14 @@ public class TS_LibFileTmcrFileHandler {
     public Path localfileZIP;
     public TGS_Url remotefileZIP;
 
-    public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
+    public static boolean use(boolean useOpendf, TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout
     ) {
-        return use(fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout);
+        return use(useOpendf, fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout);
     }
 
-    public static boolean use(TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
+    public static boolean use(boolean useOpendf, TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout
     ) {
