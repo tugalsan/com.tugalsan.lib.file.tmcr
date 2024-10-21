@@ -108,7 +108,7 @@ public class TS_LibFileTmcrCodeImageCompile {
             return d.returnError(result, "ERROR: code token[1] error! width is : " + w);
         }
         d.ci(result.value0, "INFO: width is : " + w);
-        final var final_w = w;
+//        final var final_w = w;
 
         //GET HEIGHT
         var h = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
