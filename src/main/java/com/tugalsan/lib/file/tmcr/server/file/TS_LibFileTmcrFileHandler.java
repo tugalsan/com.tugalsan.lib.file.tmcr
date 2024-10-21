@@ -18,7 +18,6 @@ import java.awt.image.*;
 import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.file.pdf.itext.server.TS_FilePdfItext;
 import com.tugalsan.api.file.pdf.openpdf.server.TS_FilePdfOpenPdf;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
@@ -76,30 +75,30 @@ public class TS_LibFileTmcrFileHandler {
     public Path localfileZIP;
     public TGS_Url remotefileZIP;
 
-    public static boolean use(boolean useOpendf, TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
+    public static boolean use(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout
     ) {
-        return use(useOpendf, fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout);
+        return use(/*useOpendf, */fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout);
     }
 
-    public static boolean use(boolean useOpendf, TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
+    public static boolean use(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout
     ) {
         d.ci("use", "running macro code...");
         var _fileHandler = TGS_FuncEffectivelyFinal.of(TS_LibFileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_LibFileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
-            TS_LibFileTmcrFileHandler.use_do(useOpendf, fileCommonConfig, __fileHandler -> {
-                holdForAWhile.value0 = __fileHandler;
+            TS_LibFileTmcrFileHandler.use_do(/*useOpendf, */fileCommonConfig, __fileHandler -> {
+                        holdForAWhile.value0 = __fileHandler;
 
-                d.ci("use", "compileCode");
-                TS_LibFileTmcrParser.compileCode(anchor, fileCommonConfig, __fileHandler, (userDotTable, percentage) -> {
-                    if (progressUpdate_with_userDotTable_and_percentage != null) {
-                        progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
-                    }
-                }, timeout);
-            });
+                        d.ci("use", "compileCode");
+                        TS_LibFileTmcrParser.compileCode(anchor, fileCommonConfig, __fileHandler, (userDotTable, percentage) -> {
+                            if (progressUpdate_with_userDotTable_and_percentage != null) {
+                                progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
+                            }
+                        }, timeout);
+                    });
             return holdForAWhile.value0;
         });
         if (_fileHandler == null) {
@@ -137,7 +136,7 @@ public class TS_LibFileTmcrFileHandler {
         return fileCommonConfig.runReport;
     }
 
-    private static void use_do(boolean useOpendf, TS_FileCommonConfig fileCommonConfig, TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler) {
+    private static void use_do(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
@@ -172,18 +171,18 @@ public class TS_LibFileTmcrFileHandler {
         TS_LibFileTmcrFileTMCR.use(enableTMCR, fileCommonConfig, localfileTMCR, remotefileTMCR, tmcr -> {
             TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
                 TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
-                    TS_FilePdfOpenPdf.use(enablePDF && useOpendf, fileCommonConfig, localfilePDF, remotefilePDF, pdf_openPdf -> {
-                        TS_FilePdfItext.use(enablePDF && !useOpendf, fileCommonConfig, localfilePDF, remotefilePDF, pdf_iText -> {
-                            TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
-                                TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
-                                    var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
-                                            tmcr, webHTML, webHTM, pdf_openPdf, pdf_iText, xlsx, docx
-                                    );
-                                    fileHandler.run(instance);
+                    TS_FilePdfOpenPdf.use(enablePDF /*&& useOpendf*/, fileCommonConfig, localfilePDF, remotefilePDF, pdf_openPdf -> {
+//                        TS_FilePdfItext.use(enablePDF && !useOpendf, fileCommonConfig, localfilePDF, remotefilePDF, pdf_iText -> {
+                                TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
+                                    TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
+                                        var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
+                                                tmcr, webHTML, webHTM, pdf_openPdf, /*pdf_iText, */ xlsx, docx
+                                        );
+                                        fileHandler.run(instance);
+                                    });
                                 });
+//                        });
                             });
-                        });
-                    });
                 }
                 );
             });
