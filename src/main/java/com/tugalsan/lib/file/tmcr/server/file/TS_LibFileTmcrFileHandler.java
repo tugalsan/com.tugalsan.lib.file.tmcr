@@ -171,18 +171,16 @@ public class TS_LibFileTmcrFileHandler {
         TS_LibFileTmcrFileTMCR.use(enableTMCR, fileCommonConfig, localfileTMCR, remotefileTMCR, tmcr -> {
             TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
                 TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
-                    TS_FilePdfOpenPdf.use(enablePDF /*&& useOpendf*/, fileCommonConfig, localfilePDF, remotefilePDF, pdf_openPdf -> {
-//                        TS_FilePdfItext.use(enablePDF && !useOpendf, fileCommonConfig, localfilePDF, remotefilePDF, pdf_iText -> {
-                                TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
-                                    TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
-                                        var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
-                                                tmcr, webHTML, webHTM, pdf_openPdf, /*pdf_iText, */ xlsx, docx
-                                        );
-                                        fileHandler.run(instance);
-                                    });
-                                });
-//                        });
+                    TS_FilePdfOpenPdf.use(enablePDF, fileCommonConfig, localfilePDF, remotefilePDF, pdf -> {
+                        TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
+                            TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
+                                var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
+                                        tmcr, webHTML, webHTM, pdf, xlsx, docx
+                                );
+                                fileHandler.run(instance);
                             });
+                        });
+                    });
                 }
                 );
             });

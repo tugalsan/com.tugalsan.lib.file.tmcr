@@ -11,7 +11,6 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.file.zip;
     requires com.tugalsan.api.file.html;
     requires com.tugalsan.api.file.txt;
-    //requires com.tugalsan.api.file.pdf.itext;
     requires com.tugalsan.api.file.pdf.openpdf;
     requires com.tugalsan.api.file.img;
     requires com.tugalsan.api.log;

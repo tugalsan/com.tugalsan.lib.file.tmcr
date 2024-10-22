@@ -31,11 +31,6 @@
             <artifactId>com.tugalsan.api.file.xlsx</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>com.tugalsan.api.file.pdf.itext</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.tugalsan.api.file.pdf.openpdf</artifactId>
