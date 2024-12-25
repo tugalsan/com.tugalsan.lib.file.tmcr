@@ -30,7 +30,7 @@ public class TS_LibFileTmcrParser {
         return -1;
     }
 
-    public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout) {
+    public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout, CharSequence defaultViewTableName) {
         var e = TGS_UnSafe.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -387,7 +387,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeMapCompile.is_MAPADD_FROMSQL(fileCommonConfig)) {
                     d.ci("compileCode", "is_MAPADD_FROMSQL");
-                    cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(anchor, fileCommonConfig, mifHandler);
+                    cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(anchor, fileCommonConfig, mifHandler, defaultViewTableName);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;
@@ -397,7 +397,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
-                    cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(anchor, fileCommonConfig, mifHandler, filenameMode);
+                    cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName);
                     if (!cmd.value1) {
                         mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
                         return null;

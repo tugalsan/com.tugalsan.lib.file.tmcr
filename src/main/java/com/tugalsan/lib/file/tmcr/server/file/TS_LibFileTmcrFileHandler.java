@@ -77,14 +77,14 @@ public class TS_LibFileTmcrFileHandler {
 
     public static boolean use(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            Duration timeout
+            Duration timeout, CharSequence defaultViewTableName
     ) {
-        return use(/*useOpendf, */fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout);
+        return use(/*useOpendf, */fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout, defaultViewTableName);
     }
 
     public static boolean use(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout
+            TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout, CharSequence defaultViewTableName
     ) {
         d.ci("use", "running macro code...");
         var _fileHandler = TGS_FuncEffectivelyFinal.of(TS_LibFileTmcrFileHandler.class).coronateAs(__ -> {
@@ -97,7 +97,7 @@ public class TS_LibFileTmcrFileHandler {
                             if (progressUpdate_with_userDotTable_and_percentage != null) {
                                 progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
                             }
-                        }, timeout);
+                        }, timeout, defaultViewTableName);
                     });
             return holdForAWhile.value0;
         });

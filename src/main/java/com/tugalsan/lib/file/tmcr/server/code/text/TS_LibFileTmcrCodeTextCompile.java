@@ -465,7 +465,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     //ADD_TEXT_VAR_FROMSQL_REVERSE VAR ID
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
+    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.macroline: [" + fileCommonConfig.macroLine + "]");
 
@@ -527,7 +527,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCell returns as: " + data);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCellVisible...");
-        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, column, data);
+        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
         if (visibleTextAndSubId == null) {
             return d.returnError(result, "visibleTextAndSubId == null");
         }

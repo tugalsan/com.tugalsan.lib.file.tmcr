@@ -59,7 +59,7 @@ public class TS_LibFileTmcrCodeMapCompile {
     }
 
     //MAPADD_FROMSQL VAR ID ...
-    public static TGS_Tuple3<String, Boolean, String> compile_MAPADD_FROMSQL(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TGS_Tuple3<String, Boolean, String> compile_MAPADD_FROMSQL(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, CharSequence defaultViewTableName) {
         var result = d.createFuncBoolean("compile_MAPADD_FROMSQL");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
             return d.returnError(result, "token size not 3");
@@ -94,7 +94,7 @@ public class TS_LibFileTmcrCodeMapCompile {
         }
         d.ci("sniff returns as: ", data);
 
-        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, column, data);
+        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
         var visibleText = visibleTextAndSubId[0];
         var subId = visibleTextAndSubId[1];
         d.ci("visibleText.self: ", visibleText);
