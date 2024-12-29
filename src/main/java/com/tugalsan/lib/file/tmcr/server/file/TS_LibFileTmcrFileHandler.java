@@ -38,7 +38,6 @@ import java.util.stream.IntStream;
 public class TS_LibFileTmcrFileHandler {
 
     final public static TS_Log d = TS_Log.of(false, TS_LibFileTmcrFileHandler.class);
-    final private static boolean PARALLEL = false; //may cause unexpected exception: java.lang.OutOfMemoryError: Java heap space
 
     public TS_FileCommonConfig fileCommonConfig;
     final public List<TS_FileCommonAbstract> files;
@@ -198,7 +197,7 @@ public class TS_LibFileTmcrFileHandler {
                 d.ce("saveFile", "WARNING: error message added to files", errorSource);
             }
         }, e -> TGS_Func.empty.run());
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             TGS_UnSafe.run(() -> {
                 if (!mi.saveFile(errorSource)) {
@@ -211,7 +210,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean createNewPage(int pageSizeAX, boolean landscape, Integer marginLeft, Integer marginRight, Integer marginTop, Integer marginBottom) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.createNewPage(pageSizeAX, landscape, marginLeft, marginRight, marginTop, marginBottom);
             if (!b) {
@@ -228,7 +227,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean addImage(BufferedImage pstImage, Path pstImageLoc, boolean textWrap, int left0_center1_right2, long imageCounter) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.addImage(pstImage, pstImageLoc, textWrap, left0_center1_right2, imageCounter);
             if (!b) {
@@ -244,7 +243,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean beginTableCell(int rowSpan, int colSpan, Integer cellHeight) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.beginTableCell(rowSpan, colSpan, cellHeight);
             if (!b) {
@@ -260,7 +259,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean endTableCell(int rotationInDegrees_0_90_180_270) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.endTableCell(rotationInDegrees_0_90_180_270);
             if (!b) {
@@ -300,7 +299,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean endTable() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.endTable();
             if (!b) {
@@ -317,7 +316,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean beginText(int allign_Left0_center1_right2_just3) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.beginText(allign_Left0_center1_right2_just3);
             if (!b) {
@@ -334,7 +333,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean endText() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.endText();
             if (!b) {
@@ -573,7 +572,7 @@ public class TS_LibFileTmcrFileHandler {
 
     private boolean addText_do(String text) {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.addText(text);
             if (!b) {
@@ -590,7 +589,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean addLineBreak() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.addLineBreak();
             if (!b) {
@@ -607,7 +606,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean setFontStyle() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.setFontStyle();
             if (!b) {
@@ -624,7 +623,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean setFontHeight() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.setFontHeight();
             if (!b) {
@@ -641,7 +640,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean setFontColor() {
         TGS_Tuple1<Boolean> result = new TGS_Tuple1(true);
-        var stream = PARALLEL ? files.parallelStream() : files.stream();
+        var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
             var b = mi.setFontColor();
             if (!b) {
