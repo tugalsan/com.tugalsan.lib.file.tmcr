@@ -4,7 +4,6 @@ import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.charset.client.*;
 import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
@@ -22,10 +21,10 @@ public class TS_LibFileTmcrCodeFontCompile {
         return fileCommonConfig.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_SIZE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_COLOR(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_SET_FONT_COLOR(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_COLOR");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "token size not 2");
+            return result.mutate2Error("token size not 2");
         }
         fileCommonConfig.fontColor = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
         var comparison = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK().equals(fileCommonConfig.fontColor)
@@ -40,38 +39,38 @@ public class TS_LibFileTmcrCodeFontCompile {
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED().equals(fileCommonConfig.fontColor)
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_YELLOW().equals(fileCommonConfig.fontColor);
         if (!comparison) {
-            return d.returnError(result, "CODE_TOKEN_FONT_COLOR_XXX code token[1] error! should be " + TS_FileCommonConfig.class.getSimpleName() + ".CODE_TOKEN_FONT_COLOR_XXX");
+            return result.mutate2Error("CODE_TOKEN_FONT_COLOR_XXX code token[1] error! should be " + TS_FileCommonConfig.class.getSimpleName() + ".CODE_TOKEN_FONT_COLOR_XXX");
         }
         if (!mifHandler.setFontColor()) {
-            return d.returnError(result, "Error: fileCommonConfig.mifHandler.setFontColor() == false");
+            return result.mutate2Error("Error: fileCommonConfig.mifHandler.setFontColor() == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_SIZE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_SET_FONT_SIZE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_SIZE");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "token size is not 2");
+            return result.mutate2Error("token size is not 2");
         }
         var nfs = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
         if (nfs == null || nfs < 1) {
-            return d.returnError(result, TS_FileCommonFontTags.CODE_SET_FONT_SIZE() + " code token[1] error! size should be 1 or more");
+            return result.mutate2Error(TS_FileCommonFontTags.CODE_SET_FONT_SIZE() + " code token[1] error! size should be 1 or more");
         }
         fileCommonConfig.fontHeight = nfs;
         if (!mifHandler.setFontHeight()) {
-            return d.returnError(result, "Error: fileCommonConfig.mifHandler.setFontHeight() == false");
+            return result.mutate2Error("Error: fileCommonConfig.mifHandler.setFontHeight() == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_SET_FONT_STYLE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(TS_FileCommonFontTags.CODE_SET_FONT_STYLE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_SET_FONT_STYLE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_SET_FONT_STYLE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_SET_FONT_STYLE");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "Error: Tokensize is not 2!");
+            return result.mutate2Error("Error: Tokensize is not 2!");
         }
         fileCommonConfig.fontUnderlined = false;
         var code = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
@@ -88,11 +87,11 @@ public class TS_LibFileTmcrCodeFontCompile {
             fileCommonConfig.fontBold = false;
             fileCommonConfig.fontItalic = false;
         } else {
-            return d.returnError(result, TS_FileCommonFontTags.CODE_SET_FONT_STYLE() + " code token[1] error! should be either: " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLD() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_ITALIC() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLDITALIC() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_PLAIN());
+            return result.mutate2Error(TS_FileCommonFontTags.CODE_SET_FONT_STYLE() + " code token[1] error! should be either: " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLD() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_ITALIC() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_BOLDITALIC() + ", " + TS_FileCommonFontTags.CODE_TOKEN_FONT_STYLE_PLAIN());
         }
         if (!mifHandler.setFontStyle()) {
-            return d.returnError(result, "Error: fileCommonConfig.mifHandler.setFontStyle() == false");
+            return result.mutate2Error("Error: fileCommonConfig.mifHandler.setFontStyle() == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 }

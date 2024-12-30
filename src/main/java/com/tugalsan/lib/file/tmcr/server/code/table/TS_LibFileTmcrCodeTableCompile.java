@@ -49,10 +49,10 @@ public class TS_LibFileTmcrCodeTableCompile {
         return fileCommonConfig.macroLine.startsWith(CODE_TABLECELL_BORDER());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TABLECELL(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_BEGIN_TABLECELL(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_BEGIN_TABLECELL");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 4)) {
-            return d.returnError(result, "token size not 4");
+            return result.mutate2Error("token size not 4");
         }
         Integer rowSpan;
         Integer colSpan;
@@ -62,7 +62,7 @@ public class TS_LibFileTmcrCodeTableCompile {
         } else {
             rowSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
             if (rowSpan == null || rowSpan < 1) {
-                return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[1] error! rowSpan == null || rowSpan < 1");
+                return result.mutate2Error(CODE_BEGIN_TABLECELL() + " code token[1] error! rowSpan == null || rowSpan < 1");
             }
         }
         if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), CODE_TOKEN_NULL())) {
@@ -70,25 +70,25 @@ public class TS_LibFileTmcrCodeTableCompile {
         } else {
             colSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
             if (colSpan == null || colSpan < 1) {
-                return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[2] error! colSpan == null || colSpan < 1");
+                return result.mutate2Error(CODE_BEGIN_TABLECELL() + " code token[2] error! colSpan == null || colSpan < 1");
             }
         }
         if (!TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(3), CODE_TOKEN_NULL())) {
             cellHeight = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3));
             if (cellHeight == null || cellHeight < 1) {
-                return d.returnError(result, CODE_BEGIN_TABLECELL() + " code token[3] error! cellHeight == null || cellHeight < 1");
+                return result.mutate2Error(CODE_BEGIN_TABLECELL() + " code token[3] error! cellHeight == null || cellHeight < 1");
             }
         } else {
             cellHeight = DEFAULT_CELL_HEIGHT() * rowSpan;
         }
         fileCommonConfig.cellHeight = cellHeight;
         if (!mifHandler.beginTableCell(rowSpan, colSpan, cellHeight)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.beginTableCell(rowSpan, colSpan, cellHeight) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.beginTableCell(rowSpan, colSpan, cellHeight) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_END_TABLECELL(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_END_TABLECELL(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_END_TABLECELL");
         var rotate = TGS_FuncEffectivelyFinal.ofInt()
                 .anoint(val -> 0)
@@ -98,30 +98,30 @@ public class TS_LibFileTmcrCodeTableCompile {
                 .coronate();
         fileCommonConfig.cellHeight = null;
         if (!mifHandler.endTableCell(rotate)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.endTableCell(rotate) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.endTableCell(rotate) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_TABLECELL_BORDER(TS_FileCommonConfig fileCommonConfig) {
+    public static TS_Log.Result_withLog compile_TABLECELL_BORDER(TS_FileCommonConfig fileCommonConfig) {
         var result = d.createFuncBoolean("compile_TABLECELL_BORDER");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "token size not 2");
+            return result.mutate2Error("token size not 2");
         }
         fileCommonConfig.enableTableCellBorder = fileCommonConfig.macroLineTokens.get(1).equals("NOBORDER");
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TABLE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_BEGIN_TABLE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_BEGIN_TABLE");
         if (fileCommonConfig.macroLineTokens.size() < 2) {
-            return d.returnError(result, CODE_BEGIN_TABLE() + " code should have more than 1 token error!");
+            return result.mutate2Error(CODE_BEGIN_TABLE() + " code should have more than 1 token error!");
         }
         var relColSizes = new int[fileCommonConfig.macroLineTokens.size() - 1];//can be only 1 as that many columns with same size
         for (var rcsi = 0; rcsi < relColSizes.length; rcsi++) {
             var rcsf = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(rcsi + 1));
             if (rcsf == null || rcsf < 0) {
-                return d.returnError(result, CODE_BEGIN_TABLE() + " token.relColSizes[" + rcsi + "] error! rcsf == null || rcsf < 0");
+                return result.mutate2Error(CODE_BEGIN_TABLE() + " token.relColSizes[" + rcsi + "] error! rcsf == null || rcsf < 0");
             }
             relColSizes[rcsi] = rcsf;
         }
@@ -133,16 +133,16 @@ public class TS_LibFileTmcrCodeTableCompile {
         relColSizes = TGS_MathUtils.convertWeighted(relColSizes, 1, 100);
         d.ci("compile_BEGIN_TABLE.FIX relColSizes: " + TGS_StringUtils.cmn().toString(relColSizes, ", "));
         if (!mifHandler.beginTable(relColSizes)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.beginTable(relColSizes) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.beginTable(relColSizes) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_END_TABLE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_END_TABLE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_END_TABLE");
         if (!mifHandler.endTable()) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.endTable() == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.endTable() == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 }

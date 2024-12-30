@@ -22,15 +22,15 @@ public class TS_LibFileTmcrCodeUrlCompile {
         return TGS_CharSetCast.current().containsIgnoreCase(fileCommonConfig.macroLines.get(idx), CODE_URL_LOCALHOST());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_URL_SH_OLD(TS_FileCommonConfig fileCommonConfig, int idx) {
+    public static TS_Log.Result_withLog compile_CODE_URL_SH_OLD(TS_FileCommonConfig fileCommonConfig, int idx) {
         var result = d.createFuncBoolean("compile_CODE_URL_SH");
         d.ci("compile_CODE_URL_SH", "before", fileCommonConfig.macroLines.get(idx));
         fileCommonConfig.macroLines.set(idx, fileCommonConfig.macroLines.get(idx).replace(CODE_URL_SH_OLD(), CODE_URL_SH_NEW()));
         d.ci("compile_CODE_URL_SH", "after", fileCommonConfig.macroLines.get(idx));
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_URL_LOCALHOST(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, int idx) {
+    public static TS_Log.Result_withLog compile_CODE_URL_LOCALHOST(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, int idx) {
         var result = d.createFuncBoolean("compile_CODE_URL_LOCALHOST");
         d.ci("compile_CODE_URL_LOCALHOST", "before", fileCommonConfig.macroLines.get(idx));
         d.ci("compile_CODE_URL_LOCALHOST", "host", fileCommonConfig.domainName);
@@ -42,6 +42,6 @@ public class TS_LibFileTmcrCodeUrlCompile {
             fileCommonConfig.macroLines.set(idx, fileCommonConfig.macroLines.get(idx).replace(codeLocalHostLowerCase, fileCommonConfig.domainName));
         }
         d.ci("compile_CODE_URL_LOCALHOST", "after", fileCommonConfig.macroLines.get(idx));
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 }

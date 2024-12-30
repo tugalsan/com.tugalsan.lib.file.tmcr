@@ -40,16 +40,16 @@ public class TS_LibFileTmcrParser {
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
                 if (TS_LibFileTmcrCodeUrlCompile.is_CODE_URL_SH_OLD(fileCommonConfig, i)) {
                     var cmd = TS_LibFileTmcrCodeUrlCompile.compile_CODE_URL_SH_OLD(fileCommonConfig, i);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                 }
 
                 if (TS_LibFileTmcrCodeUrlCompile.is_CODE_URL_LOCALHOST(fileCommonConfig, i)) {
                     var cmd = TS_LibFileTmcrCodeUrlCompile.compile_CODE_URL_LOCALHOST(anchor, fileCommonConfig, i);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                 }
@@ -57,8 +57,8 @@ public class TS_LibFileTmcrParser {
 
             d.ci("compileCode", "injecting...");
             var cmd = TS_LibFileTmcrCodeInjectCompile.compile_CODE_INJECT_CODE(fileCommonConfig, timeout);
-            if (!cmd.value1) {
-                mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+            if (!cmd.result) {
+                mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                 return null;
             }
 
@@ -72,15 +72,15 @@ public class TS_LibFileTmcrParser {
                 d.ci("compileCode", "percent", percent);
 
                 cmd = TS_LibFileTmcrParser_Tokenize.compile_TOKENIZE(fileCommonConfig, i);
-                if (!cmd.value1) {
-                    mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                if (!cmd.result) {
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                     return null;
                 }
                 d.ci("compileCode", "macroLine", fileCommonConfig.macroLine);
 
                 cmd = TS_LibFileTmcrCodeMapCompile.compile_CODE_MAPGET(fileCommonConfig);
-                if (!cmd.value1) {
-                    mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                if (!cmd.result) {
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                     return null;
                 } else {
                     d.ci("compileCode", "AFTER_MAPGET.macroLines[" + i + "/" + fileCommonConfig.macroLines.size() + "]-> [" + fileCommonConfig.macroLines.get(i) + "]");
@@ -123,8 +123,8 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodePageCompile.is_INSERT_PAGE(fileCommonConfig)) {//PAGE HANDLER
                     cmd = TS_LibFileTmcrCodePageCompile.compile_INSERT_PAGE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     } else {
                         fileCommonConfig.insertPageTriggeredBefore = true;
@@ -141,14 +141,14 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeImageCompile.is_INSERT_IMAGE(fileCommonConfig)) {
                     d.ci("compileCode", "is_INSERT_IMAGE");
                     cmd = TS_LibFileTmcrCodeImageCompile.compile_INSERT_IMAGE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
+                    if (!cmd.result) {
                         var fontColorBackup = fileCommonConfig.fontColor;
                         fileCommonConfig.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                         mifHandler.beginText(0);
-                        mifHandler.addText(cmd.value0 + "->" + cmd.value2);
+                        mifHandler.addText(cmd.classNameDotfuncName + "->" + cmd.log);
                         mifHandler.endText();
                         fileCommonConfig.fontColor = fontColorBackup;
-//                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+//                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
 //                        return;
 //                    } else {
                     }
@@ -158,8 +158,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTableCompile.is_BEGIN_TABLECELL(fileCommonConfig)) {
                     d.ci("compileCode", "is_BEGIN_TABLECELL");
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_BEGIN_TABLECELL(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -168,8 +168,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTableCompile.is_END_TABLECELL(fileCommonConfig)) {
                     d.ci("compileCode", "is_END_TABLECELL");
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_END_TABLECELL(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -178,8 +178,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTableCompile.is_TABLECELL_BORDER(fileCommonConfig)) {
                     d.ci("compileCode", "is_TABLECELL_BORDER");
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_TABLECELL_BORDER(fileCommonConfig);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -188,8 +188,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTableCompile.is_BEGIN_TABLE(fileCommonConfig)) {
                     d.ci("compileCode", "is_BEGIN_TABLE");
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_BEGIN_TABLE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -198,8 +198,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTableCompile.is_END_TABLE(fileCommonConfig)) {
                     d.ci("compileCode", "is_END_TABLE");
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_END_TABLE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -208,8 +208,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_BEGIN_TEXT(fileCommonConfig)) {
                     d.ci("compileCode", "is_BEGIN_TEXT");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_BEGIN_TEXT(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -218,8 +218,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_END_TEXT(fileCommonConfig)) {
                     d.ci("compileCode", "is_END_TEXT");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_END_TEXT(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -228,8 +228,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT(fileCommonConfig, mifHandler, filenameMode);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -238,8 +238,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_HTML(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_HTML");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_HTML(fileCommonConfig, mifHandler, timeout);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -248,8 +248,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_CREATE_DATE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_CREATE_DATE");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_DATE(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -258,8 +258,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_CREATE_USER(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_CREATE_USER");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_USER(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -268,8 +268,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_DATE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_REVLST_DATE");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_DATE(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -278,8 +278,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_USER(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_REVLST_USER");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_USER(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -288,8 +288,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_REVLST_NO(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_REVLST_NO");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_NO(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -298,8 +298,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_USER(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_USER");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_USER(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -308,8 +308,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_NEWLINE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_NEWLINE");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_NEWLINE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -318,8 +318,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_SPC(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_SPC");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_SPC(fileCommonConfig, mifHandler, filenameMode);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -328,8 +328,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_TIME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_TIME");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_TIME(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -338,8 +338,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_DATE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_DATE");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_DATE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -348,8 +348,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_HR(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_HR");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_HR(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -358,8 +358,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_FUNCNAME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_FUNCNAME");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_FUNCNAME(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -368,8 +368,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROM_SQLQUERY(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROM_SQLQUERY");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROM_SQLQUERY(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -378,8 +378,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_CW(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_CW");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_CW(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -388,8 +388,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeMapCompile.is_MAPADD_FROMSQL(fileCommonConfig)) {
                     d.ci("compileCode", "is_MAPADD_FROMSQL");
                     cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(anchor, fileCommonConfig, mifHandler, defaultViewTableName);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -398,8 +398,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -408,8 +408,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_TABNAME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_TABNAME");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_TABNAME(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -418,8 +418,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_COLNAME(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_COLNAME");
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_COLNAME(anchor, fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -428,8 +428,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeFontCompile.is_SET_FONT_COLOR(fileCommonConfig)) {
                     d.ci("compileCode", "is_SET_FONT_COLOR");
                     cmd = TS_LibFileTmcrCodeFontCompile.compile_SET_FONT_COLOR(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -438,8 +438,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeFontCompile.is_SET_FONT_SIZE(fileCommonConfig)) {
                     d.ci("compileCode", "is_SET_FONT_SIZE");
                     cmd = TS_LibFileTmcrCodeFontCompile.compile_SET_FONT_SIZE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;
@@ -448,8 +448,8 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeFontCompile.is_SET_FONT_STYLE(fileCommonConfig)) {
                     d.ci("compileCode", "is_SET_FONT_STYLE");
                     cmd = TS_LibFileTmcrCodeFontCompile.compile_SET_FONT_STYLE(fileCommonConfig, mifHandler);
-                    if (!cmd.value1) {
-                        mifHandler.saveFile(cmd.value0 + "->" + cmd.value2);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
                     continue;

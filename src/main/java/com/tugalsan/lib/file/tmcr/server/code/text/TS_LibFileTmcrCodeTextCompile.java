@@ -53,10 +53,10 @@ public class TS_LibFileTmcrCodeTextCompile {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_BEGIN_TEXT());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_BEGIN_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_BEGIN_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_BEGIN_TEXT");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "token size not 2");
+            return result.mutate2Error("token size not 2");
         }
         int allign_Left0_center1_right2_just3;
         var allignText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
@@ -73,37 +73,37 @@ public class TS_LibFileTmcrCodeTextCompile {
             allign_Left0_center1_right2_just3 = 0;
         }
         if (!mifHandler.beginText(allign_Left0_center1_right2_just3)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.beginText(allign_Left0_center1_right2_just3) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.beginText(allign_Left0_center1_right2_just3) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_END_TEXT(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_END_TEXT());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_END_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_END_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_END_TEXT");
         if (!mifHandler.endText()) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.endText() == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.endText() == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT() + " ") || fileCommonConfig.macroLineUpperCase.equals(CODE_ADD_TEXT());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
         var result = d.createFuncBoolean("compile_ADD_TEXT");
         var text = CODE_ADD_TEXT().length() == fileCommonConfig.macroLine.length() ? "" : fileCommonConfig.macroLine.substring(CODE_ADD_TEXT().length() + 1);
         if (filenameMode) {
             fileCommonConfig.prefferedFileNameLabel += text;
-            return d.returnTrue(result);
+            return result.mutate2True();
         } else if (mifHandler.addText(text)) {
-            return d.returnTrue(result);
+            return result.mutate2True();
         } else {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
     }
 
@@ -111,224 +111,224 @@ public class TS_LibFileTmcrCodeTextCompile {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_HTML());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_HTML(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, Duration timeout) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_HTML(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, Duration timeout) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_HTML");
         var urls = fileCommonConfig.macroLine.substring(CODE_ADD_TEXT_HTML().length() + 1).trim();
         d.ci("url detected as " + urls);
         var text = TS_UrlDownloadUtils.toText(TGS_Url.of(urls), timeout);
         if (text == null) {
-            return d.returnError(result, "ERROR: htmlContent return null. check your internet connection!!!");
+            return result.mutate2Error("ERROR: htmlContent return null. check your internet connection!!!");
         }
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_CREATE_DATE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_CREATE_DATE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_CREATE_DATE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_CREATE_DATE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_CREATE_DATE");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "token size not 3");
+            return result.mutate2Error("token size not 3");
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return d.returnError(result, "ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error("ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
             id = fileCommonConfig.selectedId;
             if (id == null) {
-                return d.returnError(result, "ERROR: SATIR SEÇİLMEDİ HATASI");
+                return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
             if (id == null) {
-                return d.returnError(result, "ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[2] should be a number!");
+                return result.mutate2Error("ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[2] should be a number!");
             }
         }
         var createDate = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_CREATE_0(), TS_LibRqlRevRowUtils.PARAM_RET_DATE_0());
         var createDateLong = TGS_CastUtils.toLong(createDate);
         var text = createDateLong == null ? createDate : TGS_Time.toString_dateOnly(createDateLong);
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_CREATE_USER(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_CREATE_USER());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_CREATE_USER(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_CREATE_USER(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_CREATE_USER");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "ERROR: token size not 3");
+            return result.mutate2Error("ERROR: token size not 3");
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return d.returnError(result, CODE_ADD_TEXT_CREATE_USER() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(CODE_ADD_TEXT_CREATE_USER() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
             id = fileCommonConfig.selectedId;
             if (id == null) {
-                return d.returnError(result, "ERROR: SATIR SEÇİLMEDİ HATASI");
+                return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
             if (id == null) {
-                return d.returnError(result, CODE_ADD_TEXT_CREATE_USER() + ".token[2] should be a number!");
+                return result.mutate2Error(CODE_ADD_TEXT_CREATE_USER() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_CREATE_0(), TS_LibRqlRevRowUtils.PARAM_RET_USER_2());
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_REVLST_DATE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_REVLST_DATE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_REVLST_DATE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_REVLST_DATE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_REVLST_DATE");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "token size not 3");
+            return result.mutate2Error("token size not 3");
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return d.returnError(result, CODE_ADD_TEXT_REVLST_DATE() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(CODE_ADD_TEXT_REVLST_DATE() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
             id = fileCommonConfig.selectedId;
             if (id == null) {
-                return d.returnError(result, "ERROR: SATIR SEÇİLMEDİ HATASI");
+                return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
             if (id == null) {
-                return d.returnError(result, CODE_ADD_TEXT_REVLST_DATE() + ".token[2] should be a number!");
+                return result.mutate2Error(CODE_ADD_TEXT_REVLST_DATE() + ".token[2] should be a number!");
             }
         }
         var revDate = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_DATE_0());
         var revDateLong = TGS_CastUtils.toLong(revDate);
         var text = revDateLong == null ? revDate : TGS_Time.toString_dateOnly(revDateLong);
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_REVLST_USER(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_REVLST_USER());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_REVLST_USER(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_REVLST_USER(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_REVLST_USER");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "token size not 3");
+            return result.mutate2Error("token size not 3");
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return d.returnError(result, CODE_ADD_TEXT_REVLST_USER() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(CODE_ADD_TEXT_REVLST_USER() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
             id = fileCommonConfig.selectedId;
             if (id == null) {
-                return d.returnError(result, "ERROR: SATIR SEÇİLMEDİ HATASI");
+                return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
             if (id == null) {
-                return d.returnError(result, CODE_ADD_TEXT_REVLST_USER() + ".token[2] should be a number!");
+                return result.mutate2Error(CODE_ADD_TEXT_REVLST_USER() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_USER_2());
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_REVLST_NO(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_REVLST_NO());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_REVLST_NO(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_REVLST_NO(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_REVLST_NO");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "token size not 3");
+            return result.mutate2Error("token size not 3");
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return d.returnError(result, CODE_ADD_TEXT_REVLST_NO() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(CODE_ADD_TEXT_REVLST_NO() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
             id = fileCommonConfig.selectedId;
             if (id == null) {
-                return d.returnError(result, "ERROR: SATIR SEÇİLMEDİ HATASI");
+                return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
             if (id == null) {
-                return d.returnError(result, CODE_ADD_TEXT_REVLST_NO() + ".token[2] should be a number!");
+                return result.mutate2Error(CODE_ADD_TEXT_REVLST_NO() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_COUNT_3());
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_USER(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_USER());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_USER(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_USER(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_USER");
         var text = fileCommonConfig.username;
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_NEWLINE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_NEWLINE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_NEWLINE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_NEWLINE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_NEWLINE");
         var text = "\n";
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_SPC(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_SPC());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_SPC(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_SPC(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_SPC");
         var text = " ";
         if (filenameMode) {
             fileCommonConfig.prefferedFileNameLabel += " ";
-            return d.returnTrue(result);
+            return result.mutate2True();
         } else if (mifHandler.addText(text)) {
-            return d.returnTrue(result);
+            return result.mutate2True();
         } else {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
     }
 
@@ -336,69 +336,69 @@ public class TS_LibFileTmcrCodeTextCompile {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_TIME());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_TIME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_TIME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_TIME");
         var text = fileCommonConfig.now.toString_timeOnly_simplified();
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_DATE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_DATE());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_DATE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_DATE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_DATE");
         var text = fileCommonConfig.now.toString_dateOnly();
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_HR(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_HR());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_HR(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_HR(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_HR");
         if (!mifHandler.addLineBreak()) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addLineBreak() == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addLineBreak() == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_FUNCNAME(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_FUNCNAME());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_FUNCNAME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_FUNCNAME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_FUNCNAME");
         var text = fileCommonConfig.funcName;
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_VAR_FROM_SQLQUERY(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_VAR_FROM_SQLQUERY());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_VAR_FROM_SQLQUERY(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROM_SQLQUERY(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_VAR_FROM_SQLQUERY");
         var sql = fileCommonConfig.macroLine.substring(CODE_ADD_TEXT_VAR_FROM_SQLQUERY().length() + 1);
         TGS_Tuple1<String> pack = new TGS_Tuple1();
         TS_SQLSelectStmtUtils.select(anchor, sql, rs -> pack.value0 = rs.str.get(0, 0));
         if (pack.value0 == null) {
-            return d.returnError(result, "ERROR: text == null");
+            return result.mutate2Error("ERROR: text == null");
         }
         if (!mifHandler.addText(pack.value0)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_CW(TS_FileCommonConfig fileCommonConfig) {
@@ -406,48 +406,48 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     //ADD_TEXT_CW VAR ID
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_CW(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_CW(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_CW");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "token size not 3");
+            return result.mutate2Error("token size not 3");
         }
         TGS_LibRqlTbl table;
         Integer colIdx;
         {
             var tableAndColname = TS_LibFileTmcrParser_Assure.splitTableDotColname(fileCommonConfig, 1);
             if (tableAndColname == null) {
-                return d.returnError(result, "tableAndColname == null");
+                return result.mutate2Error("tableAndColname == null");
             }
-            table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname[0]);
+            table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname.tableName());
             if (table == null) {
-                return d.returnError(result, "table == null");
+                return result.mutate2Error("table == null");
             }
-            colIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname[1]);
+            colIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname.colname());
             if (colIdx == null) {
-                return d.returnError(result, "colIdx == null");
+                return result.mutate2Error("colIdx == null");
             }
         }
         var column = table.columns.get(colIdx);
         var id = TS_LibFileTmcrParser_Assure.getId(fileCommonConfig, mifHandler, 2);
         if (id == null) {
-            return d.returnError(result, "id == null");
+            return result.mutate2Error("id == null");
         }
         d.ci("id returns as: ", id);
 
         var data = TS_LibFileTmcrParser_Assure.sniffCellSimple(anchor, fileCommonConfig, table, id, colIdx);
         if (data == null) {
-            return d.returnError(result, "data == null");
+            return result.mutate2Error("data == null");
         }
         d.ci("sniff returns as: ", data);
 
         d.ci("compile_ADD_TEXT_CW.detection.ok");
         if (!column.getType().equals(TGS_SQLColTypedUtils.TYPE_LNGDATE())) {
-            return d.returnError(result, fileCommonConfig.macroLine + " -> CW column " + colIdx + " needs TK_GWTSQLColumnType.TYPE_LNGDATE but found: " + column.getType());
+            return result.mutate2Error(fileCommonConfig.macroLine + " -> CW column " + colIdx + " needs TK_GWTSQLColumnType.TYPE_LNGDATE but found: " + column.getType());
         }
         d.ci("compile_ADD_TEXT_CW.TYPE_LNGDATE.detected");
         var data_l = TGS_CastUtils.toLong(data);
         if (data_l == null) {
-            return d.returnError(result, fileCommonConfig.macroLine + "CW data_l == null!!!");
+            return result.mutate2Error(fileCommonConfig.macroLine + "CW data_l == null!!!");
         }
         d.ci("compile_ADD_TEXT_CW.data_l: ", data_l);
         var date = TGS_Time.ofDate(data_l);
@@ -455,9 +455,9 @@ public class TS_LibFileTmcrCodeTextCompile {
         var text = String.valueOf(date.getWeekNumber().orElse(0));
 
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_FileCommonConfig fileCommonConfig) {
@@ -465,29 +465,29 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     //ADD_TEXT_VAR_FROMSQL_REVERSE VAR ID
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.macroline: [" + fileCommonConfig.macroLine + "]");
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.checkTokenSize");
         if (fileCommonConfig.macroLineTokens.size() == 2) {//if last value is empty
             if (mifHandler.addText("EMPTY")) {
-                return d.returnTrue(result);
+                return result.mutate2True();
             } else {
-                return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+                return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
             }
         }
 
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
-            return d.returnError(result, "token size not 3");
+            return result.mutate2Error("token size not 3");
         }
 
         var nullTag = fileCommonConfig.macroLineTokens.get(2);
         if (TGS_CharSetCast.current().equalsIgnoreCase("null", nullTag)) {
             if (mifHandler.addText("NULL")) {
-                return d.returnTrue(result);
+                return result.mutate2True();
             } else {
-                return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+                return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
             }
         }
 
@@ -497,15 +497,15 @@ public class TS_LibFileTmcrCodeTextCompile {
         {
             var tableAndColname = TS_LibFileTmcrParser_Assure.splitTableDotColname(fileCommonConfig, 1);
             if (tableAndColname == null) {
-                return d.returnError(result, "tableAndColname == null");
+                return result.mutate2Error("tableAndColname == null");
             }
-            table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname[0]);
+            table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname.tableName());
             if (table == null) {
-                return d.returnError(result, "table == null");
+                return result.mutate2Error("table == null");
             }
-            colIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname[1]);
+            colIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname.colname());
             if (colIdx == null) {
-                return d.returnError(result, "colIdx == null");
+                return result.mutate2Error("colIdx == null");
             }
             d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.parse#1.colIdx:[" + colIdx + "]");
         }
@@ -515,23 +515,23 @@ public class TS_LibFileTmcrCodeTextCompile {
         var column = table.columns.get(colIdx);
         var id = TS_LibFileTmcrParser_Assure.getId(fileCommonConfig, mifHandler, 2);
         if (id == null) {
-            return d.returnError(result, "id == null");
+            return result.mutate2Error("id == null");
         }
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.id returns as: " + id);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCellSimple...");
         var data = TS_LibFileTmcrParser_Assure.sniffCellSimple(anchor, fileCommonConfig, table, id, colIdx);//FIX THAT THING IMMATDIATELY!!!
         if (data == null) {
-            return d.returnError(result, "data == null");
+            return result.mutate2Error("data == null");
         }
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCell returns as: " + data);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCellVisible...");
         var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
         if (visibleTextAndSubId == null) {
-            return d.returnError(result, "visibleTextAndSubId == null");
+            return result.mutate2Error("visibleTextAndSubId == null");
         }
-        var visibleText = visibleTextAndSubId[0];
+        var visibleText = visibleTextAndSubId.visibleText();
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.visibleText: " + visibleText);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.result...");
@@ -546,11 +546,11 @@ public class TS_LibFileTmcrCodeTextCompile {
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.result: " + text);
         if (filenameMode) {
             fileCommonConfig.prefferedFileNameLabel += text;
-            return d.returnTrue(result);
+            return result.mutate2True();
         } else if (mifHandler.addText(text)) {
-            return d.returnTrue(result);
+            return result.mutate2True();
         } else {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
     }
 
@@ -558,53 +558,53 @@ public class TS_LibFileTmcrCodeTextCompile {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_TABNAME());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_TABNAME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_TABNAME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_TABNAME");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "token size not 2");
+            return result.mutate2Error("token size not 2");
         }
         var table = TS_LibRqlBufferUtils.get(fileCommonConfig.macroLineTokens.get(1));
         if (table == null) {
-            return d.returnError(result, CODE_ADD_TEXT_TABNAME() + ".token[1] sniff table not worked as expected! table == null");
+            return result.mutate2Error(CODE_ADD_TEXT_TABNAME() + ".token[1] sniff table not worked as expected! table == null");
         }
         var text = table.nameReadable;
         if (!mifHandler.addText(text)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 
     public static boolean is_ADD_TEXT_COLNAME(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_COLNAME());
     }
 
-    public static TGS_Tuple3<String, Boolean, String> compile_ADD_TEXT_COLNAME(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_COLNAME(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_COLNAME");
 
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return d.returnError(result, "token size not 2");
+            return result.mutate2Error("token size not 2");
         }
         TGS_LibRqlTbl table;
         Integer colIdx;
         {
             var tableAndColname = TS_LibFileTmcrParser_Assure.splitTableDotColname(fileCommonConfig, 1);
             if (tableAndColname == null) {
-                return d.returnError(result, "tableAndColname == null");
+                return result.mutate2Error("tableAndColname == null");
             }
-            table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname[0]);
+            table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname.tableName());
             if (table == null) {
-                return d.returnError(result, "table == null");
+                return result.mutate2Error("table == null");
             }
-            colIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname[1]);
+            colIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname.colname());
             if (colIdx == null) {
-                return d.returnError(result, "colIdx == null");
+                return result.mutate2Error("colIdx == null");
             }
         }
 
         var cnv = table.columns.get(colIdx).getColumnNameVisible();
         if (!mifHandler.addText(cnv)) {
-            return d.returnError(result, "fileCommonConfig.mifHandler.addText(text) == false");
+            return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
         }
-        return d.returnTrue(result);
+        return result.mutate2True();
     }
 }

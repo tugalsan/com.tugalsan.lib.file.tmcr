@@ -17,7 +17,7 @@ public class TS_LibFileTmcrCodeInjectCompile {
 
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeInjectCompile.class);
 
-    public static TGS_Tuple3<String, Boolean, String> compile_CODE_INJECT_CODE(TS_FileCommonConfig fileCommonConfig, Duration timeout) {
+    public static TS_Log.Result_withLog compile_CODE_INJECT_CODE(TS_FileCommonConfig fileCommonConfig, Duration timeout) {
         var result = d.createFuncBoolean("compile_CODE_INJECT_CODE");
         d.ci("compile_CODE_INJECT_CODE", "welcome");
         return TGS_UnSafe.call(() -> {
@@ -44,12 +44,12 @@ public class TS_LibFileTmcrCodeInjectCompile {
                     d.ci("getting html context of", url);
                     var htmlCodeContent = TS_UrlDownloadUtils.toText(url, timeout);
                     if (htmlCodeContent == null) {
-                        return d.returnError(result, "ERROR: htmlCodeContent return null. check " + url + " @compile_CODE_INJECT_CODE3");
+                        return result.mutate2Error("ERROR: htmlCodeContent return null. check " + url + " @compile_CODE_INJECT_CODE3");
                     }
                     d.ci("parsing html context");
                     var macroLines2 = TGS_StringUtils.jre().toList(htmlCodeContent, "\n");
                     if (macroLines2 == null) {
-                        return d.returnError(result, "ERROR: macroLines2 == null @compile_CODE_INJECT_CODE4");
+                        return result.mutate2Error("ERROR: macroLines2 == null @compile_CODE_INJECT_CODE4");
                     }
                     d.ci("compile_CODE_INJECT_CODE", "Injection content.size: " + macroLines2.size());
                     fileCommonConfig.macroLines.remove(i);
@@ -69,9 +69,9 @@ public class TS_LibFileTmcrCodeInjectCompile {
             if (d.infoEnable) {
                 IntStream.range(0, fileCommonConfig.macroLines.size()).forEachOrdered(i -> d.ci("compile_CODE_INJECT_CODE.AFTER_INJECT.macroLines[", i, "/", fileCommonConfig.macroLines.size(), "]-> [", fileCommonConfig.macroLines.get(i), "]"));
             }
-            return d.returnTrue(result);
+            return result.mutate2True();
         }, e -> {
-            return d.returnError(result, "ERROR: " + TGS_StringUtils.cmn().toString((Throwable) e) + " @compile_CODE_INJECT_CODE1");
+            return result.mutate2Error("ERROR: " + TGS_StringUtils.cmn().toString((Throwable) e) + " @compile_CODE_INJECT_CODE1");
         });
     }
 }

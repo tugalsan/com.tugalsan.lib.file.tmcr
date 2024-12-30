@@ -1,7 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.label;
 
 import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSet;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.conn.server.*;
@@ -113,11 +112,11 @@ public class TS_LibFileTmcrCodeLabelCompile {
                 if (tableAndColname == null) {
                     return ERROR();
                 }
-                table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname[0]);
+                table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname.tableName());
                 if (table == null) {
                     return ERROR();
                 }
-                tableColIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname[1]);
+                tableColIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname.colname());
                 if (tableColIdx == null) {
                     return ERROR();
                 }

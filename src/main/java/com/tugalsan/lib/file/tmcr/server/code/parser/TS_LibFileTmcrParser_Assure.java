@@ -48,17 +48,18 @@ public class TS_LibFileTmcrParser_Assure {
         return table;
     }
 
-    public static String[] splitTableDotColname(TS_FileCommonConfig fileCommonConfig, int tableDotColnameIdx) {
+    public static Result_splitTableDotColname splitTableDotColname(TS_FileCommonConfig fileCommonConfig, int tableDotColnameIdx) {
         var tableDotColname = fileCommonConfig.macroLineTokens.get(tableDotColnameIdx);
         var dividerIdx = tableDotColname.indexOf(".");
         if (dividerIdx == -1) {
             d.ce(fileCommonConfig.macroLine, ".token[", tableDotColnameIdx, "] = [", tableDotColname, "] should have . in it!");
             return null;
         }
-        return new String[]{
-            tableDotColname.substring(0, dividerIdx), //tableName
-            tableDotColname.substring(dividerIdx + 1) //colname
-        };
+        return new Result_splitTableDotColname(tableDotColname.substring(0, dividerIdx), tableDotColname.substring(dividerIdx + 1));
+    }
+
+    public static record Result_splitTableDotColname(String tableName, String colname) {
+
     }
 
     public static Integer getColumnIndex(TS_FileCommonConfig fileCommonConfig, TGS_LibRqlTbl table, String colname) {
@@ -126,7 +127,7 @@ public class TS_LibFileTmcrParser_Assure {
         return text;
     }
 
-    public static String[] getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig,
+    public static Result_VisibleTextAndSubId getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig,
             CharSequence tableName, CharSequence defaultViewTableName, TGS_LibRqlCol column, String inputData) {
         String outputData;
         Long subId = null;
@@ -188,10 +189,10 @@ public class TS_LibFileTmcrParser_Assure {
         } else {
             outputData = inputData;
         }
-        return new String[]{
-            outputData,
-            String.valueOf(subId)
-        };
+        return new Result_VisibleTextAndSubId(outputData, subId);
     }
 
+    public static record Result_VisibleTextAndSubId(String visibleText, Long subId) {
+
+    }
 }
