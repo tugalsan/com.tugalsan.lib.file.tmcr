@@ -528,10 +528,12 @@ public class TS_LibFileTmcrCodeTextCompile {
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCellVisible...");
         var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
-        if (visibleTextAndSubId == null) {
-            return result.mutate2Error("visibleTextAndSubId == null");
-        }
-        var visibleText = visibleTextAndSubId.visibleText();
+//        if (visibleTextAndSubId == null) {
+//            return result.mutate2Error("visibleTextAndSubId == null");
+//        }
+        var visibleText = visibleTextAndSubId == null
+                ? "WARNING @" + d.className + "." + "compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE: 'visibleTextAndSubId == null'  W/ tn:" + tn + ", column:" + column + ", data:" + data
+                : visibleTextAndSubId.visibleText();
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.visibleText: " + visibleText);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.result...");
