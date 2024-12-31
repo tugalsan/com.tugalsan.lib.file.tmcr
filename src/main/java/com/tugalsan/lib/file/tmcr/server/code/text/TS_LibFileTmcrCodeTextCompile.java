@@ -532,7 +532,7 @@ public class TS_LibFileTmcrCodeTextCompile {
 //            return result.mutate2Error("visibleTextAndSubId == null");
 //        }
         var visibleText = visibleTextAndSubId == null
-                ? "WARNING @" + d.className + "." + "compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE: 'visibleTextAndSubId == null'  W/ tn:" + tn + ", column:" + column + ", data:" + data
+                ? "ERROR_DATA_NOT_FOUND @" + d.className + "." + "compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE: 'visibleTextAndSubId == null'  W/ tn:" + tn + ", column:" + column + ", data:" + data
                 : visibleTextAndSubId.visibleText();
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.visibleText: " + visibleText);
 
