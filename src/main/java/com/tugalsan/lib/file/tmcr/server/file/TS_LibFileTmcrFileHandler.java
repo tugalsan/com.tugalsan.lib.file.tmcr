@@ -26,6 +26,7 @@ import com.tugalsan.api.function.client.TGS_Func;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.client.TGS_StringUtils;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.TGS_Url;
@@ -74,14 +75,14 @@ public class TS_LibFileTmcrFileHandler {
     public Path localfileZIP;
     public TGS_Url remotefileZIP;
 
-    public static boolean use(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
+    public static boolean use(TS_ThreadSyncTrigger servletKillTrigger,/*boolean useOpendf, */ TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout, CharSequence defaultViewTableName
     ) {
-        return use(/*useOpendf, */fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout, defaultViewTableName);
+        return use(servletKillTrigger,/*useOpendf, */ fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout, defaultViewTableName);
     }
 
-    public static boolean use(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
+    public static boolean use(TS_ThreadSyncTrigger servletKillTrigger,/*boolean useOpendf, */ TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
             TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout, CharSequence defaultViewTableName
     ) {
@@ -92,7 +93,7 @@ public class TS_LibFileTmcrFileHandler {
                         holdForAWhile.value0 = __fileHandler;
 
                         d.ci("use", "compileCode");
-                        TS_LibFileTmcrParser.compileCode(anchor, fileCommonConfig, __fileHandler, (userDotTable, percentage) -> {
+                        TS_LibFileTmcrParser.compileCode(servletKillTrigger, anchor, fileCommonConfig, __fileHandler, (userDotTable, percentage) -> {
                             if (progressUpdate_with_userDotTable_and_percentage != null) {
                                 progressUpdate_with_userDotTable_and_percentage.run(userDotTable, percentage);
                             }

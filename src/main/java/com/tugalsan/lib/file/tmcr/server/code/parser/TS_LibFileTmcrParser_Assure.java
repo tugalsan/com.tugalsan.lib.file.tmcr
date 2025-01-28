@@ -7,6 +7,7 @@ import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.math.client.*;
 import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.time.client.*;
 import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
@@ -127,7 +128,7 @@ public class TS_LibFileTmcrParser_Assure {
         return text;
     }
 
-    public static Result_VisibleTextAndSubId getVisibleTextAndSubId(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig,
+    public static Result_VisibleTextAndSubId getVisibleTextAndSubId(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig,
             CharSequence tableName, CharSequence defaultViewTableName, TGS_LibRqlCol column, String inputData) {
         String outputData;
         Long subId = null;
@@ -171,7 +172,7 @@ public class TS_LibFileTmcrParser_Assure {
                 return null;
             }
             {
-                var ra = TS_LibRqlLinkUtils.get(TS_LibRqlBufferUtils.items, anchor, tableName, defaultViewTableName, column.getDataString1_LnkTargetTableName(), subId);
+                var ra = TS_LibRqlLinkUtils.get(servletKillThrigger, TS_LibRqlBufferUtils.items, anchor, tableName, defaultViewTableName, column.getDataString1_LnkTargetTableName(), subId);
                 if (ra == null) {
                     var errorText = fileCommonConfig.macroLine + ".getLNGLINKText() == null";
                     d.ce("getVisibleTextAndSubId:", errorText);

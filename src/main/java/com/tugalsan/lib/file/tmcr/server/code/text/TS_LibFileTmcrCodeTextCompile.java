@@ -12,6 +12,7 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
 import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT;
 import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_COLNAME;
@@ -465,7 +466,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     //ADD_TEXT_VAR_FROMSQL_REVERSE VAR ID
-    public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.macroline: [" + fileCommonConfig.macroLine + "]");
 
@@ -527,7 +528,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCell returns as: " + data);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCellVisible...");
-        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
+        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(servletKillThrigger, anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
 //        if (visibleTextAndSubId == null) {
 //            return result.mutate2Error("visibleTextAndSubId == null");
 //        }

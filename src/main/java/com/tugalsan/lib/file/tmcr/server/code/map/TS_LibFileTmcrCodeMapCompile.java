@@ -10,6 +10,7 @@ import static com.tugalsan.lib.file.tmcr.server.code.map.TS_LibFileTmcrCodeMapTa
 import static com.tugalsan.lib.file.tmcr.server.code.map.TS_LibFileTmcrCodeMapTags.CODE_MAPGET;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
 import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
@@ -58,7 +59,7 @@ public class TS_LibFileTmcrCodeMapCompile {
     }
 
     //MAPADD_FROMSQL VAR ID ...
-    public static TS_Log.Result_withLog compile_MAPADD_FROMSQL(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, CharSequence defaultViewTableName) {
+    public static TS_Log.Result_withLog compile_MAPADD_FROMSQL(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, CharSequence defaultViewTableName) {
         var result = d.createFuncBoolean("compile_MAPADD_FROMSQL");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
             return result.mutate2Error("token size not 3");
@@ -93,7 +94,7 @@ public class TS_LibFileTmcrCodeMapCompile {
         }
         d.ci("sniff returns as: ", data);
 
-        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
+        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(servletKillThrigger, anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
         d.ci("visibleText.self: ", visibleTextAndSubId.visibleText());
         d.ci("subId.self: " + visibleTextAndSubId.subId());
 

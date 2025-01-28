@@ -7,6 +7,7 @@ import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.conn.server.*;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.unsafe.client.*;
 
 import com.tugalsan.lib.file.tmcr.server.code.font.TS_LibFileTmcrCodeFontCompile;
@@ -30,7 +31,7 @@ public class TS_LibFileTmcrParser {
         return -1;
     }
 
-    public static void compileCode(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout, CharSequence defaultViewTableName) {
+    public static void compileCode(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout, CharSequence defaultViewTableName) {
         var e = TGS_UnSafe.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -38,6 +39,9 @@ public class TS_LibFileTmcrParser {
             }
             d.ci("compileCode", "replacing...");
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                if (servletKillThrigger.hasTriggered()) {
+                    return null;
+                }
                 if (TS_LibFileTmcrCodeUrlCompile.is_CODE_URL_SH_OLD(fileCommonConfig, i)) {
                     var cmd = TS_LibFileTmcrCodeUrlCompile.compile_CODE_URL_SH_OLD(fileCommonConfig, i);
                     if (!cmd.result) {
@@ -54,6 +58,9 @@ public class TS_LibFileTmcrParser {
                     }
                 }
             }
+            if (servletKillThrigger.hasTriggered()) {
+                return null;
+            }
 
             d.ci("compileCode", "injecting...");
             var cmd = TS_LibFileTmcrCodeInjectCompile.compile_CODE_INJECT_CODE(fileCommonConfig, timeout);
@@ -61,10 +68,16 @@ public class TS_LibFileTmcrParser {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                 return null;
             }
+            if (servletKillThrigger.hasTriggered()) {
+                return null;
+            }
 
             d.ci("compileCode", "compiling...");
             var filenameMode = false;
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                if (servletKillThrigger.hasTriggered()) {
+                    return null;
+                }
                 var percent = 100 * (i + 1) / fileCommonConfig.macroLines.size();
                 if (progressUpdate_with_userDotTable_and_percentage != null) {
                     progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, percent);
@@ -387,7 +400,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeMapCompile.is_MAPADD_FROMSQL(fileCommonConfig)) {
                     d.ci("compileCode", "is_MAPADD_FROMSQL");
-                    cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(anchor, fileCommonConfig, mifHandler, defaultViewTableName);
+                    cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(servletKillThrigger, anchor, fileCommonConfig, mifHandler, defaultViewTableName);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
@@ -397,7 +410,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
-                    cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName);
+                    cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(servletKillThrigger, anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
