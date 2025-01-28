@@ -4,6 +4,7 @@ import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.restbl.server.*;
 import com.tugalsan.api.sql.resultset.server.*;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.time.client.*;
 import com.tugalsan.lib.file.tmcr.server.code.font.TS_LibFileTmcrCodeFontWriter;
 import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_BEGIN_TABLE;
@@ -67,11 +68,11 @@ public class TS_LibFileTmcrCodeTableWriter {
         return CODE_BEGIN_TABLE() + " " + columnCount + "\n";
     }
 
-    public static String getMacroCodeTable(TGS_ListTable t, int colPercentage[], int fontsizeHeader, int fontsizeData, boolean sqlCellprefixIsBold) {
-        return getMacroCodeTable(t, colPercentage, fontsizeHeader, fontsizeData, false, sqlCellprefixIsBold);
+    public static String getMacroCodeTable(TS_ThreadSyncTrigger servletKillTrigger, TGS_ListTable t, int colPercentage[], int fontsizeHeader, int fontsizeData, boolean sqlCellprefixIsBold) {
+        return getMacroCodeTable(servletKillTrigger, t, colPercentage, fontsizeHeader, fontsizeData, false, sqlCellprefixIsBold);
     }
 
-    public static String getMacroCodeTable(TGS_ListTable t, int colPercentage[], int fontsizeHeader, int fontsizeData, boolean rotateHeader_90, boolean sqlCellprefixIsBold) {
+    public static String getMacroCodeTable(TS_ThreadSyncTrigger servletKillTrigger, TGS_ListTable t, int colPercentage[], int fontsizeHeader, int fontsizeData, boolean rotateHeader_90, boolean sqlCellprefixIsBold) {
         if (t == null) {
             return "";
         }
@@ -101,7 +102,10 @@ public class TS_LibFileTmcrCodeTableWriter {
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_SIZE(fontsizeData));
         for (var r = 1; r < rowSize; r++) {
-            for (int c = 0; c < columnSize; c++) {
+            if (servletKillTrigger.hasTriggered()){
+                return "";
+            }
+            for (var c = 0; c < columnSize; c++) {
                 sb.append(getMacroCodeTableCellObject(t.getValueAsObject(r, c), sqlCellprefixIsBold));
             }
         }
@@ -110,7 +114,7 @@ public class TS_LibFileTmcrCodeTableWriter {
         return sb.toString();
     }
 
-    public static String getMacroCodeTable(TS_SQLResultSet rs, int colPercentage[], int fontsizeHeader, int fontsizeData) {
+    public static String getMacroCodeTable(TS_ThreadSyncTrigger servletKillTrigger, TS_SQLResultSet rs, int colPercentage[], int fontsizeHeader, int fontsizeData) {
         var size = rs.row.size();
         var sb = new StringBuilder();
         if (colPercentage == null) {
@@ -128,6 +132,9 @@ public class TS_LibFileTmcrCodeTableWriter {
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_SIZE(fontsizeData));
         IntStream.range(0, size).forEachOrdered(ri -> {
+            if(servletKillTrigger.hasTriggered()){
+                return;
+            }
             rs.row.scrll(ri);
             sb.append(getMacroCodeTableRow(rs));
         });
