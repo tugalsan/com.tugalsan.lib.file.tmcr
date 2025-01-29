@@ -123,7 +123,7 @@ public class TS_LibFileTmcrFileHandler {
                 d.ce("use", "zipableFiles.isEmpty()!");
                 return false;
             }
-            TS_FileZipUtils.zipList(zipableFiles, _fileHandler.localfileZIP);
+            TS_FileZipUtils.zipList(servletKillTrigger, zipableFiles, _fileHandler.localfileZIP);
             if (!TS_FileUtils.isExistFile(_fileHandler.localfileZIP)) {
                 d.ce("use", "!TS_FileUtils.isExistFile", _fileHandler.localfileZIP);
                 return false;
