@@ -9,6 +9,7 @@ import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.txt.server.TS_FileTxtUtils;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 
 public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
 
@@ -26,6 +27,7 @@ public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
             instance.use_init(fileCommonConfig);
             tmcr.run(instance);
         } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
             instance.saveFile(e.getMessage());
             throw e;
         } finally {
