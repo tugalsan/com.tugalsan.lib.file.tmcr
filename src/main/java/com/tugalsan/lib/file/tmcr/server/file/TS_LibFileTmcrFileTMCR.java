@@ -15,6 +15,10 @@ public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
 
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrFileTMCR.class);
 
+    public String getSuperClassName(){
+        return d.className;
+    }
+    
     private TS_FileCommonConfig fileCommonConfig;
 
     private TS_LibFileTmcrFileTMCR(boolean enabled, Path localFile, TGS_Url remoteFile) {
