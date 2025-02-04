@@ -19,7 +19,7 @@ import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.file.pdf.openpdf.server.TS_FilePdfOpenPdf;
-import com.tugalsan.api.file.pdf.pdfbox3.server.TS_FilePdfBox3;
+import com.tugalsan.api.file.pdf.pdfbox3.server.TS_FilePdfBox3FileCommon;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
@@ -174,7 +174,7 @@ public class TS_LibFileTmcrFileHandler {
             TS_FileHtml.use(enableHTML, fileCommonConfig, localfileHTML, remotefileHTML, webHTMLBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTML -> {
                 TS_FileHtml.use(enableHTM, fileCommonConfig, localfileHTM, remotefileHTM, webHTMBase64, webWidthScalePercent, webFontHightPercent, (webHTM, imageLoc) -> TS_LibFileTmcrFileSetName.urlFromPath(fileCommonConfig, imageLoc), webHTM -> {
                     TS_FilePdfOpenPdf.use(enablePDF && !TRY_TO_MIGRATE_PDFBOX3, fileCommonConfig, localfilePDF, remotefilePDF, pdfOpenPdf -> {
-                        TS_FilePdfBox3.use(enablePDF && TRY_TO_MIGRATE_PDFBOX3, fileCommonConfig, localfilePDF, remotefilePDF, pdfPdfBox3 -> {
+                        TS_FilePdfBox3FileCommon.use(enablePDF && TRY_TO_MIGRATE_PDFBOX3, fileCommonConfig, localfilePDF, remotefilePDF, pdfPdfBox3 -> {
                             TS_FileXlsx.use(enableXLSX, fileCommonConfig, localfileXLSX, remotefileXLSX, xlsx -> {
                                 TS_FileDocx.use(enableDOCX, fileCommonConfig, localfileDOCX, remotefileDOCX, docx -> {
                                     var instance = new TS_LibFileTmcrFileHandler(fileCommonConfig, localfileZIP, remotefileZIP,
