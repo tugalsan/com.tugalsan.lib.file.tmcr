@@ -7,12 +7,12 @@ import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.random.server.TS_RandomUtils;
 import com.tugalsan.api.shape.client.*;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.thread.server.TS_ThreadWait;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncWait;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
 import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
 import com.tugalsan.lib.rql.client.*;
@@ -284,7 +284,7 @@ public class TS_LibFileTmcrCodeImageCompile {
                 return result.mutate2Error("ERROR: preImage == null @ preImageLoc:" + preImageLoc);
             }
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             mifHandler.addText("ERROR: preImage == e @ preImageLoc:" + preImageLoc + ", e:" + e.getMessage());
             d.ci(result.classNameDotfuncName, "  processed.");
             d.ci(result.classNameDotfuncName, "compile_INSERT_IMAGE_COMMON  processed. ");
@@ -375,7 +375,7 @@ public class TS_LibFileTmcrCodeImageCompile {
             h = pstImage.getHeight();
 //            System.out.println("AAAAAAAAA- AYARLI QUALITY:" + quality);
             TS_FileImageUtils.toFile(pstImage, pstImageLoc, 1);
-            TS_ThreadWait.milliseconds200();
+            TS_ThreadSyncWait.milliseconds200();
             if (TS_FileUtils.getFileSizeInBytes(pstImageLoc) > FULL_QUALITY_FILE_SIZE_THREASHOLD_AS_BYTES) {
                 TS_FileImageUtils.toFile(pstImage, pstImageLoc, quality / 100f);
             }

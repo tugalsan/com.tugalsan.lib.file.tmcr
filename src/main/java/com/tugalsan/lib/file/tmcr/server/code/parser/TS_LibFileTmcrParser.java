@@ -1,14 +1,16 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.function.client.TGS_Func_In2;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In2;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
 import com.tugalsan.lib.file.tmcr.server.code.filename.TS_LibFileTmcrCodeFileNameCompile;
 import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCEUtils;
 import java.util.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.sql.conn.server.*;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.api.unsafe.client.*;
+
 
 import com.tugalsan.lib.file.tmcr.server.code.font.TS_LibFileTmcrCodeFontCompile;
 import com.tugalsan.lib.file.tmcr.server.code.image.TS_LibFileTmcrCodeImageCompile;
@@ -31,8 +33,8 @@ public class TS_LibFileTmcrParser {
         return -1;
     }
 
-    public static void compileCode(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout, CharSequence defaultViewTableName) {
-        var e = TGS_UnSafe.call(() -> {
+    public static void compileCode(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_FuncMTUCE_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout, CharSequence defaultViewTableName) {
+        var e = TGS_FuncMTCEUtils.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, 1);
@@ -478,7 +480,7 @@ public class TS_LibFileTmcrParser {
                     filenameMode = false;
                     continue;
                 }
-                TGS_UnSafe.thrw(d.className, "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
+                TGS_FuncMTUCEUtils.thrw(d.className, "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
             }
             d.ci("compileCode", "for.macroLines.done.");
             return null;
@@ -490,7 +492,7 @@ public class TS_LibFileTmcrParser {
         compileCode_completed(fileCommonConfig, progressUpdate_with_userDotTable_and_percentage);
     }
 
-    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    private static void compileCode_completed(TS_FileCommonConfig fileCommonConfig, TGS_FuncMTUCE_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         d.ci("compileCode_completed", "SAVE EXPORT FILES");
         if (progressUpdate_with_userDotTable_and_percentage != null) {
             progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -499,7 +501,7 @@ public class TS_LibFileTmcrParser {
         d.ci("compileCode_completed", "FIN");
     }
 
-    private static void compileCode_failed(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, Exception e, TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
+    private static void compileCode_failed(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, Exception e, TGS_FuncMTUCE_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage) {
         addMacro_Lines_ErrorText(fileCommonConfig, mifHandler, e);
         fileCommonConfig.runReport = true;
         if (progressUpdate_with_userDotTable_and_percentage != null) {

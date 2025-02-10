@@ -1,10 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.function.client.TGS_FuncEffectivelyFinal;
-import com.tugalsan.api.function.client.TGS_Func_In2;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCEEffectivelyFinal;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In2;
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.function.client.TGS_Func_In1;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In1;
 import com.tugalsan.api.file.client.TGS_FileUtilsEng;
 import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import com.tugalsan.api.file.html.server.TS_FileHtml;
@@ -23,19 +23,19 @@ import com.tugalsan.api.file.pdf.pdfbox3.server.TS_FilePdfBox3FileCommon;
 import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.zip.server.TS_FileZipUtils;
 import com.tugalsan.api.font.server.TS_FontUtils;
-import com.tugalsan.api.function.client.TGS_Func;
 import com.tugalsan.api.sql.conn.server.TS_SQLConnAnchor;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.tuple.client.TGS_Tuple1;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.lib.file.tmcr.client.TGS_LibFileTmcrTypes;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser;
 import java.awt.Font;
 import java.time.Duration;
 import java.util.stream.IntStream;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
 
 public class TS_LibFileTmcrFileHandler {
 
@@ -78,18 +78,18 @@ public class TS_LibFileTmcrFileHandler {
     public TGS_Url remotefileZIP;
 
     public static boolean use(TS_ThreadSyncTrigger servletKillTrigger,/*boolean useOpendf, */ TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            TGS_FuncMTUCE_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
             Duration timeout, CharSequence defaultViewTableName
     ) {
         return use(servletKillTrigger,/*useOpendf, */ fileCommonConfig, anchor, progressUpdate_with_userDotTable_and_percentage, null, timeout, defaultViewTableName);
     }
 
     public static boolean use(TS_ThreadSyncTrigger servletKillTrigger,/*boolean useOpendf, */ TS_FileCommonConfig fileCommonConfig, TS_SQLConnAnchor anchor,
-            TGS_Func_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
-            TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout, CharSequence defaultViewTableName
+            TGS_FuncMTUCE_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage,
+            TGS_FuncMTUCE_In1<TS_LibFileTmcrFileHandler> fileHandler, Duration timeout, CharSequence defaultViewTableName
     ) {
         d.ci("use", "running macro code...");
-        var _fileHandler = TGS_FuncEffectivelyFinal.of(TS_LibFileTmcrFileHandler.class).coronateAs(__ -> {
+        var _fileHandler = TGS_FuncMTUCEEffectivelyFinal.of(TS_LibFileTmcrFileHandler.class).coronateAs(__ -> {
             TGS_Tuple1<TS_LibFileTmcrFileHandler> holdForAWhile = TGS_Tuple1.of();
             TS_LibFileTmcrFileHandler.use_do(/*useOpendf, */fileCommonConfig, __fileHandler -> {
                         holdForAWhile.value0 = __fileHandler;
@@ -138,7 +138,7 @@ public class TS_LibFileTmcrFileHandler {
         return fileCommonConfig.runReport;
     }
 
-    private static void use_do(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TGS_Func_In1<TS_LibFileTmcrFileHandler> fileHandler) {
+    private static void use_do(/*boolean useOpendf, */TS_FileCommonConfig fileCommonConfig, TGS_FuncMTUCE_In1<TS_LibFileTmcrFileHandler> fileHandler) {
         var webWidthScalePercent = 68;
         var webFontHightPercent = 60;
         var webHTMLBase64 = false;
@@ -193,7 +193,7 @@ public class TS_LibFileTmcrFileHandler {
     }
 
     public boolean saveFile(String errorSource) {
-        TGS_UnSafe.run(() -> {
+        TGS_FuncMTCEUtils.run(() -> {
             if (errorSource != null) {
                 fileCommonConfig.fontColor = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_RED();
                 beginText(0);
@@ -201,10 +201,10 @@ public class TS_LibFileTmcrFileHandler {
                 endText();
                 d.ce("saveFile", "WARNING: error message added to files", errorSource);
             }
-        }, e -> TGS_Func.empty.run());
+        }, e -> TGS_FuncMTUCE.empty.run());
         var stream = fileCommonConfig.PARALLEL ? files.parallelStream() : files.stream();
         stream.filter(mif -> mif.isEnabled()).forEach(mi -> {
-            TGS_UnSafe.run(() -> {
+            TGS_FuncMTCEUtils.run(() -> {
                 if (!mi.saveFile(errorSource)) {
                     d.ce("saveFile", "ERROR: cannot save mi.getLocalFileName:" + mi.getLocalFileName());
                 }
@@ -377,7 +377,7 @@ public class TS_LibFileTmcrFileHandler {
             return addText_canDisplay(fullText);
         }
         var fontFamilySize = fileCommonConfig.fontFamilyFonts.size();
-        var fullTextThatCanBeDisplayed = TGS_FuncEffectivelyFinal.ofStr().coronateAs(__ -> {//change unsupported codePoints to '?'
+        var fullTextThatCanBeDisplayed = TGS_FuncMTUCEEffectivelyFinal.ofStr().coronateAs(__ -> {//change unsupported codePoints to '?'
             var codePointUnsupported = "?".codePointAt(0);
             TGS_Tuple1<Boolean> codePointUnsupportedFound = TGS_Tuple1.of(false);
             var sb = new StringBuilder();
@@ -400,7 +400,7 @@ public class TS_LibFileTmcrFileHandler {
         //decide fontidx and send text to addText_canDisplay
         var sb = new StringBuilder();
         fullTextThatCanBeDisplayed.codePoints().forEachOrdered(cp -> {
-            var decidedFontFamilyIdx = TGS_FuncEffectivelyFinal.ofInt().coronateAs(__ -> {
+            var decidedFontFamilyIdx = TGS_FuncMTUCEEffectivelyFinal.ofInt().coronateAs(__ -> {
                 for (var fontFamilyIdx = 0; fontFamilyIdx < fontFamilySize; fontFamilyIdx++) {
                     if (TS_FontUtils.canDisplay(getFont(fontFamilyIdx), cp)) {
                         return fontFamilyIdx;

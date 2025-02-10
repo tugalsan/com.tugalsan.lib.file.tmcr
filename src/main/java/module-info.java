@@ -1,7 +1,7 @@
 module com.tugalsan.lib.file.tmcr { 
     requires java.desktop;
     requires com.tugalsan.api.tuple;
-    requires com.tugalsan.api.unsafe;
+    
     requires com.tugalsan.api.function;
     requires com.tugalsan.api.file;
     requires com.tugalsan.api.font;

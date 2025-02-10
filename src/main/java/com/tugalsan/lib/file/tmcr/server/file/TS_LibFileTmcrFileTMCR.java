@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.function.client.TGS_Func_In1;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In1;
 import com.tugalsan.api.file.common.server.TS_FileCommonAbstract;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -9,7 +9,7 @@ import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.file.txt.server.TS_FileTxtUtils;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 
 public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
 
@@ -25,13 +25,13 @@ public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
         super(enabled, localFile, remoteFile);
     }
 
-    public static void use(boolean enabled, TS_FileCommonConfig fileCommonConfig, Path localFile, TGS_Url remoteFile, TGS_Func_In1<TS_LibFileTmcrFileTMCR> tmcr) {
+    public static void use(boolean enabled, TS_FileCommonConfig fileCommonConfig, Path localFile, TGS_Url remoteFile, TGS_FuncMTUCE_In1<TS_LibFileTmcrFileTMCR> tmcr) {
         var instance = new TS_LibFileTmcrFileTMCR(enabled, localFile, remoteFile);
         try {
             instance.use_init(fileCommonConfig);
             tmcr.run(instance);
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             instance.saveFile(e.getMessage());
             throw e;
         } finally {
