@@ -50,7 +50,7 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
         } else if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE().equals(rotation_0_90_180_270)) {
             sb.append(" ").append(rotation_0_90_180_270);
         } else {
-            var rotation = TGS_CastUtils.toInteger(rotation_0_90_180_270);
+            var rotation = TGS_CastUtils.toInteger(rotation_0_90_180_270).orElse(null);
             if (rotation == null) {
                 sb.append(" ").append("CODE_ERROR_FOR_ROATATION_AS_").append(rotation_0_90_180_270);
             }
@@ -108,7 +108,7 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
         } else if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE().equals(rotation_0_90_180_270)) {
             sb.append(" ").append(rotation_0_90_180_270);
         } else {
-            var rotation = TGS_CastUtils.toInteger(rotation_0_90_180_270);
+            var rotation = TGS_CastUtils.toInteger(rotation_0_90_180_270).orElse(null);
             if (rotation == null) {
                 sb.append(" ").append("CODE_ERROR_FOR_ROATATION_AS_").append(rotation_0_90_180_270);
             }

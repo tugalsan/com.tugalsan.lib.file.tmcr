@@ -547,7 +547,7 @@ public class TS_LibFileTmcrFileHandler {
                                 if (i != -1) {
                                     var fontHeight = fontHeightText.substring(0, i);
                                     d.ci("addText_line.fontHeight to be parsed: [" + fontHeight + "]");
-                                    var fsInt = TGS_CastUtils.toInteger(fontHeight);
+                                    var fsInt = TGS_CastUtils.toInteger(fontHeight).orElse(null);
                                     if (fsInt == null) {
                                         d.ci("addText_line.fontHeight[" + fontHeight + "] cannot be processed. 10 will be used instead.");
                                         fontHeightText = fontHeightText.substring(i + 1);

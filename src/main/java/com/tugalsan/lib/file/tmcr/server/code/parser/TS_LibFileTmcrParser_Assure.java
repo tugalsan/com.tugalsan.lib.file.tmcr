@@ -83,7 +83,7 @@ public class TS_LibFileTmcrParser_Assure {
                 mifHandler.saveFile(errText);
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(idIdx));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(idIdx)).orElse(null);;
             if (id == null) {
                 var errText = TGS_StringUtils.cmn().concat("HATA: ID BULUNAMADI!fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "].tokenAsId[", String.valueOf(idIdx), "] should be a number!");
                 d.ce(errText, false);
@@ -136,24 +136,42 @@ public class TS_LibFileTmcrParser_Assure {
         d.ci("getVisibleTextAndSubId.getType:" + column.getType());
         var tc = TGS_LibRqlColUtils.toSqlCol(column);
         if (tc.typeLngTime()) {
-            outputData = TGS_Time.toString_timeOnly_simplified(TGS_CastUtils.toLong(inputData));
-            d.ci("getVisibleTextAndSubId.cast2Time:" + outputData);
+            var inputDataLng = TGS_CastUtils.toLong(inputData).orElse(null);
+            if (inputDataLng == null) {
+                d.ci("getVisibleTextAndSubId.cast2Time.cannotConvertLng:" + inputData);
+                outputData = inputData;
+            } else {
+                outputData = TGS_Time.toString_timeOnly_simplified(inputDataLng);
+                d.ci("getVisibleTextAndSubId.cast2Time:" + outputData);
+            }
         } else if (tc.typeLngDate()) {
-            outputData = TGS_Time.toString_dateOnly(TGS_CastUtils.toLong(inputData));
-            d.ci("getVisibleTextAndSubId.cast2Date:" + outputData);
+            var inputDataLng = TGS_CastUtils.toLong(inputData).orElse(null);
+            if (inputDataLng == null) {
+                outputData = inputData;
+                d.ci("getVisibleTextAndSubId.cast2Date.cannotConvertLng:" + inputData);
+            } else {
+                outputData = TGS_Time.toString_dateOnly(inputDataLng);
+                d.ci("getVisibleTextAndSubId.cast2Date:" + outputData);
+            }
         } else if (tc.typeLngDbl()) {
             var sb = new StringBuilder();
-            outputData = String.valueOf(TGS_MathUtils.long2Double(TGS_CastUtils.toLong(inputData), column.getDataInt_STRFamilyMaxCharSize_or_LNGDOUBLEPrecision()));
-            sb.append(outputData);
-            var di = outputData.indexOf(".");
-            if (di == -1) {
-                sb.append(".");
-                IntStream.range(0, column.getDataInt_STRFamilyMaxCharSize_or_LNGDOUBLEPrecision()).forEachOrdered(i -> sb.append("0"));
+            var inputDataLng = TGS_CastUtils.toLong(inputData).orElse(null);
+            if (inputDataLng == null) {
+                d.ci("getVisibleTextAndSubId.cast2Double.cannotConvertLng:" + inputData);
+                outputData = inputData;
             } else {
-                IntStream.range(outputData.substring(di + 1).length(), column.getDataInt_STRFamilyMaxCharSize_or_LNGDOUBLEPrecision()).forEachOrdered(i -> sb.append("0"));
+                outputData = String.valueOf(TGS_MathUtils.long2Double(inputDataLng, column.getDataInt_STRFamilyMaxCharSize_or_LNGDOUBLEPrecision()));
+                sb.append(outputData);
+                var di = outputData.indexOf(".");
+                if (di == -1) {
+                    sb.append(".");
+                    IntStream.range(0, column.getDataInt_STRFamilyMaxCharSize_or_LNGDOUBLEPrecision()).forEachOrdered(i -> sb.append("0"));
+                } else {
+                    IntStream.range(outputData.substring(di + 1).length(), column.getDataInt_STRFamilyMaxCharSize_or_LNGDOUBLEPrecision()).forEachOrdered(i -> sb.append("0"));
+                }
+                outputData = sb.toString();
+                d.ci("getVisibleTextAndSubId.cast2Double:" + outputData);
             }
-            outputData = sb.toString();
-            d.ci("getVisibleTextAndSubId.cast2Double:" + outputData);
         } else if (tc.typeLngLnk()) {
             var datas = TGS_StringUtils.jre().toList_spc(inputData);
             if (datas == null) {
@@ -165,7 +183,7 @@ public class TS_LibFileTmcrParser_Assure {
                 d.ce("getVisibleTextAndSubId:", errorText);
                 return null;
             }
-            subId = TGS_CastUtils.toLong(datas.get(0));
+            subId = TGS_CastUtils.toLong(datas.get(0)).orElse(null);
             if (subId == null) {
                 var errorText = fileCommonConfig.macroLine + ".subId == null";
                 d.ce("getVisibleTextAndSubId:", errorText);

@@ -146,13 +146,13 @@ public class TS_LibFileTmcrCodeTextCompile {
                 return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
                 return result.mutate2Error("ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[2] should be a number!");
             }
         }
         var createDate = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_CREATE_0(), TS_LibRqlRevRowUtils.PARAM_RET_DATE_0());
-        var createDateLong = TGS_CastUtils.toLong(createDate);
+        var createDateLong = TGS_CastUtils.toLong(createDate).orElse(null);
         var text = createDateLong == null ? createDate : TGS_Time.toString_dateOnly(createDateLong);
         if (!mifHandler.addText(text)) {
             return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
@@ -180,7 +180,7 @@ public class TS_LibFileTmcrCodeTextCompile {
                 return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
                 return result.mutate2Error(CODE_ADD_TEXT_CREATE_USER() + ".token[2] should be a number!");
             }
@@ -212,13 +212,13 @@ public class TS_LibFileTmcrCodeTextCompile {
                 return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
                 return result.mutate2Error(CODE_ADD_TEXT_REVLST_DATE() + ".token[2] should be a number!");
             }
         }
         var revDate = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_DATE_0());
-        var revDateLong = TGS_CastUtils.toLong(revDate);
+        var revDateLong = TGS_CastUtils.toLong(revDate).orElse(null);
         var text = revDateLong == null ? revDate : TGS_Time.toString_dateOnly(revDateLong);
         if (!mifHandler.addText(text)) {
             return result.mutate2Error("fileCommonConfig.mifHandler.addText(text) == false");
@@ -246,7 +246,7 @@ public class TS_LibFileTmcrCodeTextCompile {
                 return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
                 return result.mutate2Error(CODE_ADD_TEXT_REVLST_USER() + ".token[2] should be a number!");
             }
@@ -278,7 +278,7 @@ public class TS_LibFileTmcrCodeTextCompile {
                 return result.mutate2Error("ERROR: SATIR SEÇİLMEDİ HATASI");
             }
         } else {
-            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2));
+            id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
                 return result.mutate2Error(CODE_ADD_TEXT_REVLST_NO() + ".token[2] should be a number!");
             }
@@ -446,7 +446,7 @@ public class TS_LibFileTmcrCodeTextCompile {
             return result.mutate2Error(fileCommonConfig.macroLine + " -> CW column " + colIdx + " needs TK_GWTSQLColumnType.TYPE_LNGDATE but found: " + column.getType());
         }
         d.ci("compile_ADD_TEXT_CW.TYPE_LNGDATE.detected");
-        var data_l = TGS_CastUtils.toLong(data);
+        var data_l = TGS_CastUtils.toLong(data).orElse(null);
         if (data_l == null) {
             return result.mutate2Error(fileCommonConfig.macroLine + "CW data_l == null!!!");
         }

@@ -42,7 +42,7 @@ public class TS_LibFileTmcrCodeMapCompile {
                 } else if (Objects.equals(mapValue, "LAST")) {
                     idx = fileCommonConfig.mapVars.size() - 1;
                 } else {
-                    idx = TGS_CastUtils.toInteger(mapValue);
+                    idx = TGS_CastUtils.toInteger(mapValue).orElse(null);
                     if (idx == null) {
                         return result.mutate2Error("ERROR: İKİNCİ TAKI BİR SAYI OLMALI HATASI!");
                     }

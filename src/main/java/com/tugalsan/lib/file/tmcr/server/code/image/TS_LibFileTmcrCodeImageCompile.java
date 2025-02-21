@@ -58,7 +58,7 @@ public class TS_LibFileTmcrCodeImageCompile {
         var rotationIsLandscape = false;
         var rotationIsPortrait = false;
         var rotationTAG = fileCommonConfig.macroLineTokens.get(fromSQL ? 8 : 7);
-        var r = TGS_CastUtils.toInteger(rotationTAG);
+        var r = TGS_CastUtils.toInteger(rotationTAG).orElse(null);
         if (r == null) {
             if (Objects.equals(rotationTAG, TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE())) {
                 rotationIsLandscape = true;
@@ -101,7 +101,7 @@ public class TS_LibFileTmcrCodeImageCompile {
         d.ci(result.classNameDotfuncName, "INFO: left0_center1_right2 is : " + left0_center1_right2);
 
         //GET WIDTH
-        var w = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
+        var w = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1)).orElse(null);
         if (w == null && !TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(1), TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
             return result.mutate2Error("ERROR: code token[1] error! width is : " + w);
         }
@@ -109,7 +109,7 @@ public class TS_LibFileTmcrCodeImageCompile {
 //        final var final_w = w;
 
         //GET HEIGHT
-        var h = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
+        var h = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
         if (h == null && !TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())) {
             return result.mutate2Error("ERROR: code token[2] error! height is : " + h);
         }
@@ -181,7 +181,7 @@ public class TS_LibFileTmcrCodeImageCompile {
                     return result.mutate2Error("ERROR: fromSQL.code token[7] error! SATIR SEÇİLMEDİ HATASI");
                 }
             } else {
-                id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(7));
+                id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(7)).orElse(null);
                 if (id == null) {
                     return result.mutate2Error("ERROR: fromSQL.code token[7] should be a number");
                 }

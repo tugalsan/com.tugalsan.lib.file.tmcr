@@ -138,7 +138,7 @@ public class TS_LibFileTmcrCodeLabelCompile {
                         return ERROR();
                     }
                 } else {
-                    id = TGS_CastUtils.toLong(ids);
+                    id = TGS_CastUtils.toLong(ids).orElse(null);;
                     if (id == null) {
                         d.ce(fileCommonConfig.macroLine + ".id should be a number, is it still mapget???");
                         d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));

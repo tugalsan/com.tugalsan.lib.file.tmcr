@@ -60,7 +60,7 @@ public class TS_LibFileTmcrCodeTableCompile {
         if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(1), CODE_TOKEN_NULL())) {
             rowSpan = 1;
         } else {
-            rowSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
+            rowSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1)).orElse(null);
             if (rowSpan == null || rowSpan < 1) {
                 return result.mutate2Error(CODE_BEGIN_TABLECELL() + " code token[1] error! rowSpan == null || rowSpan < 1");
             }
@@ -68,13 +68,13 @@ public class TS_LibFileTmcrCodeTableCompile {
         if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(2), CODE_TOKEN_NULL())) {
             colSpan = 1;
         } else {
-            colSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2));
+            colSpan = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (colSpan == null || colSpan < 1) {
                 return result.mutate2Error(CODE_BEGIN_TABLECELL() + " code token[2] error! colSpan == null || colSpan < 1");
             }
         }
         if (!TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLineTokens.get(3), CODE_TOKEN_NULL())) {
-            cellHeight = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3));
+            cellHeight = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3)).orElse(null);
             if (cellHeight == null || cellHeight < 1) {
                 return result.mutate2Error(CODE_BEGIN_TABLECELL() + " code token[3] error! cellHeight == null || cellHeight < 1");
             }
@@ -119,7 +119,7 @@ public class TS_LibFileTmcrCodeTableCompile {
         }
         var relColSizes = new int[fileCommonConfig.macroLineTokens.size() - 1];//can be only 1 as that many columns with same size
         for (var rcsi = 0; rcsi < relColSizes.length; rcsi++) {
-            var rcsf = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(rcsi + 1));
+            var rcsf = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(rcsi + 1)).orElse(null);
             if (rcsf == null || rcsf < 0) {
                 return result.mutate2Error(CODE_BEGIN_TABLE() + " token.relColSizes[" + rcsi + "] error! rcsf == null || rcsf < 0");
             }

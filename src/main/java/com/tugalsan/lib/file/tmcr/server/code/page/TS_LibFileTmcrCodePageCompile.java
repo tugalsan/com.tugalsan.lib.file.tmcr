@@ -67,22 +67,22 @@ public class TS_LibFileTmcrCodePageCompile {
             d.ci(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[2] error! -> SET Default as " + CODE_TOKEN_PORT());
             land = DEFAULT_PAGE_LAYOUT_LANDSCAPE();
         }
-        var ml = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3));
+        var ml = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3)).orElse(null);
         if (ml == null) {
             d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[3] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_LFT());
             ml = DEFAULT_PAGE_MARGIN_LFT();
         }
-        var mr = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(4));
+        var mr = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(4)).orElse(null);
         if (mr == null) {
             d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[4] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_RGT());
             mr = DEFAULT_PAGE_MARGIN_RGT();
         }
-        var mt = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(5));
+        var mt = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(5)).orElse(null);
         if (mt == null) {
             d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[5] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_TOP());
             mt = DEFAULT_PAGE_MARGIN_TOP();
         }
-        var mb = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(6));
+        var mb = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(6)).orElse(null);
         if (mb == null) {
             d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[6] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_BTM());
             mb = DEFAULT_PAGE_MARGIN_BTM();

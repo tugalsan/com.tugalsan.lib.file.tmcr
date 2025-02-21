@@ -52,7 +52,7 @@ public class TS_LibFileTmcrCodeFontCompile {
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
             return result.mutate2Error("token size is not 2");
         }
-        var nfs = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1));
+        var nfs = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(1)).orElse(null);
         if (nfs == null || nfs < 1) {
             return result.mutate2Error(TS_FileCommonFontTags.CODE_SET_FONT_SIZE() + " code token[1] error! size should be 1 or more");
         }
