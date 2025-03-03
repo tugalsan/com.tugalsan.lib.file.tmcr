@@ -47,8 +47,7 @@ public class TS_LibFileTmcrFileHandler {
 
     public boolean isZipFileRequested() {
         return fileCommonConfig.requestedFileTypes.stream()
-                .filter(type -> Objects.equals(type, TGS_LibFileTmcrTypes.FILE_TYPE_ZIP()))
-                .findAny().isPresent();
+                .anyMatch(type -> Objects.equals(type, TGS_LibFileTmcrTypes.FILE_TYPE_ZIP()));
     }
 
     public List<Path> zipableFiles() {
