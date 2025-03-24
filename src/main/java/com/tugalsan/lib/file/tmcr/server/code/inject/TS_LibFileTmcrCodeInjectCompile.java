@@ -8,7 +8,7 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import static com.tugalsan.lib.file.tmcr.server.code.inject.TS_LibFileTmcrCodeInjectTags.CODE_INJECT_CODE;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
 import java.time.Duration;
 //import com.tugalsan.lib.route.client.*;
 import java.util.stream.*;
@@ -20,7 +20,7 @@ public class TS_LibFileTmcrCodeInjectCompile {
     public static TS_Log.Result_withLog compile_CODE_INJECT_CODE(TS_FileCommonConfig fileCommonConfig, Duration timeout) {
         var result = d.createFuncBoolean("compile_CODE_INJECT_CODE");
         d.ci("compile_CODE_INJECT_CODE", "welcome");
-        return TGS_FuncMTCEUtils.call(() -> {
+        return TGS_FuncMTCUtils.call(() -> {
             var injectCheckEnable = false;
             d.ci("compile_CODE_INJECT_CODE", "entered inject while with lineCount " + fileCommonConfig.macroLines.size());
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {

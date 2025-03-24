@@ -1,13 +1,13 @@
 package com.tugalsan.lib.file.tmcr.server.code.filename;
 
-import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In1;
+import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU_In1;
 import com.tugalsan.api.list.client.*;
 
 import java.util.*;
 
 public class TS_LibFileTmcrCodeFileNameWriter {
 
-    public static List<String> buildFileNameWithAddTextCommands(TGS_FuncMTUCE_In1<List> commands) {
+    public static List<String> buildFileNameWithAddTextCommands(TGS_FuncMTU_In1<List> commands) {
         List<String> listOfAddTextCommands = TGS_ListUtils.of();
         commands.run(listOfAddTextCommands);
         List<String> allCommands = TGS_ListUtils.of(listOfAddTextCommands);

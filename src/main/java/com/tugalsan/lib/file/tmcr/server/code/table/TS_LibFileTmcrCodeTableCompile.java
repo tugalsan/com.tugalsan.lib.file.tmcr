@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.table;
 
-import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCEEffectivelyFinal;
+import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTUEffectivelyFinal;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
 import com.tugalsan.api.log.server.*;
@@ -90,7 +90,7 @@ public class TS_LibFileTmcrCodeTableCompile {
 
     public static TS_Log.Result_withLog compile_END_TABLECELL(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_END_TABLECELL");
-        var rotate = TGS_FuncMTUCEEffectivelyFinal.ofInt()
+        var rotate = TGS_FuncMTUEffectivelyFinal.ofInt()
                 .anoint(val -> 0)
                 .anointIf(val -> fileCommonConfig.macroLineUpperCase.startsWith(CODE_END_TABLECELL_90()), val -> 90)
                 .anointIf(val -> fileCommonConfig.macroLineUpperCase.startsWith(CODE_END_TABLECELL_180()), val -> 180)
