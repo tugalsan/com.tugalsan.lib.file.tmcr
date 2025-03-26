@@ -37,7 +37,6 @@ public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
         } finally {
             instance.saveFile(null);
         }
-
     }
 
     private void use_init(TS_FileCommonConfig fileCommonConfig) {

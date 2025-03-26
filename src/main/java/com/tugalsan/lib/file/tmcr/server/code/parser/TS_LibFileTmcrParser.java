@@ -26,6 +26,10 @@ import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
 import java.time.Duration;
 
 public class TS_LibFileTmcrParser {
+    
+    private TS_LibFileTmcrParser(){
+        
+    }
 
     final private static TS_Log d = TS_Log.of(false, TS_LibFileTmcrParser.class);
 
