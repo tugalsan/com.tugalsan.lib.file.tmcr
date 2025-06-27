@@ -37,7 +37,9 @@ public class TS_LibFileTmcrCodeImageCompile {
     }
 
     public static TS_Log.Result_withLog compile_INSERT_IMAGE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
-        var result = d.createFuncBoolean(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE() + "/" + TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
+        var result = d.createFuncBoolean(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE()
+                + "/" + TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMQR()
+                + "/" + TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
         d.ci(result.classNameDotfuncName, "INFO: macroLine: " + fileCommonConfig.macroLineUpperCase);
         d.ci(result.classNameDotfuncName, "INFO: dirDat: " + fileCommonConfig.dirDat);
 
@@ -229,11 +231,22 @@ public class TS_LibFileTmcrCodeImageCompile {
                 preImageLoc = Path.of(getInBox.toString(), fn);
             }
             d.ci(result.classNameDotfuncName, "INFO: fromSQL.preImageLoc: " + preImageLoc);
-        } else if (fromQR) {//FROM URL
+        } else if (fromQR) {//FROM QR64
+            //GET QR TEXT
             var ref = fileCommonConfig.macroLineTokens.get(6);
-            var imgText = TGS_CryptUtils.decrypt64(ref);
-            var imgQR = TS_FileImageCodeQRUtils.toQR(imgText);
-            preImageLoc = TS_FileImageUtils.toFileTemp(imgQR, 0.8, ".jpg");
+            var qrText = TGS_CryptUtils.decrypt64(ref);
+
+            //STORE QRTEXT TO QRIMAGE
+            var qrImage = TS_FileImageCodeQRUtils.toQR(qrText);
+
+            //STORE QRIMAGE TO QRPATH
+            var qrPathName = TS_RandomUtils.nextString(10, true, true, false, false, null);
+            var qrPath = fileCommonConfig.dirDatUsrTmp.resolve(qrPathName + ".jpg");
+            d.ci(result.classNameDotfuncName, "fromQR", "qrPath", qrPath);
+            TS_FileImageUtils.toFile(qrImage, qrPath, 0.8);
+
+            //UPDATE FILE NAME
+            preImageLoc = qrPath;
         } else {//FROM URL
             var ref = fileCommonConfig.macroLineTokens.get(6);
             d.ci(result.classNameDotfuncName, "fromUrl", "ref.init", ref);
@@ -262,7 +275,7 @@ public class TS_LibFileTmcrCodeImageCompile {
                 ref = fileTmp.toString();
                 d.ci(result.classNameDotfuncName, "fromUrl", "ref.updated", ref);
             }
-            fileCommonConfig.macroLineTokens.set(6, ref);
+//            fileCommonConfig.macroLineTokens.set(6, ref);//WHY
 
             u_file = TS_PathUtils.toPath(ref);
             if (u_file.isExcuse()) {
