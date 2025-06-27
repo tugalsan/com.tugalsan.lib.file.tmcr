@@ -14,6 +14,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.file.pdf.openpdf;
     requires com.tugalsan.api.file.pdf.pdfbox3;
     requires com.tugalsan.api.file.img;
+    requires com.tugalsan.api.file.img.code;
     requires com.tugalsan.api.log;
     requires com.tugalsan.api.union;
     requires com.tugalsan.api.charset;
@@ -23,6 +24,7 @@ module com.tugalsan.lib.file.tmcr {
     requires com.tugalsan.api.list;
     requires com.tugalsan.api.string;
     requires com.tugalsan.api.cast;
+    requires com.tugalsan.api.crypto;
     requires com.tugalsan.api.random;
     requires com.tugalsan.api.stream;
     requires com.tugalsan.api.math;

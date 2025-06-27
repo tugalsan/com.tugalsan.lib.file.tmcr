@@ -13,6 +13,16 @@ public class TS_LibFileTmcrCodeImageUsage {
                 .append(" ROTATION/0/90/180/270 ")
                 .append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_CREATE()).append("/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())
                 .append("\n");
+        sb.append("//  ").append(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMQR())
+                .append(" MAXWIDTH/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())
+                .append(" MAXHEIGHT/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())
+                .append(" RESPECT/NULL ")
+                .append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LEFT()).append("/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_RIGHT()).append("/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_CENTER())
+                .append(" ").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP()).append("/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())
+                .append(" QR64")
+                .append(" ROTATION/0/90/180/270 ")
+                .append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_CREATE()).append("/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())
+                .append("\n");
         sb.append("//  ").append(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL())
                 .append(" MAXWIDTH/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())
                 .append(" MAXHEIGHT/").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL())

@@ -12,6 +12,7 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.url.server.*;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
 import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import com.tugalsan.api.file.img.code.server.TS_FileImageCodeQRUtils;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncWait;
 import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
 import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
@@ -40,14 +41,13 @@ public class TS_LibFileTmcrCodeImageCompile {
         d.ci(result.classNameDotfuncName, "INFO: dirDat: " + fileCommonConfig.dirDat);
 
         //WHICH CODE
-        boolean fromSQL;
-        if (fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL())) {
-            fromSQL = true;
+        var fromSQL = fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
+        var fromQR = fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMQR());
+        if (fromSQL) {
             if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 10)) {
                 return result.mutate2Error("ERROR: on code " + TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL() + ", tokensize should be 10");
             }
-        } else {//CODE_INSERT_IMAGE
-            fromSQL = false;
+        } else {//CODE_INSERT_IMAGE OR CODE_INSERT_IMAGE_FROMQR
             if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 8)) {
                 return result.mutate2Error("ERROR: on code " + TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE() + ", tokensize should be 8");
             }
@@ -228,6 +228,10 @@ public class TS_LibFileTmcrCodeImageCompile {
                 preImageLoc = Path.of(getInBox.toString(), fn);
             }
             d.ci(result.classNameDotfuncName, "INFO: fromSQL.preImageLoc: " + preImageLoc);
+        } else if (fromQR) {//FROM URL
+            var ref = fileCommonConfig.macroLineTokens.get(6);
+            var imgQR = TS_FileImageCodeQRUtils.toQR(ref);
+            preImageLoc = TS_FileImageUtils.toFileTemp(imgQR, 0.8, ".jpg");
         } else {//FROM URL
             var ref = fileCommonConfig.macroLineTokens.get(6);
             d.ci(result.classNameDotfuncName, "fromUrl", "ref.init", ref);

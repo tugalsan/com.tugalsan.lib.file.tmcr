@@ -9,6 +9,14 @@ public class TS_LibFileTmcrCodeImageTags {
     public static String CODE_INSERT_IMAGE() {
         return "INSERT_IMAGE";
     }
+    
+    public static String CODE_INSERT_IMAGE_FROMQR() {
+        return "INSERT_IMAGE_FROMQR";
+    }
+
+    public static String CODE_INSERT_IMAGE_QR() {
+        return "INSERT_IMAGE_QR";
+    }
 
     public static String CODE_TOKEN_NULL() {
         return "NULL";
