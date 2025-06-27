@@ -2,6 +2,7 @@ package com.tugalsan.lib.file.tmcr.server.code.image;
 
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.charset.client.TGS_CharSetCast;
+import com.tugalsan.api.crypto.client.TGS_CryptUtils;
 import com.tugalsan.api.file.img.server.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
@@ -230,7 +231,8 @@ public class TS_LibFileTmcrCodeImageCompile {
             d.ci(result.classNameDotfuncName, "INFO: fromSQL.preImageLoc: " + preImageLoc);
         } else if (fromQR) {//FROM URL
             var ref = fileCommonConfig.macroLineTokens.get(6);
-            var imgQR = TS_FileImageCodeQRUtils.toQR(ref);
+            var imgText = TGS_CryptUtils.decrypt64(ref);
+            var imgQR = TS_FileImageCodeQRUtils.toQR(imgText);
             preImageLoc = TS_FileImageUtils.toFileTemp(imgQR, 0.8, ".jpg");
         } else {//FROM URL
             var ref = fileCommonConfig.macroLineTokens.get(6);

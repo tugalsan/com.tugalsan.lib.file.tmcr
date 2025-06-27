@@ -1,9 +1,9 @@
 package com.tugalsan.lib.file.tmcr.server.code.image;
 
 public class TS_LibFileTmcrCodeImageTags {
-
-    public static String CODE_INSERT_IMAGE_FROMSQL() {
-        return "INSERT_IMAGE_FROMSQL";
+    
+    private TS_LibFileTmcrCodeImageTags(){
+        
     }
 
     public static String CODE_INSERT_IMAGE() {
@@ -14,8 +14,8 @@ public class TS_LibFileTmcrCodeImageTags {
         return "INSERT_IMAGE_FROMQR";
     }
 
-    public static String CODE_INSERT_IMAGE_QR() {
-        return "INSERT_IMAGE_QR";
+    public static String CODE_INSERT_IMAGE_FROMSQL() {
+        return "INSERT_IMAGE_FROMSQL";
     }
 
     public static String CODE_TOKEN_NULL() {
