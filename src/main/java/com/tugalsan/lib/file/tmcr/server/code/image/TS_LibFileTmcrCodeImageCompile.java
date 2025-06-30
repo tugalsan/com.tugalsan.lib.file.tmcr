@@ -237,7 +237,8 @@ public class TS_LibFileTmcrCodeImageCompile {
             var qrText = TGS_CryptUtils.decrypt64(ref);
 
             //STORE QRTEXT TO QRIMAGE
-            var qrImage = TS_FileImageCodeQRUtils.toQR(qrText);
+            var qrImage = TS_FileImageCodeQRUtils.toQR(fileCommonConfig.QR_WIDTH, fileCommonConfig.QR_HEIGHT, qrText);
+            qrImage = TS_FileImageUtils.toMagnifiedAtCenter(qrImage, fileCommonConfig.QR_MAGNIFY);
 
             //STORE QRIMAGE TO QRPATH
             var qrPathName = TS_RandomUtils.nextString(10, true, true, false, false, null);

@@ -75,7 +75,6 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
     }
 
     public StringBuilder buildFromQR(CharSequence qrText) {
-        var qr64 = TGS_CryptUtils.encrypt64(qrText.toString());
         var sb = new StringBuilder();
         sb.append(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMQR());
         sb.append(" ").append(maxWidthNullable == null ? TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL() : maxWidthNullable.toString());
@@ -90,7 +89,7 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
                 sb.append(" ").append(TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LEFT());
         }
         sb.append(" ").append(textWrap ? TS_LibFileTmcrCodeImageTags.CODE_TOKEN_TEXTWRAP() : TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL());
-        sb.append(" ").append(qr64);
+        sb.append(" ").append(TGS_CryptUtils.encrypt64(qrText.toString()));
         if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_PORTRAIT().equals(rotation_0_90_180_270)) {
             sb.append(" ").append(rotation_0_90_180_270);
         } else if (TS_LibFileTmcrCodeImageTags.CODE_TOKEN_LANDSCAPE().equals(rotation_0_90_180_270)) {
