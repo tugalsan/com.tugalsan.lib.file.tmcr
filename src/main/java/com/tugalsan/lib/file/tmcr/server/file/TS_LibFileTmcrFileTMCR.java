@@ -15,8 +15,9 @@ public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
 
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrFileTMCR.class);
 
+    @Override
     public String getSuperClassName(){
-        return d.className;
+        return d.className();
     }
     
     private TS_FileCommonConfig fileCommonConfig;

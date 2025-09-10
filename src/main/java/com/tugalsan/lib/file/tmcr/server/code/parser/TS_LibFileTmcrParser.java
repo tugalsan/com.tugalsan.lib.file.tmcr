@@ -484,7 +484,7 @@ public class TS_LibFileTmcrParser {
                     filenameMode = false;
                     continue;
                 }
-                TGS_FuncMTUUtils.thrw(d.className, "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
+                TGS_FuncMTUUtils.thrw(d.className(), "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
             }
             d.ci("compileCode", "for.macroLines.done.");
             return null;
