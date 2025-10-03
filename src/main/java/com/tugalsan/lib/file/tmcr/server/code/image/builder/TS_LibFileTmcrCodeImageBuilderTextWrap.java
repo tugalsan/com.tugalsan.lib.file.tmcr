@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.image.builder;
 
-import com.tugalsan.lib.file.tmcr.server.code.image.TS_LibFileTmcrCodeImageTags;
+import module com.tugalsan.lib.file.tmcr;
 
 public class TS_LibFileTmcrCodeImageBuilderTextWrap {
 

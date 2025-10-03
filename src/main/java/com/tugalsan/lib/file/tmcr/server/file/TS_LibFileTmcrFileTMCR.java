@@ -1,15 +1,13 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU_In1;
-import com.tugalsan.api.file.common.server.TS_FileCommonAbstract;
-import java.awt.image.BufferedImage;
-import java.nio.file.Path;
-import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.file.server.TS_FileUtils;
-import com.tugalsan.api.file.txt.server.TS_FileTxtUtils;
-import com.tugalsan.api.url.client.*;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.function.client.TGS_FuncUtils;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.file;
+import module com.tugalsan.api.file.txt;
+import module com.tugalsan.api.url;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.function;
+import module java.desktop;
+import java.nio.file.*;
 
 public class TS_LibFileTmcrFileTMCR extends TS_FileCommonAbstract {
 

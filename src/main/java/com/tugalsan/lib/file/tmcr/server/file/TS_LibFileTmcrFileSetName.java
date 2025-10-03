@@ -1,11 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.file.server.TS_PathUtils;
-import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.url.client.TGS_Url;
-import com.tugalsan.api.url.client.TGS_UrlQueryUtils;
-import java.nio.file.Path;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.file;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.url;
+import java.nio.file.*;
 
 public class TS_LibFileTmcrFileSetName {
 

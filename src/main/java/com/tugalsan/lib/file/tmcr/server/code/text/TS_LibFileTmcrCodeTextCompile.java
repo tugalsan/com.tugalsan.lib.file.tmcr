@@ -1,49 +1,21 @@
 package com.tugalsan.lib.file.tmcr.server.code.text;
 
-import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.tuple.client.*;
-import com.tugalsan.api.sql.col.typed.client.*;
-import com.tugalsan.api.sql.conn.server.*;
-import com.tugalsan.api.sql.select.server.*;
-import com.tugalsan.api.time.client.*;
-import com.tugalsan.api.url.client.*;
-import com.tugalsan.api.url.server.*;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_COLNAME;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_DATE;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_USER;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CW;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_DATE;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_FUNCNAME;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_HR;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_HTML;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_NEWLINE;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_DATE;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_NO;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_USER;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_SPC;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_TABNAME;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_TIME;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_USER;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROMSQL;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROMSQL_REVERSE;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROM_SQLQUERY;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_BEGIN_TEXT;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_END_TEXT;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_TOKEN_JUST;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_TOKEN_LEFT;
-import static com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextTags.CODE_TOKEN_RIGHT;
-import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
-import com.tugalsan.lib.rql.buffer.server.*;
-import com.tugalsan.lib.rql.client.*;
-import com.tugalsan.lib.rql.rev.server.*;
-import java.time.Duration;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.tuple;
+import module com.tugalsan.api.sql.col.typed;
+import module com.tugalsan.api.sql.conn;
+import module com.tugalsan.api.sql.select;
+import module com.tugalsan.api.time;
+import module com.tugalsan.api.url;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.thread;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.lib.rql.buffer;
+import module com.tugalsan.lib.rql;
+import module com.tugalsan.lib.rql.rev;
+import java.time.*;
 import java.util.*;
 
 public class TS_LibFileTmcrCodeTextCompile {
@@ -51,7 +23,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeTextCompile.class);
 
     public static boolean is_BEGIN_TEXT(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_BEGIN_TEXT());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_BEGIN_TEXT());
     }
 
     public static TS_Log.Result_withLog compile_BEGIN_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -61,13 +33,13 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         int allign_Left0_center1_right2_just3;
         var allignText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
-        if (Objects.equals(allignText, CODE_TOKEN_LEFT())) {
+        if (Objects.equals(allignText, TS_LibFileTmcrCodeTextTags.CODE_TOKEN_LEFT())) {
             allign_Left0_center1_right2_just3 = 0;
-        } else if (Objects.equals(allignText, CODE_TOKEN_LEFT())) {
+        } else if (Objects.equals(allignText, TS_LibFileTmcrCodeTextTags.CODE_TOKEN_LEFT())) {
             allign_Left0_center1_right2_just3 = 1;
-        } else if (Objects.equals(allignText, CODE_TOKEN_RIGHT())) {
+        } else if (Objects.equals(allignText, TS_LibFileTmcrCodeTextTags.CODE_TOKEN_RIGHT())) {
             allign_Left0_center1_right2_just3 = 2;
-        } else if (Objects.equals(allignText, CODE_TOKEN_JUST())) {
+        } else if (Objects.equals(allignText, TS_LibFileTmcrCodeTextTags.CODE_TOKEN_JUST())) {
             allign_Left0_center1_right2_just3 = 3;
         } else {
 //            d.ce(CODE_BEGIN_TEXT() + " ERROR: code token[1] error! -> SET Default as ", CODE_TOKEN_LEFT());
@@ -80,7 +52,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_END_TEXT(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_END_TEXT());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_END_TEXT());
     }
 
     public static TS_Log.Result_withLog compile_END_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -92,12 +64,12 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT() + " ") || fileCommonConfig.macroLineUpperCase.equals(CODE_ADD_TEXT());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT() + " ") || fileCommonConfig.macroLineUpperCase.equals(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
         var result = d.createFuncBoolean("compile_ADD_TEXT");
-        var text = CODE_ADD_TEXT().length() == fileCommonConfig.macroLine.length() ? "" : fileCommonConfig.macroLine.substring(CODE_ADD_TEXT().length() + 1);
+        var text = TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT().length() == fileCommonConfig.macroLine.length() ? "" : fileCommonConfig.macroLine.substring(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT().length() + 1);
         if (filenameMode) {
             fileCommonConfig.prefferedFileNameLabel += text;
             return result.mutate2True();
@@ -109,12 +81,12 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_HTML(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_HTML());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_HTML());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_HTML(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, Duration timeout) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_HTML");
-        var urls = fileCommonConfig.macroLine.substring(CODE_ADD_TEXT_HTML().length() + 1).trim();
+        var urls = fileCommonConfig.macroLine.substring(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_HTML().length() + 1).trim();
         d.ci("url detected as " + urls);
         var text = TS_UrlDownloadUtils.toText(TGS_Url.of(urls), timeout);
         if (text == null) {
@@ -127,7 +99,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_CREATE_DATE(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_CREATE_DATE());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_DATE());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_CREATE_DATE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -137,7 +109,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return result.mutate2Error("ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error("ERROR: " + TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_DATE() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
@@ -148,7 +120,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
-                return result.mutate2Error("ERROR: " + CODE_ADD_TEXT_CREATE_DATE() + ".token[2] should be a number!");
+                return result.mutate2Error("ERROR: " + TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_DATE() + ".token[2] should be a number!");
             }
         }
         var createDate = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_CREATE_0(), TS_LibRqlRevRowUtils.PARAM_RET_DATE_0());
@@ -161,7 +133,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_CREATE_USER(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_CREATE_USER());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_USER());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_CREATE_USER(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -171,7 +143,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return result.mutate2Error(CODE_ADD_TEXT_CREATE_USER() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_USER() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
@@ -182,7 +154,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
-                return result.mutate2Error(CODE_ADD_TEXT_CREATE_USER() + ".token[2] should be a number!");
+                return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CREATE_USER() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_CREATE_0(), TS_LibRqlRevRowUtils.PARAM_RET_USER_2());
@@ -193,7 +165,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_REVLST_DATE(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_REVLST_DATE());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_DATE());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_REVLST_DATE(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -203,7 +175,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return result.mutate2Error(CODE_ADD_TEXT_REVLST_DATE() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_DATE() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
@@ -214,7 +186,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
-                return result.mutate2Error(CODE_ADD_TEXT_REVLST_DATE() + ".token[2] should be a number!");
+                return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_DATE() + ".token[2] should be a number!");
             }
         }
         var revDate = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_DATE_0());
@@ -227,7 +199,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_REVLST_USER(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_REVLST_USER());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_USER());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_REVLST_USER(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -237,7 +209,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return result.mutate2Error(CODE_ADD_TEXT_REVLST_USER() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_USER() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
@@ -248,7 +220,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
-                return result.mutate2Error(CODE_ADD_TEXT_REVLST_USER() + ".token[2] should be a number!");
+                return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_USER() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_USER_2());
@@ -259,7 +231,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_REVLST_NO(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_REVLST_NO());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_NO());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_REVLST_NO(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -269,7 +241,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         var targetTablename = fileCommonConfig.macroLineTokens.get(1);
         if (!TS_LibRqlBufferUtils.exists(targetTablename)) {
-            return result.mutate2Error(CODE_ADD_TEXT_REVLST_NO() + ".token[1] table not found error! " + targetTablename);
+            return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_NO() + ".token[1] table not found error! " + targetTablename);
         }
         Long id;
         if (fileCommonConfig.macroLineTokens.get(2).equals(TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
@@ -280,7 +252,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         } else {
             id = TGS_CastUtils.toLong(fileCommonConfig.macroLineTokens.get(2)).orElse(null);
             if (id == null) {
-                return result.mutate2Error(CODE_ADD_TEXT_REVLST_NO() + ".token[2] should be a number!");
+                return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_REVLST_NO() + ".token[2] should be a number!");
             }
         }
         var text = TS_LibRqlRevRowUtils.last(anchor, targetTablename, id, TS_LibRqlRevRowUtils.PARAM_ACT_MODIFY_1(), TS_LibRqlRevRowUtils.PARAM_RET_COUNT_3());
@@ -291,7 +263,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_USER(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_USER());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_USER());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_USER(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -304,7 +276,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_NEWLINE(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_NEWLINE());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_NEWLINE());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_NEWLINE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -317,7 +289,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_SPC(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_SPC());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_SPC());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_SPC(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode) {
@@ -334,7 +306,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_TIME(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_TIME());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_TIME());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_TIME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -347,7 +319,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_DATE(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_DATE());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_DATE());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_DATE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -360,7 +332,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_HR(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_HR());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_HR());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_HR(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -372,7 +344,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_FUNCNAME(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_FUNCNAME());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_FUNCNAME());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_FUNCNAME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -385,12 +357,12 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_VAR_FROM_SQLQUERY(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_VAR_FROM_SQLQUERY());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROM_SQLQUERY());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROM_SQLQUERY(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_VAR_FROM_SQLQUERY");
-        var sql = fileCommonConfig.macroLine.substring(CODE_ADD_TEXT_VAR_FROM_SQLQUERY().length() + 1);
+        var sql = fileCommonConfig.macroLine.substring(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROM_SQLQUERY().length() + 1);
         TGS_Tuple1<String> pack = new TGS_Tuple1();
         TS_SQLSelectStmtUtils.select(anchor, sql, rs -> pack.value0 = rs.str.get(0, 0));
         if (pack.value0 == null) {
@@ -403,7 +375,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_CW(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_CW());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_CW());
     }
 
     //ADD_TEXT_CW VAR ID
@@ -462,7 +434,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_VAR_FROMSQL());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROMSQL());
     }
 
     //ADD_TEXT_VAR_FROMSQL_REVERSE VAR ID
@@ -539,12 +511,12 @@ public class TS_LibFileTmcrCodeTextCompile {
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.result...");
         String text;
-        if (fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_VAR_FROMSQL_REVERSE())) {
+        if (fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROMSQL_REVERSE())) {
             text = TS_LibFileTmcrParser_Assure.reverse(visibleText);
-            d.ci(CODE_ADD_TEXT_VAR_FROMSQL_REVERSE() + " finned as " + text);
+            d.ci(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROMSQL_REVERSE() + " finned as " + text);
         } else {
             text = visibleText;
-            d.ci(CODE_ADD_TEXT_VAR_FROMSQL() + " finned as " + text);
+            d.ci(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_VAR_FROMSQL() + " finned as " + text);
         }
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.result: " + text);
         if (filenameMode) {
@@ -558,7 +530,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_TABNAME(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_TABNAME());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_TABNAME());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_TABNAME(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -568,7 +540,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         }
         var table = TS_LibRqlBufferUtils.get(fileCommonConfig.macroLineTokens.get(1));
         if (table == null) {
-            return result.mutate2Error(CODE_ADD_TEXT_TABNAME() + ".token[1] sniff table not worked as expected! table == null");
+            return result.mutate2Error(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_TABNAME() + ".token[1] sniff table not worked as expected! table == null");
         }
         var text = table.nameReadable;
         if (!mifHandler.addText(text)) {
@@ -578,7 +550,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     public static boolean is_ADD_TEXT_COLNAME(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_ADD_TEXT_COLNAME());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT_COLNAME());
     }
 
     public static TS_Log.Result_withLog compile_ADD_TEXT_COLNAME(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {

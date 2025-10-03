@@ -1,21 +1,14 @@
 package com.tugalsan.lib.file.tmcr.server.code.label;
 
-import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.sql.conn.server.*;
-import com.tugalsan.api.string.client.*;
-import static com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags.CODE_GOTO_LABEL;
-import static com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags.CODE_SET_LABEL;
-import static com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags.CODE_TOKEN_EQUALS;
-import static com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags.CODE_TOKEN_IF_VAL;
-import static com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags.CODE_TOKEN_NOT_EQUALS;
-import static com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags.ERROR;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
-import com.tugalsan.lib.rql.client.*;
-import com.tugalsan.lib.rql.txt.server.*;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.sql.conn;
+import module com.tugalsan.api.string;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.lib.rql;
+import module com.tugalsan.lib.rql.txt;
 import java.util.*;
 
 public class TS_LibFileTmcrCodeLabelCompile {
@@ -23,12 +16,12 @@ public class TS_LibFileTmcrCodeLabelCompile {
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeLabelCompile.class);
 
     public static boolean is_SET_LABEL(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_SET_LABEL());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeLabelTags.CODE_SET_LABEL());
     }
 
     public static boolean is_SET_LABEL_ON_SEARCH(TS_FileCommonConfig fileCommonConfig) {
-        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel)) {
-            d.ci("is_SET_LABEL_ON_SEARCH", CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel + " found");
+        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLine, TS_LibFileTmcrCodeLabelTags.CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel)) {
+            d.ci("is_SET_LABEL_ON_SEARCH", TS_LibFileTmcrCodeLabelTags.CODE_SET_LABEL() + " " + fileCommonConfig.doFind_gotoLabel + " found");
             return true;
         } else {
             return false;
@@ -36,8 +29,8 @@ public class TS_LibFileTmcrCodeLabelCompile {
     }
 
     public static boolean is_SET_LABEL_ON_ERROR(TS_FileCommonConfig fileCommonConfig) {
-        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLine, CODE_SET_LABEL() + " " + ERROR())) {
-            d.ci("is_SET_LABEL_ON_ERROR", CODE_SET_LABEL() + " " + ERROR() + " found");
+        if (TGS_CharSetCast.current().equalsIgnoreCase(fileCommonConfig.macroLine, TS_LibFileTmcrCodeLabelTags.CODE_SET_LABEL() + " " + TS_LibFileTmcrCodeLabelTags.ERROR())) {
+            d.ci("is_SET_LABEL_ON_ERROR", TS_LibFileTmcrCodeLabelTags.CODE_SET_LABEL() + " " + TS_LibFileTmcrCodeLabelTags.ERROR() + " found");
             return true;
         } else {
             return false;
@@ -45,7 +38,7 @@ public class TS_LibFileTmcrCodeLabelCompile {
     }
 
     public static boolean is_GOTO_LABEL(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_GOTO_LABEL());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeLabelTags.CODE_GOTO_LABEL());
     }
 
     public static String get_GOTO_LABEL(TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig) {
@@ -56,7 +49,7 @@ public class TS_LibFileTmcrCodeLabelCompile {
         //SIZE 2 COMPILE
         if (fileCommonConfig.macroLineTokens.size() == 2) {//i = 0; TODO IF NECESSARY
             doFind_gotoLabel = fileCommonConfig.macroLineTokens.get(1);
-            d.ci(CODE_GOTO_LABEL(), "set as", doFind_gotoLabel);
+            d.ci(TS_LibFileTmcrCodeLabelTags.CODE_GOTO_LABEL(), "set as", doFind_gotoLabel);
             return doFind_gotoLabel;
         }
 
@@ -66,7 +59,7 @@ public class TS_LibFileTmcrCodeLabelCompile {
         //GOTO_LABEL STARTBOYAKUL IF_VAL 0 NOT_EQUALS MAPGET.0
         //    0          1       2    3   4            -------------- 5 ---------------------        6       
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, new int[]{6, 7})) {
-            return ERROR();
+            return TS_LibFileTmcrCodeLabelTags.ERROR();
         }
 
         //FETCH IDX_1 label
@@ -75,10 +68,10 @@ public class TS_LibFileTmcrCodeLabelCompile {
         var ifVal = fileCommonConfig.macroLineTokens.get(2);
         d.ci("get_GOTO_LABEL", "IDX_1", label);
         d.ci("get_GOTO_LABEL", "IDX_2", ifVal);
-        if (!ifVal.equals(CODE_TOKEN_IF_VAL())) {
+        if (!ifVal.equals(TS_LibFileTmcrCodeLabelTags.CODE_TOKEN_IF_VAL())) {
             d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
             d.ce("get_GOTO_LABEL", "ERROR: !parsedLineCodes.get(2).equals(CODE_IF_VAL) as '" + ifVal + "'");
-            return ERROR();
+            return TS_LibFileTmcrCodeLabelTags.ERROR();
         }
 
         //FETCH IDX_3 val
@@ -89,14 +82,14 @@ public class TS_LibFileTmcrCodeLabelCompile {
         d.ci("get_GOTO_LABEL", "IDX_4", equalsText);
 
         Boolean ifValEquals;
-        if (Objects.equals(equalsText, CODE_TOKEN_EQUALS())) {
+        if (Objects.equals(equalsText, TS_LibFileTmcrCodeLabelTags.CODE_TOKEN_EQUALS())) {
             ifValEquals = true;
-        } else if (Objects.equals(equalsText, CODE_TOKEN_NOT_EQUALS())) {
+        } else if (Objects.equals(equalsText, TS_LibFileTmcrCodeLabelTags.CODE_TOKEN_NOT_EQUALS())) {
             ifValEquals = false;
         } else {
             d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
             d.ce("get_GOTO_LABEL", "ERROR: parsedLineCodes.get(4) not recognized", equalsText);
-            return ERROR();
+            return TS_LibFileTmcrCodeLabelTags.ERROR();
         }
         d.ci("get_GOTO_LABEL", "ifValEquals", ifValEquals);
 
@@ -110,15 +103,15 @@ public class TS_LibFileTmcrCodeLabelCompile {
                 d.ci("get_GOTO_LABEL", "sz7", "IDX_5", fileCommonConfig.macroLineTokens.get(5));
                 var tableAndColname = TS_LibFileTmcrParser_Assure.splitTableDotColname(fileCommonConfig, 5);
                 if (tableAndColname == null) {
-                    return ERROR();
+                    return TS_LibFileTmcrCodeLabelTags.ERROR();
                 }
                 table = TS_LibFileTmcrParser_Assure.getTable(fileCommonConfig, tableAndColname.tableName());
                 if (table == null) {
-                    return ERROR();
+                    return TS_LibFileTmcrCodeLabelTags.ERROR();
                 }
                 tableColIdx = TS_LibFileTmcrParser_Assure.getColumnIndex(fileCommonConfig, table, tableAndColname.colname());
                 if (tableColIdx == null) {
-                    return ERROR();
+                    return TS_LibFileTmcrCodeLabelTags.ERROR();
                 }
             }
             d.ci("get_GOTO_LABEL", "sz7", "table", table.nameSql);
@@ -135,14 +128,14 @@ public class TS_LibFileTmcrCodeLabelCompile {
                         d.ce(fileCommonConfig.macroLine + ".id requires you select a row from the table!");
                         d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
                         d.ce("HATA: SATIR SEÇİLMEDİ HATASI", false);
-                        return ERROR();
+                        return TS_LibFileTmcrCodeLabelTags.ERROR();
                     }
                 } else {
                     id = TGS_CastUtils.toLong(ids).orElse(null);;
                     if (id == null) {
                         d.ce(fileCommonConfig.macroLine + ".id should be a number, is it still mapget???");
                         d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
-                        return ERROR();
+                        return TS_LibFileTmcrCodeLabelTags.ERROR();
                     }
                 }
             }
@@ -167,9 +160,9 @@ public class TS_LibFileTmcrCodeLabelCompile {
 //                        i = 0; TODO IF NECESSARY
             doFind_gotoLabel = label;
             d.ci("get_GOTO_LABEL", "get_GOTO_LABEL.doFind_gotoLabel,", label);
-            d.ci("get_GOTO_LABEL", CODE_GOTO_LABEL() + " set as " + doFind_gotoLabel);
+            d.ci("get_GOTO_LABEL", TS_LibFileTmcrCodeLabelTags.CODE_GOTO_LABEL() + " set as " + doFind_gotoLabel);
         } else {
-            d.ci("get_GOTO_LABEL", CODE_GOTO_LABEL() + " skipped");
+            d.ci("get_GOTO_LABEL", TS_LibFileTmcrCodeLabelTags.CODE_GOTO_LABEL() + " skipped");
         }
         return doFind_gotoLabel;
     }

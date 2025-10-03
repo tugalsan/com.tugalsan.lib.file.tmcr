@@ -1,11 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.file;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonAbstract;
-import com.tugalsan.api.file.server.TS_FileUtils;
-import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.lib.file.tmcr.client.TGS_LibFileTmcrTypes;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.string.client.TGS_StringUtils;
+import module com.tugalsan.api.file;
+import module com.tugalsan.api.log;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.string;
 
 public class TS_LibFileTmcrFilePrefferedFileName {
 

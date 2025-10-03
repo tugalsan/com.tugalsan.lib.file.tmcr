@@ -1,10 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.code.image.builder;
 
-import com.tugalsan.api.cast.client.TGS_CastUtils;
-import com.tugalsan.api.url.client.TGS_Url;
-import com.tugalsan.lib.file.tmcr.server.code.image.TS_LibFileTmcrCodeImageTags;
-import java.nio.file.Path;
-import com.tugalsan.api.crypto.client.TGS_CryptUtils;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.url;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.api.crypto;
+import java.nio.file.*;
 
 public class TS_LibFileTmcrCodeImageBuilderRotation {
 

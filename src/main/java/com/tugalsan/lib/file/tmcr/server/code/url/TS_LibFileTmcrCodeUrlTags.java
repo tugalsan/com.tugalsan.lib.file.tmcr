@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.url;
 
-import com.tugalsan.api.servlet.url.client.TGS_SURLUtils;
+import module com.tugalsan.api.servlet.url;
 
 public class TS_LibFileTmcrCodeUrlTags {
 

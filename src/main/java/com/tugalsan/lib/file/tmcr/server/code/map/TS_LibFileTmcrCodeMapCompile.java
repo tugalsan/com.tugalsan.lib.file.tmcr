@@ -1,19 +1,14 @@
 package com.tugalsan.lib.file.tmcr.server.code.map;
 
-import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.tuple.client.*;
-import com.tugalsan.api.sql.conn.server.*;
-import com.tugalsan.api.string.client.*;
-import static com.tugalsan.lib.file.tmcr.server.code.map.TS_LibFileTmcrCodeMapTags.CODE_MAPADD_FROMSQL;
-import static com.tugalsan.lib.file.tmcr.server.code.map.TS_LibFileTmcrCodeMapTags.CODE_MAPGET;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_SelectedId;
-import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
-import com.tugalsan.lib.rql.client.*;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.sql.conn;
+import module com.tugalsan.api.string;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.thread;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.lib.rql;
 import java.util.*;
 
 public class TS_LibFileTmcrCodeMapCompile {
@@ -21,18 +16,18 @@ public class TS_LibFileTmcrCodeMapCompile {
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeMapCompile.class);
 
     public static boolean is_MAPADD_FROMSQL(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLineUpperCase.startsWith(CODE_MAPADD_FROMSQL());
+        return fileCommonConfig.macroLineUpperCase.startsWith(TS_LibFileTmcrCodeMapTags.CODE_MAPADD_FROMSQL());
     }
 
     public static TS_Log.Result_withLog compile_CODE_MAPGET(TS_FileCommonConfig fileCommonConfig) {
         var result = d.createFuncBoolean("compile_CODE_MAPGET");
         for (var j = fileCommonConfig.macroLineTokens.size() - 1; j > -1; j--) {
-            if (fileCommonConfig.macroLineTokens.get(j).startsWith(CODE_MAPGET())) {
+            if (fileCommonConfig.macroLineTokens.get(j).startsWith(TS_LibFileTmcrCodeMapTags.CODE_MAPGET())) {
                 String mapValue;
                 if (!fileCommonConfig.macroLineTokens.get(j).contains(".")) {
                     return result.mutate2Error("ERROR: " + fileCommonConfig.macroLineTokens.get(j) + " code should have . error!");
                 }
-                mapValue = fileCommonConfig.macroLineTokens.get(j).substring(CODE_MAPGET().length() + 1);
+                mapValue = fileCommonConfig.macroLineTokens.get(j).substring(TS_LibFileTmcrCodeMapTags.CODE_MAPGET().length() + 1);
                 Integer idx;
                 if (Objects.equals(mapValue, TS_LibFileTmcrParser_SelectedId.CODE_TOKEN_SELECTED_ID())) {
                     if (fileCommonConfig.selectedId == null) {
@@ -99,7 +94,7 @@ public class TS_LibFileTmcrCodeMapCompile {
         d.ci("subId.self: " + visibleTextAndSubId.subId());
 
         var resultText = visibleTextAndSubId.subId() == null ? visibleTextAndSubId.visibleText() : visibleTextAndSubId.subId().toString();
-        d.ci(CODE_MAPADD_FROMSQL(), " finned as ", resultText);
+        d.ci(TS_LibFileTmcrCodeMapTags.CODE_MAPADD_FROMSQL(), " finned as ", resultText);
         fileCommonConfig.mapVars.add(resultText);
         return result.mutate2True();
     }

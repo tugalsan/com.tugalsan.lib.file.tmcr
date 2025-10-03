@@ -1,22 +1,12 @@
 package com.tugalsan.lib.file.tmcr.server.code.table;
 
-import com.tugalsan.api.list.client.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.sql.restbl.server.*;
-import com.tugalsan.api.sql.resultset.server.*;
-import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.api.time.client.*;
-import com.tugalsan.lib.file.tmcr.server.code.font.TS_LibFileTmcrCodeFontWriter;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_BEGIN_TABLE;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_BEGIN_TABLECELL;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_END_TABLE;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL_180;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL_270;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL_90;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_TABLECELL_BORDER;
-import static com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableTags.CODE_TOKEN_NULL;
-import com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextWriter;
+import module com.tugalsan.api.list;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.sql.restbl;
+import module com.tugalsan.api.sql.resultset;
+import module com.tugalsan.api.thread;
+import module com.tugalsan.api.time;
+import module com.tugalsan.lib.file.tmcr;
 import java.util.stream.*;
 
 public class TS_LibFileTmcrCodeTableWriter {
@@ -24,28 +14,28 @@ public class TS_LibFileTmcrCodeTableWriter {
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrCodeTableWriter.class);
 
     public static String SET_TABLECELL_NOBORDER(boolean enabled) {
-        return CODE_TABLECELL_BORDER() + (enabled ? " NOBORDER\n" : " BORDER\n");
+        return TS_LibFileTmcrCodeTableTags.CODE_TABLECELL_BORDER() + (enabled ? " NOBORDER\n" : " BORDER\n");
     }
 
     public static String END_TABLECELL() {
-        return CODE_END_TABLECELL() + "\n";
+        return TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL() + "\n";
     }
 
     public static String END_TABLECELL(int rotation_0_90_180_270) {
         if (rotation_0_90_180_270 == 90) {
-            return CODE_END_TABLECELL_90() + "\n";
+            return TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL_90() + "\n";
         }
         if (rotation_0_90_180_270 == 180) {
-            return CODE_END_TABLECELL_180() + "\n";
+            return TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL_180() + "\n";
         }
         if (rotation_0_90_180_270 == 270) {
-            return CODE_END_TABLECELL_270() + "\n";
+            return TS_LibFileTmcrCodeTableTags.CODE_END_TABLECELL_270() + "\n";
         }
         return END_TABLECELL();
     }
 
     public static String BEGIN_TABLECELL(Integer rowSpan_orNull, Integer colSpan_orNull, Integer height_orNull) {
-        return CODE_BEGIN_TABLECELL() + " " + (rowSpan_orNull == null ? CODE_TOKEN_NULL() : rowSpan_orNull) + " " + (colSpan_orNull == null ? CODE_TOKEN_NULL() : colSpan_orNull) + " " + (height_orNull == null ? CODE_TOKEN_NULL() : height_orNull) + "\n";
+        return TS_LibFileTmcrCodeTableTags.CODE_BEGIN_TABLECELL() + " " + (rowSpan_orNull == null ? TS_LibFileTmcrCodeTableTags.CODE_TOKEN_NULL() : rowSpan_orNull) + " " + (colSpan_orNull == null ? TS_LibFileTmcrCodeTableTags.CODE_TOKEN_NULL() : colSpan_orNull) + " " + (height_orNull == null ? TS_LibFileTmcrCodeTableTags.CODE_TOKEN_NULL() : height_orNull) + "\n";
     }
 
     public static String BEGIN_TABLECELL() {
@@ -53,11 +43,11 @@ public class TS_LibFileTmcrCodeTableWriter {
     }
 
     public static String END_TABLE() {
-        return CODE_END_TABLE() + "\n";
+        return TS_LibFileTmcrCodeTableTags.CODE_END_TABLE() + "\n";
     }
 
     public static String BEGIN_TABLE(int columnSize[]) {
-        var s = CODE_BEGIN_TABLE();
+        var s = TS_LibFileTmcrCodeTableTags.CODE_BEGIN_TABLE();
         for (var colInteger : columnSize) {
             s += " " + colInteger;
         }
@@ -65,7 +55,7 @@ public class TS_LibFileTmcrCodeTableWriter {
     }
 
     public static String BEGIN_TABLE(int columnCount) {
-        return CODE_BEGIN_TABLE() + " " + columnCount + "\n";
+        return TS_LibFileTmcrCodeTableTags.CODE_BEGIN_TABLE() + " " + columnCount + "\n";
     }
 
     public static String getMacroCodeTable(TS_ThreadSyncTrigger servletKillTrigger, TGS_ListTable t, int colPercentage[], int fontsizeHeader, int fontsizeData, boolean sqlCellprefixIsBold) {
@@ -102,7 +92,7 @@ public class TS_LibFileTmcrCodeTableWriter {
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_SIZE(fontsizeData));
         for (var r = 1; r < rowSize; r++) {
-            if (servletKillTrigger.hasTriggered()){
+            if (servletKillTrigger.hasTriggered()) {
                 return "";
             }
             for (var c = 0; c < columnSize; c++) {
@@ -132,7 +122,7 @@ public class TS_LibFileTmcrCodeTableWriter {
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
         sb.append(TS_LibFileTmcrCodeFontWriter.SET_FONT_SIZE(fontsizeData));
         IntStream.range(0, size).forEachOrdered(ri -> {
-            if(servletKillTrigger.hasTriggered()){
+            if (servletKillTrigger.hasTriggered()) {
                 return;
             }
             rs.row.scrll(ri);

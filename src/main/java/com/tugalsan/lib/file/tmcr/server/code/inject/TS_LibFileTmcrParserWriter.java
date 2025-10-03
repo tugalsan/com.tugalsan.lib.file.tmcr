@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.inject;
 
-import com.tugalsan.api.url.client.TGS_Url;
+import module com.tugalsan.api.url;
 
 public class TS_LibFileTmcrParserWriter {
 

@@ -1,23 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.code.page;
 
-import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.TGS_CharSet;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.tuple.client.*;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A0;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A1;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A2;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A3;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A4;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A5;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_A6;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_LAND;
-import static com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageTags.CODE_TOKEN_PORT;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.api.file.common;
 import java.util.*;
 
 public class TS_LibFileTmcrCodePageCompile {
@@ -49,7 +36,7 @@ public class TS_LibFileTmcrCodePageCompile {
     }
 
     public static boolean is_INSERT_PAGE(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLine.startsWith(CODE_INSERT_PAGE());
+        return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE());
     }
 
     public static TS_Log.Result_withLog compile_INSERT_PAGE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
@@ -59,52 +46,52 @@ public class TS_LibFileTmcrCodePageCompile {
         }
         boolean land;
         var landText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(2));
-        if (Objects.equals(landText, CODE_TOKEN_LAND())) {
+        if (Objects.equals(landText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_LAND())) {
             land = true;
-        } else if (Objects.equals(landText, CODE_TOKEN_LAND())) {
+        } else if (Objects.equals(landText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_LAND())) {
             land = false;
         } else {
-            d.ci(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[2] error! -> SET Default as " + CODE_TOKEN_PORT());
+            d.ci(result.classNameDotfuncName, TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " code token[2] error! -> SET Default as " + TS_LibFileTmcrCodePageTags.CODE_TOKEN_PORT());
             land = DEFAULT_PAGE_LAYOUT_LANDSCAPE();
         }
         var ml = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(3)).orElse(null);
         if (ml == null) {
-            d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[3] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_LFT());
+            d.ce(result.classNameDotfuncName, TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " code token[3] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_LFT());
             ml = DEFAULT_PAGE_MARGIN_LFT();
         }
         var mr = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(4)).orElse(null);
         if (mr == null) {
-            d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[4] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_RGT());
+            d.ce(result.classNameDotfuncName, TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " code token[4] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_RGT());
             mr = DEFAULT_PAGE_MARGIN_RGT();
         }
         var mt = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(5)).orElse(null);
         if (mt == null) {
-            d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[5] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_TOP());
+            d.ce(result.classNameDotfuncName, TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " code token[5] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_TOP());
             mt = DEFAULT_PAGE_MARGIN_TOP();
         }
         var mb = TGS_CastUtils.toInteger(fileCommonConfig.macroLineTokens.get(6)).orElse(null);
         if (mb == null) {
-            d.ce(result.classNameDotfuncName, CODE_INSERT_PAGE() + " code token[6] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_BTM());
+            d.ce(result.classNameDotfuncName, TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " code token[6] error! -> SET Default as " + DEFAULT_PAGE_MARGIN_BTM());
             mb = DEFAULT_PAGE_MARGIN_BTM();
         }
         int pageSizeAX;
         var pageSizeText = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
-        if (Objects.equals(pageSizeText, CODE_TOKEN_A0())) {
+        if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A0())) {
             pageSizeAX = 0;
-        } else if (Objects.equals(pageSizeText, CODE_TOKEN_A1())) {
+        } else if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A1())) {
             pageSizeAX = 1;
-        } else if (Objects.equals(pageSizeText, CODE_TOKEN_A2())) {
+        } else if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A2())) {
             pageSizeAX = 2;
-        } else if (Objects.equals(pageSizeText, CODE_TOKEN_A3())) {
+        } else if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A3())) {
             pageSizeAX = 3;
-        } else if (Objects.equals(pageSizeText, CODE_TOKEN_A4())) {
+        } else if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A4())) {
             pageSizeAX = 4;
-        } else if (Objects.equals(pageSizeText, CODE_TOKEN_A5())) {
+        } else if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A5())) {
             pageSizeAX = 5;
-        } else if (Objects.equals(pageSizeText, CODE_TOKEN_A6())) {
+        } else if (Objects.equals(pageSizeText, TS_LibFileTmcrCodePageTags.CODE_TOKEN_A6())) {
             pageSizeAX = 6;
         } else {
-            d.ce(CODE_INSERT_PAGE() + " code token[1] error! -> SET Default as " + CODE_TOKEN_A4());
+            d.ce(TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " code token[1] error! -> SET Default as " + TS_LibFileTmcrCodePageTags.CODE_TOKEN_A4());
             pageSizeAX = DEFAULT_PAGE_SIZE_A();
         }
         if (!mifHandler.createNewPage(pageSizeAX, land, ml, mr, mt, mb)) {

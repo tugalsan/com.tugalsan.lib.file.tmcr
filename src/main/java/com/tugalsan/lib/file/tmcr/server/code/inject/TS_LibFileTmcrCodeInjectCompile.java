@@ -1,16 +1,12 @@
 package com.tugalsan.lib.file.tmcr.server.code.inject;
 
-import com.tugalsan.api.charset.client.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.string.client.*;
-
-import com.tugalsan.api.url.client.*;
-import com.tugalsan.api.url.server.*;
-import static com.tugalsan.lib.file.tmcr.server.code.inject.TS_LibFileTmcrCodeInjectTags.CODE_INJECT_CODE;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
-import java.time.Duration;
-//import com.tugalsan.lib.route.client.*;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.string;
+import module com.tugalsan.api.url;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.function;
+import java.time.*;
 import java.util.stream.*;
 
 public class TS_LibFileTmcrCodeInjectCompile {
@@ -28,10 +24,10 @@ public class TS_LibFileTmcrCodeInjectCompile {
                 d.ci("compile_CODE_INJECT_CODE", "macroLine", macroLine);
                 var macroLineUpperCase = TGS_CharSetCast.current().toUpperCase(macroLine);
                 d.ci("compile_CODE_INJECT_CODE", "macroLineUpperCase", macroLineUpperCase);
-                if (macroLineUpperCase.startsWith(CODE_INJECT_CODE())) {
+                if (macroLineUpperCase.startsWith(TS_LibFileTmcrCodeInjectTags.CODE_INJECT_CODE())) {
                     d.ci("compile_CODE_INJECT_CODE", "inject found");
                     injectCheckEnable = true;
-                    var url = TGS_Url.of(macroLine.substring(CODE_INJECT_CODE().length() + 1).trim());
+                    var url = TGS_Url.of(macroLine.substring(TS_LibFileTmcrCodeInjectTags.CODE_INJECT_CODE().length() + 1).trim());
                     d.ci("compile_CODE_INJECT_CODE", "url detected as ", url);
 
                     {//ADD TABLENAME AND SID IF NOT EXISTS

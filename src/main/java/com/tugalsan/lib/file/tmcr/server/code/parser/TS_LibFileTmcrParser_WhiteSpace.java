@@ -1,6 +1,6 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
+import module com.tugalsan.api.file.common;
 
 public class TS_LibFileTmcrParser_WhiteSpace {
 

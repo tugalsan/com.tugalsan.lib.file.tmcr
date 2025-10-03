@@ -1,18 +1,18 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.lib.rql.buffer.server.*;
-import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.math.client.*;
-import com.tugalsan.api.sql.conn.server.*;
-import com.tugalsan.api.string.client.*;
-import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.api.time.client.*;
-import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
-import com.tugalsan.lib.rql.client.*;
-import com.tugalsan.lib.rql.link.server.*;
-import com.tugalsan.lib.rql.txt.server.*;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.lib.rql.buffer;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.math;
+import module com.tugalsan.api.sql.conn;
+import module com.tugalsan.api.string;
+import module com.tugalsan.api.thread;
+import module com.tugalsan.api.time;
+import module com.tugalsan.lib.file.tmcr;
+import module com.tugalsan.lib.rql;
+import module com.tugalsan.lib.rql.link;
+import module com.tugalsan.lib.rql.txt;
 import java.util.stream.*;
 
 public class TS_LibFileTmcrParser_Assure {

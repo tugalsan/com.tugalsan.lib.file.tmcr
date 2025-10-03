@@ -1,12 +1,9 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.api.charset.client.TGS_CharSet;
-import com.tugalsan.api.charset.client.TGS_CharSetCast;
-import com.tugalsan.api.tuple.client.TGS_Tuple3;
-import com.tugalsan.api.string.client.TGS_StringUtils;
-import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.string.client.TGS_StringUtils;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.string;
 
 public class TS_LibFileTmcrParser_Tokenize {
 

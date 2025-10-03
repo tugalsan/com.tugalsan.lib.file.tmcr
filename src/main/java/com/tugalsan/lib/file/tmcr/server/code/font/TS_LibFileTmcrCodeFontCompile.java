@@ -1,12 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.code.font;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
-import com.tugalsan.api.cast.client.*;
-import com.tugalsan.api.charset.client.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.lib.file.tmcr.server.code.parser.TS_LibFileTmcrParser_Assure;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
+import module com.tugalsan.api.cast;
+import module com.tugalsan.api.charset;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.lib.file.tmcr;
 import java.util.*;
 
 public class TS_LibFileTmcrCodeFontCompile {

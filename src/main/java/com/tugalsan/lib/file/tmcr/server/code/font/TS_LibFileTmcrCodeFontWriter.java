@@ -1,7 +1,7 @@
 package com.tugalsan.lib.file.tmcr.server.code.font;
 
-import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
-import com.tugalsan.api.string.client.*;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.string;
 
 public class TS_LibFileTmcrCodeFontWriter {
 

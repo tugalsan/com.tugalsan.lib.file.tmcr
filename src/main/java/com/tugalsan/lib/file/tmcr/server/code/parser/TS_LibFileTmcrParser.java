@@ -1,34 +1,18 @@
 package com.tugalsan.lib.file.tmcr.server.code.parser;
 
-import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU_In2;
-import com.tugalsan.api.file.common.server.TS_FileCommonConfig;
-import com.tugalsan.lib.file.tmcr.server.code.filename.TS_LibFileTmcrCodeFileNameCompile;
-import com.tugalsan.api.file.common.server.TS_FileCommonFontTags;
-import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
-import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTUUtils;
+import module com.tugalsan.api.file.common;
+import module com.tugalsan.api.function;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.sql.conn;
+import module com.tugalsan.api.thread;
+import module com.tugalsan.lib.file.tmcr;
+import java.time.*;
 import java.util.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.sql.conn.server.*;
-import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-
-
-import com.tugalsan.lib.file.tmcr.server.code.font.TS_LibFileTmcrCodeFontCompile;
-import com.tugalsan.lib.file.tmcr.server.code.image.TS_LibFileTmcrCodeImageCompile;
-import com.tugalsan.lib.file.tmcr.server.code.inject.TS_LibFileTmcrCodeInjectCompile;
-import com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelCompile;
-import com.tugalsan.lib.file.tmcr.server.code.label.TS_LibFileTmcrCodeLabelTags;
-import com.tugalsan.lib.file.tmcr.server.code.map.TS_LibFileTmcrCodeMapCompile;
-import com.tugalsan.lib.file.tmcr.server.code.page.TS_LibFileTmcrCodePageCompile;
-import com.tugalsan.lib.file.tmcr.server.code.table.TS_LibFileTmcrCodeTableCompile;
-import com.tugalsan.lib.file.tmcr.server.code.text.TS_LibFileTmcrCodeTextCompile;
-import com.tugalsan.lib.file.tmcr.server.code.url.TS_LibFileTmcrCodeUrlCompile;
-import com.tugalsan.lib.file.tmcr.server.file.TS_LibFileTmcrFileHandler;
-import java.time.Duration;
 
 public class TS_LibFileTmcrParser {
-    
-    private TS_LibFileTmcrParser(){
-        
+
+    private TS_LibFileTmcrParser() {
+
     }
 
     final private static TS_Log d = TS_Log.of(false, TS_LibFileTmcrParser.class);
