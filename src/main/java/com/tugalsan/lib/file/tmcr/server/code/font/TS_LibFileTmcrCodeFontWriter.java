@@ -33,6 +33,10 @@ public class TS_LibFileTmcrCodeFontWriter {
         return TGS_StringUtils.cmn().concat(TS_FileCommonFontTags.CODE_SET_FONT_COLOR(), " ", TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK(), "\n");
     }
 
+    public static String SET_FONT_COLOR_WHITE() {
+        return TGS_StringUtils.cmn().concat(TS_FileCommonFontTags.CODE_SET_FONT_COLOR(), " ", TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_WHITE(), "\n");
+    }
+
     public static String SET_FONT_COLOR_YELLOW() {
         return TGS_StringUtils.cmn().concat(TS_FileCommonFontTags.CODE_SET_FONT_COLOR(), " ", TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_YELLOW(), "\n");
     }
