@@ -10,7 +10,7 @@ public class TS_LibFileTmcrCodePageWriter {
         return TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE() + " A" + A_from_0_to_6 + " " + (isLandScape ? TS_LibFileTmcrCodePageTags.CODE_TOKEN_LAND() : TS_LibFileTmcrCodePageTags.CODE_TOKEN_PORT()) + " " + left_def50 + " " + right_def10 + " " + up_def10 + " " + down_def10 + "\n";
     }
 
-    public static String COPY_PAGE_BEGIN(CharSequence id) {
+    public static String COPY_PAGE_BEGIN(CharSequence id, CharSequence loc, CharSequence name) {
         return TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN() + " " + id + "\n";
     }
 
