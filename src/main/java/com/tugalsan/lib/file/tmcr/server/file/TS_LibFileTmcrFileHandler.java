@@ -121,6 +121,15 @@ public class TS_LibFileTmcrFileHandler {
             }
             TS_LibFileTmcrFilePrefferedFileName.renameZip(fileCommonConfig, _fileHandler);
         }
+        var linesBegin = fileCommonConfig.macroLines.stream().filter(line -> line.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN())).toList();
+        if (!linesBegin.isEmpty()) {
+            var linesEnd = fileCommonConfig.macroLines.stream().filter(line -> line.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_END())).toList();
+            _fileHandler.files.stream().filter(file -> file instanceof TS_FilePdfOpenPdf).map(file -> (TS_FilePdfOpenPdf) file).forEach(pdf -> {
+                d.ce("use", "begin-end detected", "filename", pdf.getLocalFileName());
+                linesBegin.forEach(line -> d.ce("use", "begin-end detected", "begin", line));
+                linesEnd.forEach(line -> d.ce("use", "begin-end detected", "end", line));
+            });
+        }
         if (fileHandler != null) {
             fileHandler.run(_fileHandler);
         }
