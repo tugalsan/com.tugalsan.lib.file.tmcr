@@ -26,6 +26,7 @@ public class TS_LibFileTmcrCodeFontCompile {
         }
         fileCommonConfig.fontColor = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
         var comparison = TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLACK().equals(fileCommonConfig.fontColor)
+                || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_WHITE().equals(fileCommonConfig.fontColor)
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_BLUE().equals(fileCommonConfig.fontColor)
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_DARK_GRAY().equals(fileCommonConfig.fontColor)
                 || TS_FileCommonFontTags.CODE_TOKEN_FONT_COLOR_GRAY().equals(fileCommonConfig.fontColor)
