@@ -61,6 +61,10 @@ public class TS_LibFileTmcrParser {
             if (servletKillThrigger.hasTriggered()) {
                 return null;
             }
+            
+            for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                
+            }
 
             d.ci("compileCode", "compiling...");
             var filenameMode = false;
