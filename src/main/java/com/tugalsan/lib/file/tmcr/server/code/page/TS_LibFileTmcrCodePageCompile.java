@@ -47,16 +47,20 @@ public class TS_LibFileTmcrCodePageCompile {
         return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE());
     }
 
-    public static TS_Log.Result_withLog compile_COPY_PAGE_BEGIN(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, List pageCopyIds_begin) {
+    public static TS_Log.Result_withLog compile_COPY_PAGE_BEGIN(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, List pageCopyIds_begin, List pageCopyIds_loc, List pageCopyIds_name) {
         var result = d.createFuncBoolean("compile_COPY_PAGE_BEGIN");
-        if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
-            return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
+        if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 4)) {
+            return result.mutate2Error("Token size not 4 error @[" + fileCommonConfig.macroLine + "]");
         }
         var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1)).trim();
         if (pageCopyIds_begin.stream().anyMatch(s -> s.equals(id))) {
             return result.mutate2Error("COPY_PAGE_BEGIN already exists @[" + fileCommonConfig.macroLine + "] id:" + id);
         }
         pageCopyIds_begin.add(id);
+        var loc = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(2)).trim();
+        pageCopyIds_loc.add(loc);
+        var name = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(3)).trim();
+        pageCopyIds_name.add(name);
         return result.mutate2True();
     }
 

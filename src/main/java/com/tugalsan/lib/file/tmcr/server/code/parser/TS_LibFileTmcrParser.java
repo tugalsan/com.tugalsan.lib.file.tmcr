@@ -63,10 +63,12 @@ public class TS_LibFileTmcrParser {
             }
 
             var pageCopyIds_begin = new ArrayList();
+            var pageCopyIds_loc = new ArrayList();
+            var pageCopyIds_name = new ArrayList();
             var pageCopyIds_end = new ArrayList();
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
                 if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {
-                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler, pageCopyIds_begin);
+                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler, pageCopyIds_begin, pageCopyIds_loc, pageCopyIds_name);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
@@ -531,7 +533,7 @@ public class TS_LibFileTmcrParser {
     }
 
     public static void addMacro_Lines_ErrorText(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, Throwable t) {
-        if (t == null) {
+        if (t == null) {//I KNOW
             d.ce("addMacro_Lines_ErrorText", "WHY T is null!!!");
         }
         mifHandler.beginText(0);
