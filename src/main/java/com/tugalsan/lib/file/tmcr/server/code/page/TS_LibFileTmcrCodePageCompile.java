@@ -40,7 +40,7 @@ public class TS_LibFileTmcrCodePageCompile {
     }
 
     public static boolean is_COPY_PAGE_END(TS_FileCommonConfig fileCommonConfig) {
-        return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN());
+        return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_END());
     }
 
     public static boolean is_INSERT_PAGE(TS_FileCommonConfig fileCommonConfig) {
