@@ -47,29 +47,32 @@ public class TS_LibFileTmcrCodePageCompile {
         return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE());
     }
 
-    public static TS_Log.Result_withLog compile_COPY_PAGE_BEGIN(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_COPY_PAGE_BEGIN(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, List pageCopyIds_begin) {
         var result = d.createFuncBoolean("compile_COPY_PAGE_BEGIN");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
             return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
         }
         var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1)).trim();
-        if (fileCommonConfig.pageCopyIds_begin.stream().anyMatch(s -> s.equals(id))) {
+        if (pageCopyIds_begin.stream().anyMatch(s -> s.equals(id))) {
             return result.mutate2Error("COPY_PAGE_BEGIN already exists @[" + fileCommonConfig.macroLine + "] id:" + id);
         }
-        fileCommonConfig.pageCopyIds_begin.add(id);
+        pageCopyIds_begin.add(id);
         return result.mutate2True();
     }
 
-    public static TS_Log.Result_withLog compile_COPY_PAGE_END(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+    public static TS_Log.Result_withLog compile_COPY_PAGE_END(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, List pageCopyIds_begin, List pageCopyIds_end) {
         var result = d.createFuncBoolean("compile_COPY_PAGE_END");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
             return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
         }
         var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1)).trim();
-        if (fileCommonConfig.pageCopyIds_end.stream().anyMatch(s -> s.equals(id))) {
+        if (pageCopyIds_begin.stream().noneMatch(s -> s.equals(id))) {
+            return result.mutate2Error("COPY_PAGE_END begin already exists @[" + fileCommonConfig.macroLine + "] id:" + id);
+        }
+        if (pageCopyIds_end.stream().anyMatch(s -> s.equals(id))) {
             return result.mutate2Error("COPY_PAGE_END already exists @[" + fileCommonConfig.macroLine + "] id:" + id);
         }
-        fileCommonConfig.pageCopyIds_end.add(id);
+        pageCopyIds_end.add(id);
         return result.mutate2True();
     }
 

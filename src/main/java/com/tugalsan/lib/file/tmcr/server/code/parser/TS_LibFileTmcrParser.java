@@ -61,9 +61,29 @@ public class TS_LibFileTmcrParser {
             if (servletKillThrigger.hasTriggered()) {
                 return null;
             }
-            
+
+            var pageCopyIds_begin = new ArrayList();
+            var pageCopyIds_end = new ArrayList();
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
-                
+                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {
+                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler, pageCopyIds_begin);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        return null;
+                    }
+                }
+
+                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {
+                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_END(fileCommonConfig, mifHandler, pageCopyIds_begin, pageCopyIds_end);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        return null;
+                    }
+                }
+            }
+            if (pageCopyIds_begin.size() != pageCopyIds_end.size()) {
+                mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "pageCopyIds_begin.size() != pageCopyIds_end.size()");
+                return null;
             }
 
             d.ci("compileCode", "compiling...");
@@ -130,28 +150,6 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodePageCompile.is_INSERT_PAGE(fileCommonConfig)) {//PAGE HANDLER
                     cmd = TS_LibFileTmcrCodePageCompile.compile_INSERT_PAGE(fileCommonConfig, mifHandler);
-                    if (!cmd.result) {
-                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
-                        return null;
-                    } else {
-                        fileCommonConfig.insertPageTriggeredBefore = true;
-                        continue;
-                    }
-                }
-
-                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {
-                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler);
-                    if (!cmd.result) {
-                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
-                        return null;
-                    } else {
-                        fileCommonConfig.insertPageTriggeredBefore = true;
-                        continue;
-                    }
-                }
-
-                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {
-                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_END(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
