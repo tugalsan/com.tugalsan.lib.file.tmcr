@@ -52,8 +52,11 @@ public class TS_LibFileTmcrCodePageCompile {
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
             return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
         }
-        var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
-        d.cr("compile_COPY_PAGE_BEGIN", "TODO","id", id);
+        var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1)).trim();
+        if (fileCommonConfig.pageCopyIds_begin.stream().anyMatch(s -> s.equals(id))) {
+            return result.mutate2Error("COPY_PAGE_BEGIN already exists @[" + fileCommonConfig.macroLine + "] id:" + id);
+        }
+        fileCommonConfig.pageCopyIds_begin.add(id);
         return result.mutate2True();
     }
 
@@ -62,8 +65,11 @@ public class TS_LibFileTmcrCodePageCompile {
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
             return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
         }
-        var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
-        d.cr("compile_COPY_PAGE_END", "TODO","id", id);
+        var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1)).trim();
+        if (fileCommonConfig.pageCopyIds_end.stream().anyMatch(s -> s.equals(id))) {
+            return result.mutate2Error("COPY_PAGE_END already exists @[" + fileCommonConfig.macroLine + "] id:" + id);
+        }
+        fileCommonConfig.pageCopyIds_end.add(id);
         return result.mutate2True();
     }
 
