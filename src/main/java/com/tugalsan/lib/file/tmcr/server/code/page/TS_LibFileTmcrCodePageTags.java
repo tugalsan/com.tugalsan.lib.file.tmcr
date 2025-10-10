@@ -2,6 +2,14 @@ package com.tugalsan.lib.file.tmcr.server.code.page;
 
 public class TS_LibFileTmcrCodePageTags {
 
+    public static String CODE_COPY_PAGE_BEGIN() {
+        return "COPY_PAGE_BEGIN";
+    }
+
+    public static String CODE_COPY_PAGE_END() {
+        return "COPY_PAGE_END";
+    }
+
     public static String CODE_INSERT_PAGE() {
         return "INSERT_PAGE";
     }

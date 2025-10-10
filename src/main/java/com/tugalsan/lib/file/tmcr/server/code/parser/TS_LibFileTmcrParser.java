@@ -135,6 +135,28 @@ public class TS_LibFileTmcrParser {
                     }
                 }
 
+                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {
+                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        return null;
+                    } else {
+                        fileCommonConfig.insertPageTriggeredBefore = true;
+                        continue;
+                    }
+                }
+
+                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {
+                    cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_END(fileCommonConfig, mifHandler);
+                    if (!cmd.result) {
+                        mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        return null;
+                    } else {
+                        fileCommonConfig.insertPageTriggeredBefore = true;
+                        continue;
+                    }
+                }
+
                 if (!fileCommonConfig.insertPageTriggeredBefore) {
                     TS_LibFileTmcrCodePageCompile.createNewPageDefault(fileCommonConfig, mifHandler);
                     mifHandler.saveFile("ERROR: First code should be new page! (try to download TMCR file to see macro code)");

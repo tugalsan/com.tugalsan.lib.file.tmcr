@@ -35,8 +35,36 @@ public class TS_LibFileTmcrCodePageCompile {
         return 10;
     }
 
+    public static boolean is_COPY_PAGE_BEGIN(TS_FileCommonConfig fileCommonConfig) {
+        return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN());
+    }
+
+    public static boolean is_COPY_PAGE_END(TS_FileCommonConfig fileCommonConfig) {
+        return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN());
+    }
+
     public static boolean is_INSERT_PAGE(TS_FileCommonConfig fileCommonConfig) {
         return fileCommonConfig.macroLine.startsWith(TS_LibFileTmcrCodePageTags.CODE_INSERT_PAGE());
+    }
+
+    public static TS_Log.Result_withLog compile_COPY_PAGE_BEGIN(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+        var result = d.createFuncBoolean("compile_COPY_PAGE_BEGIN");
+        if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
+            return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
+        }
+        var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
+        d.cr("compile_COPY_PAGE_BEGIN", "TODO","id", id);
+        return result.mutate2True();
+    }
+
+    public static TS_Log.Result_withLog compile_COPY_PAGE_END(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
+        var result = d.createFuncBoolean("compile_COPY_PAGE_END");
+        if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 2)) {
+            return result.mutate2Error("Token size not 2 error @[" + fileCommonConfig.macroLine + "]");
+        }
+        var id = TGS_CharSetCast.current().toUpperCase(fileCommonConfig.macroLineTokens.get(1));
+        d.cr("compile_COPY_PAGE_END", "TODO","id", id);
+        return result.mutate2True();
     }
 
     public static TS_Log.Result_withLog compile_INSERT_PAGE(TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler) {
