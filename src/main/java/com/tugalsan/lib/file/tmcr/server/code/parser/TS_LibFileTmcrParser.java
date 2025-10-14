@@ -80,6 +80,11 @@ public class TS_LibFileTmcrParser {
                         return null;
                     }
                     fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_WHITE());
+                    i++;
+                    i++;
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
+                    continue;
                 }
 
                 if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {
@@ -89,6 +94,11 @@ public class TS_LibFileTmcrParser {
                         return null;
                     }
                     fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_WHITE());
+                    i++;
+                    i++;
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
+                    continue;
                 }
             }
             if (pageCopyIds_begin.size() != pageCopyIds_end.size()) {
