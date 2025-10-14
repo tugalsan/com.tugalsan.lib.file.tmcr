@@ -79,11 +79,15 @@ public class TS_LibFileTmcrParser {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
-                    fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeTextWriter.BEGIN_TEXT_LEFT());
+                    i++;
                     fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_WHITE());
                     i++;
+                    fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
                     i++;
                     fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
+                    i++;
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeTextWriter.END_TEXT());
                     continue;
                 }
 
@@ -93,11 +97,15 @@ public class TS_LibFileTmcrParser {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
-                    fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeTextWriter.BEGIN_TEXT_LEFT());
+                    i++;
                     fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_WHITE());
                     i++;
+                    fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
                     i++;
                     fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeFontWriter.SET_FONT_COLOR_BLACK());
+                    i++;
+                    fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeTextWriter.END_TEXT());
                     continue;
                 }
             }
