@@ -489,6 +489,13 @@ public class TS_LibFileTmcrParser {
                     }
                     continue;
                 }
+                
+                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {//WILL BE PROCESSED AFTER PDF CONSTRUCTION
+                    continue;
+                }
+                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {//WILL BE PROCESSED AFTER PDF CONSTRUCTION
+                    continue;
+                }
 
                 if (TS_LibFileTmcrCodeFileNameCompile.is_FILENAME_START(fileCommonConfig)) {
                     d.ci("compileCode", "is_FILENAME_START");
