@@ -111,6 +111,9 @@ public class TS_LibFileTmcrParser {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "pageCopyIds_begin.size() != pageCopyIds_end.size()");
                 return null;
             }
+            if (!pageCopyIds_begin.isEmpty()){
+                fileCommonConfig.copyPageRequested = true;
+            }
 
             d.ci("compileCode", "compiling...");
             var filenameMode = false;
