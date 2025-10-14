@@ -19,6 +19,15 @@ public class TS_LibFileTmcrParser_Assure {
 
     final private static TS_Log d = TS_Log.of(TS_LibFileTmcrParser_Assure.class);
 
+    public static boolean checkTokenSizeEqualsOrMore(TS_FileCommonConfig fileCommonConfig, int tokenSize) {
+        if (fileCommonConfig.macroLineTokens.size() < tokenSize) {
+            d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have ", tokenSize, " tokens or more error!");
+            d.ce(TGS_StringUtils.cmn().toString_ln(fileCommonConfig.macroLineTokens));
+            return false;
+        }
+        return true;
+    }
+
     public static boolean checkTokenSize(TS_FileCommonConfig fileCommonConfig, int tokenSize) {
         if (fileCommonConfig.macroLineTokens.size() != tokenSize) {
             d.ce("fileCommonConfig.macroLine: [", fileCommonConfig.macroLine, "] should have ", tokenSize, " tokens error!");
