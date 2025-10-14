@@ -11,7 +11,7 @@ public class TS_LibFileTmcrCodePageWriter {
     }
 
     public static String COPY_PAGE_BEGIN(CharSequence id, CharSequence loc, CharSequence name) {
-        return TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN() + " " + id + " " + loc.toString().replace(" ", "*") + " " + name.toString().replace(" ", "*") + "\n";
+        return TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN() + " " + id + " {" + loc.toString().replace(" ", "*") + "} {" + name.toString().replace(" ", "*") + "}\n";
     }
 
     public static String COPY_PAGE_END(CharSequence id) {

@@ -67,6 +67,12 @@ public class TS_LibFileTmcrParser {
             var pageCopyIds_name = new ArrayList();
             var pageCopyIds_end = new ArrayList();
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
+                cmd = TS_LibFileTmcrParser_Tokenize.compile_TOKENIZE(fileCommonConfig, i);
+                if (!cmd.result) {
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                    return null;
+                }
+                d.ci("compileCode", "macroLine", fileCommonConfig.macroLine);
                 if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {
                     cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler, pageCopyIds_begin, pageCopyIds_loc, pageCopyIds_name);
                     if (!cmd.result) {
