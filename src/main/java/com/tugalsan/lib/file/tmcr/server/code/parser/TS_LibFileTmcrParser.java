@@ -79,6 +79,7 @@ public class TS_LibFileTmcrParser {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
+                    fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
                 }
 
                 if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {
@@ -87,6 +88,7 @@ public class TS_LibFileTmcrParser {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
+                    fileCommonConfig.macroLines.set(i, TS_LibFileTmcrCodeTextWriter.ADD_TEXT(fileCommonConfig.macroLines.get(i)));
                 }
             }
             if (pageCopyIds_begin.size() != pageCopyIds_end.size()) {
@@ -487,13 +489,6 @@ public class TS_LibFileTmcrParser {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
                     }
-                    continue;
-                }
-                
-                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_BEGIN(fileCommonConfig)) {//WILL BE PROCESSED AFTER PDF CONSTRUCTION
-                    continue;
-                }
-                if (TS_LibFileTmcrCodePageCompile.is_COPY_PAGE_END(fileCommonConfig)) {//WILL BE PROCESSED AFTER PDF CONSTRUCTION
                     continue;
                 }
 
