@@ -121,11 +121,11 @@ public class TS_LibFileTmcrFileHandler {
             }
             TS_LibFileTmcrFilePrefferedFileName.renameZip(fileCommonConfig, _fileHandler);
         }
-        var linesBegin = fileCommonConfig.macroLines.stream().filter(line -> line.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN())).toList();
+        var linesBegin = fileCommonConfig.macroLines.stream().filter(line -> line.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT() + " " + TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_BEGIN())).toList();
         if (linesBegin.isEmpty()) {
             d.ce("use", "linesBegin.isEmpty()", linesBegin.isEmpty());
         } else {
-            var linesEnd = fileCommonConfig.macroLines.stream().filter(line -> line.startsWith(TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_END())).toList();
+            var linesEnd = fileCommonConfig.macroLines.stream().filter(line -> line.startsWith(TS_LibFileTmcrCodeTextTags.CODE_ADD_TEXT() + " " + TS_LibFileTmcrCodePageTags.CODE_COPY_PAGE_END())).toList();
             d.ce("use", "linesBegin", linesBegin);
             d.ce("use", "linesEnd", linesEnd);
             _fileHandler.files.stream().filter(file -> file instanceof TS_FilePdfOpenPdf).map(file -> (TS_FilePdfOpenPdf) file).forEach(pdf -> {
