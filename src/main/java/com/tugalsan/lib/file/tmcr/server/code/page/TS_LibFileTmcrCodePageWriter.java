@@ -1,6 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.code.page;
 
 public class TS_LibFileTmcrCodePageWriter {
+    
+    private TS_LibFileTmcrCodePageWriter(){
+        
+    }
 
     public static String INSERT_PAGE(int A_from_0_to_6, boolean isLandScape) {
         return INSERT_PAGE(A_from_0_to_6, isLandScape, 50, 10, 10, 10);
