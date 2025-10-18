@@ -115,12 +115,12 @@ public class TS_LibFileTmcrParser {
                 fileCommonConfig.copyPageRequested = true;
                 var pdfRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_PDF()));
                 if (!pdfRequested) {
-                    mifHandler.saveFile("ERROR: COPY requires PDF TYPE REQUESTED");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"ERROR: COPY requires PDF TYPE REQUESTED");
                     return null;
                 }
                 var htmRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_HTM()));
                 if (!htmRequested) {
-                    mifHandler.saveFile("ERROR: COPY requires PDF HTM REQUESTED");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"ERROR: COPY requires PDF HTM REQUESTED");
                     return null;
                 }
             }
@@ -159,7 +159,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeLabelCompile.is_SET_LABEL_ON_ERROR(fileCommonConfig)) {//IF SPECIAL TAG: ERROR LABEL
                     d.ci("compileCode", "***  is_SET_LABEL ERROR found");
-                    mifHandler.saveFile("is_SET_LABEL_ON_ERROR");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"is_SET_LABEL_ON_ERROR");
                     return null;
                 }
 
@@ -168,7 +168,7 @@ public class TS_LibFileTmcrParser {
                         var s = TS_LibFileTmcrCodeLabelCompile.get_GOTO_LABEL(anchor, fileCommonConfig);
                         if (TS_LibFileTmcrCodeLabelTags.ERROR().equals(s)) {
                             d.ci("compileCode", "***  GOTO_LABEL DETECTED AS ERROR");
-                            mifHandler.saveFile("error_get_GOTO_LABEL_see_console");
+                            mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"error_get_GOTO_LABEL_see_console");
                             return null;
                         }
                         d.ci("compileCode", "***  GOTO_LABEL DETECTED as " + s);
@@ -200,7 +200,7 @@ public class TS_LibFileTmcrParser {
 
                 if (!fileCommonConfig.insertPageTriggeredBefore) {
                     TS_LibFileTmcrCodePageCompile.createNewPageDefault(fileCommonConfig, mifHandler);
-                    mifHandler.saveFile("ERROR: First code should be new page! (try to download TMCR file to see macro code)");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"ERROR: First code should be new page! (try to download TMCR file to see macro code)");
                     return null;
                 }
 
