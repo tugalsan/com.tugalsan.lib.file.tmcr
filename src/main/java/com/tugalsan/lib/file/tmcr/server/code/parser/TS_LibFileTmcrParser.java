@@ -111,8 +111,18 @@ public class TS_LibFileTmcrParser {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "pageCopyIds_begin.size() != pageCopyIds_end.size()");
                 return null;
             }
-            if (!pageCopyIds_begin.isEmpty()){
+            if (!pageCopyIds_begin.isEmpty()) {
                 fileCommonConfig.copyPageRequested = true;
+                var pdfRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_PDF()));
+                if (!pdfRequested) {
+                    mifHandler.saveFile("ERROR: COPY requires PDF TYPE REQUESTED");
+                    return null;
+                }
+                var htmRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_HTM()));
+                if (!htmRequested) {
+                    mifHandler.saveFile("ERROR: COPY requires PDF HTM REQUESTED");
+                    return null;
+                }
             }
 
             d.ci("compileCode", "compiling...");
