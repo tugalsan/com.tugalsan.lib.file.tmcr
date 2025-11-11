@@ -138,7 +138,7 @@ public class TS_LibFileTmcrParser_Assure {
     }
 
     public static Result_VisibleTextAndSubId getVisibleTextAndSubId(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig,
-            CharSequence tableName, CharSequence defaultViewTableName, TGS_LibRqlCol column, String inputData) {
+            CharSequence tableName, CharSequence defaultViewTableName, TGS_LibRqlCol column, String inputData, TS_ThreadSyncLst<TS_LibRqlLinkUtils.GetBufferItem> scopedBuffer) {
         String outputData;
         Long subId = null;
 
@@ -199,7 +199,7 @@ public class TS_LibFileTmcrParser_Assure {
                 return null;
             }
             {
-                var ra = TS_LibRqlLinkUtils.get(servletKillThrigger, TS_LibRqlBufferUtils.items, anchor, tableName, defaultViewTableName, column.getDataString1_LnkTargetTableName(), subId);
+                var ra = TS_LibRqlLinkUtils.get(servletKillThrigger, TS_LibRqlBufferUtils.items, anchor, tableName, defaultViewTableName, column.getDataString1_LnkTargetTableName(), subId, scopedBuffer);
                 if (ra == null) {
                     var errorText = fileCommonConfig.macroLine + ".getLNGLINKText() == null";
                     d.ce("getVisibleTextAndSubId:", errorText);

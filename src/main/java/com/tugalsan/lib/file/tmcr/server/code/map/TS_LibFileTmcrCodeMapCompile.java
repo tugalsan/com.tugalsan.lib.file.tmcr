@@ -9,6 +9,7 @@ import module com.tugalsan.api.file.common;
 import module com.tugalsan.api.thread;
 import module com.tugalsan.lib.file.tmcr;
 import module com.tugalsan.lib.rql;
+import com.tugalsan.lib.rql.link.server.TS_LibRqlLinkUtils;
 import java.util.*;
 
 public class TS_LibFileTmcrCodeMapCompile {
@@ -54,7 +55,7 @@ public class TS_LibFileTmcrCodeMapCompile {
     }
 
     //MAPADD_FROMSQL VAR ID ...
-    public static TS_Log.Result_withLog compile_MAPADD_FROMSQL(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, CharSequence defaultViewTableName) {
+    public static TS_Log.Result_withLog compile_MAPADD_FROMSQL(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, CharSequence defaultViewTableName, TS_ThreadSyncLst<TS_LibRqlLinkUtils.GetBufferItem> scopedBuffer) {
         var result = d.createFuncBoolean("compile_MAPADD_FROMSQL");
         if (!TS_LibFileTmcrParser_Assure.checkTokenSize(fileCommonConfig, 3)) {
             return result.mutate2Error("token size not 3");
@@ -89,7 +90,7 @@ public class TS_LibFileTmcrCodeMapCompile {
         }
         d.ci("sniff returns as: ", data);
 
-        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(servletKillThrigger, anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
+        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(servletKillThrigger, anchor, fileCommonConfig, tn, defaultViewTableName, column, data, scopedBuffer);
         d.ci("visibleText.self: ", visibleTextAndSubId.visibleText());
         d.ci("subId.self: " + visibleTextAndSubId.subId());
 

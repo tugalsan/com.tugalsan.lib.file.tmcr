@@ -14,6 +14,8 @@ import module com.tugalsan.api.thread;
 import module com.tugalsan.lib.file.tmcr;
 import module com.tugalsan.lib.rql.buffer;
 import module com.tugalsan.lib.rql;
+import com.tugalsan.lib.rql.link.server.TS_LibRqlLinkUtils;
+
 import module com.tugalsan.lib.rql.rev;
 import java.time.*;
 import java.util.*;
@@ -438,7 +440,7 @@ public class TS_LibFileTmcrCodeTextCompile {
     }
 
     //ADD_TEXT_VAR_FROMSQL_REVERSE VAR ID
-    public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName) {
+    public static TS_Log.Result_withLog compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, boolean filenameMode, CharSequence defaultViewTableName, TS_ThreadSyncLst<TS_LibRqlLinkUtils.GetBufferItem> scopedBuffer) {
         var result = d.createFuncBoolean("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.macroline: [" + fileCommonConfig.macroLine + "]");
 
@@ -500,7 +502,7 @@ public class TS_LibFileTmcrCodeTextCompile {
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCell returns as: " + data);
 
         d.ci("compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE.sniffCellVisible...");
-        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(servletKillThrigger, anchor, fileCommonConfig, tn, defaultViewTableName, column, data);
+        var visibleTextAndSubId = TS_LibFileTmcrParser_Assure.getVisibleTextAndSubId(servletKillThrigger, anchor, fileCommonConfig, tn, defaultViewTableName, column, data, scopedBuffer);
 //        if (visibleTextAndSubId == null) {
 //            return result.mutate2Error("visibleTextAndSubId == null");
 //        }

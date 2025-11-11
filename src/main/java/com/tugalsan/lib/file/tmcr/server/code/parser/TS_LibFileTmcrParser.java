@@ -6,6 +6,7 @@ import module com.tugalsan.api.log;
 import module com.tugalsan.api.sql.conn;
 import module com.tugalsan.api.thread;
 import module com.tugalsan.lib.file.tmcr;
+import com.tugalsan.lib.rql.link.server.TS_LibRqlLinkUtils;
 import java.time.*;
 import java.util.*;
 
@@ -22,6 +23,7 @@ public class TS_LibFileTmcrParser {
     }
 
     public static void compileCode(TS_ThreadSyncTrigger servletKillThrigger, TS_SQLConnAnchor anchor, TS_FileCommonConfig fileCommonConfig, TS_LibFileTmcrFileHandler mifHandler, TGS_FuncMTU_In2<String, Integer> progressUpdate_with_userDotTable_and_percentage, Duration timeout, CharSequence defaultViewTableName) {
+        TS_ThreadSyncLst<TS_LibRqlLinkUtils.GetBufferItem> scopedBuffer = TS_ThreadSyncLst.ofSlowWrite();
         var e = TGS_FuncMTCUtils.call(() -> {
             if (progressUpdate_with_userDotTable_and_percentage != null) {
                 progressUpdate_with_userDotTable_and_percentage.run(fileCommonConfig.userDotTablename, CLEAR_PERCENTAGES());
@@ -115,12 +117,12 @@ public class TS_LibFileTmcrParser {
                 fileCommonConfig.copyPageRequested = true;
                 var pdfRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_PDF()));
                 if (!pdfRequested) {
-                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"ERROR: COPY requires PDF TYPE REQUESTED");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: COPY requires PDF TYPE REQUESTED");
                     return null;
                 }
                 var htmRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_HTM()));
                 if (!htmRequested) {
-                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"ERROR: COPY requires PDF HTM REQUESTED");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: COPY requires PDF HTM REQUESTED");
                     return null;
                 }
             }
@@ -159,7 +161,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeLabelCompile.is_SET_LABEL_ON_ERROR(fileCommonConfig)) {//IF SPECIAL TAG: ERROR LABEL
                     d.ci("compileCode", "***  is_SET_LABEL ERROR found");
-                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"is_SET_LABEL_ON_ERROR");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "is_SET_LABEL_ON_ERROR");
                     return null;
                 }
 
@@ -168,7 +170,7 @@ public class TS_LibFileTmcrParser {
                         var s = TS_LibFileTmcrCodeLabelCompile.get_GOTO_LABEL(anchor, fileCommonConfig);
                         if (TS_LibFileTmcrCodeLabelTags.ERROR().equals(s)) {
                             d.ci("compileCode", "***  GOTO_LABEL DETECTED AS ERROR");
-                            mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"error_get_GOTO_LABEL_see_console");
+                            mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "error_get_GOTO_LABEL_see_console");
                             return null;
                         }
                         d.ci("compileCode", "***  GOTO_LABEL DETECTED as " + s);
@@ -200,7 +202,7 @@ public class TS_LibFileTmcrParser {
 
                 if (!fileCommonConfig.insertPageTriggeredBefore) {
                     TS_LibFileTmcrCodePageCompile.createNewPageDefault(fileCommonConfig, mifHandler);
-                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" +"ERROR: First code should be new page! (try to download TMCR file to see macro code)");
+                    mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: First code should be new page! (try to download TMCR file to see macro code)");
                     return null;
                 }
 
@@ -453,7 +455,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeMapCompile.is_MAPADD_FROMSQL(fileCommonConfig)) {
                     d.ci("compileCode", "is_MAPADD_FROMSQL");
-                    cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(servletKillThrigger, anchor, fileCommonConfig, mifHandler, defaultViewTableName);
+                    cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(servletKillThrigger, anchor, fileCommonConfig, mifHandler, defaultViewTableName, scopedBuffer);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
@@ -463,7 +465,7 @@ public class TS_LibFileTmcrParser {
 
                 if (TS_LibFileTmcrCodeTextCompile.is_ADD_TEXT_VAR_FROMSQL_or_REVERSE(fileCommonConfig)) {
                     d.ci("compileCode", "is_ADD_TEXT_VAR_FROMSQL_or_REVERSE");
-                    cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(servletKillThrigger, anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName);
+                    cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(servletKillThrigger, anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName, scopedBuffer);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
                         return null;
