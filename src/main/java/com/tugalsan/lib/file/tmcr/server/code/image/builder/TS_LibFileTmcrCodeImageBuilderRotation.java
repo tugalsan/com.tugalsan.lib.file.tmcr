@@ -118,20 +118,20 @@ public class TS_LibFileTmcrCodeImageBuilderRotation {
         return sb;
     }
 
-    public StringBuilder buildFromSql(String tablename_dot_columnName, long id) {
+    public StringBuilder buildFromSql(CharSequence tablename_dot_columnName, long id) {
         return buildFromSql(tablename_dot_columnName, String.valueOf(id));
     }
 
-    public StringBuilder buildFromSql(String tablename_dot_columnName, String id) {
+    public StringBuilder buildFromSql(CharSequence tablename_dot_columnName, String id) {
         return buildFromSql_do(true, tablename_dot_columnName, id);
     }
 
     @Deprecated //NO NEED
-    public StringBuilder buildFromSql_ifNotExistsDoNotCreateFromTemplate(String tablename_dot_columnName, String id) {
+    public StringBuilder buildFromSql_ifNotExistsDoNotCreateFromTemplate(CharSequence tablename_dot_columnName, String id) {
         return buildFromSql_do(false, tablename_dot_columnName, id);
     }
 
-    private StringBuilder buildFromSql_do(boolean ifNotExistsCreateFromTemplate, String tablename_dot_columnName, String id) {
+    private StringBuilder buildFromSql_do(boolean ifNotExistsCreateFromTemplate, CharSequence tablename_dot_columnName, String id) {
         var sb = new StringBuilder();
         sb.append(TS_LibFileTmcrCodeImageTags.CODE_INSERT_IMAGE_FROMSQL());
         sb.append(" ").append(maxWidthNullable == null ? TS_LibFileTmcrCodeImageTags.CODE_TOKEN_NULL() : maxWidthNullable.toString());
