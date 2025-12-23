@@ -32,12 +32,14 @@ public class TS_LibFileTmcrParser {
             d.ci("compileCode", "replacing...");
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
                 if (servletKillThrigger.hasTriggered()) {
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
                 if (TS_LibFileTmcrCodeUrlCompile.is_CODE_URL_SH_OLD(fileCommonConfig, i)) {
                     var cmd = TS_LibFileTmcrCodeUrlCompile.compile_CODE_URL_SH_OLD(fileCommonConfig, i);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                 }
@@ -46,11 +48,13 @@ public class TS_LibFileTmcrParser {
                     var cmd = TS_LibFileTmcrCodeUrlCompile.compile_CODE_URL_LOCALHOST(anchor, fileCommonConfig, i);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                 }
             }
             if (servletKillThrigger.hasTriggered()) {
+                d.ce("compileCode", "return@macroLines", i);
                 return null;
             }
 
@@ -58,9 +62,11 @@ public class TS_LibFileTmcrParser {
             var cmd = TS_LibFileTmcrCodeInjectCompile.compile_CODE_INJECT_CODE(fileCommonConfig, timeout);
             if (!cmd.result) {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                d.ce("compileCode", "return@macroLines", i);
                 return null;
             }
             if (servletKillThrigger.hasTriggered()) {
+                d.ce("compileCode", "return@macroLines", i);
                 return null;
             }
 
@@ -70,6 +76,7 @@ public class TS_LibFileTmcrParser {
                 cmd = TS_LibFileTmcrParser_Tokenize.compile_TOKENIZE(fileCommonConfig, i);
                 if (!cmd.result) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
                 d.ci("compileCode", "macroLine", fileCommonConfig.macroLine);
@@ -77,6 +84,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_BEGIN(fileCommonConfig, mifHandler, pageCopyIds_begin);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeTextWriter.BEGIN_TEXT_LEFT());
@@ -95,6 +103,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodePageCompile.compile_COPY_PAGE_END(fileCommonConfig, mifHandler, pageCopyIds_begin, pageCopyIds_end);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     fileCommonConfig.macroLines.add(i, TS_LibFileTmcrCodeTextWriter.BEGIN_TEXT_LEFT());
@@ -111,6 +120,7 @@ public class TS_LibFileTmcrParser {
             }
             if (pageCopyIds_begin.size() != pageCopyIds_end.size()) {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "pageCopyIds_begin.size() != pageCopyIds_end.size()");
+                d.ce("compileCode", "return@macroLines", i);
                 return null;
             }
             if (!pageCopyIds_begin.isEmpty()) {
@@ -118,11 +128,13 @@ public class TS_LibFileTmcrParser {
                 var pdfRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_PDF()));
                 if (!pdfRequested) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: COPY requires PDF TYPE REQUESTED");
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
                 var htmRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_HTM()));
                 if (!htmRequested) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: COPY requires PDF HTM REQUESTED");
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
             }
@@ -131,6 +143,7 @@ public class TS_LibFileTmcrParser {
             var filenameMode = false;
             for (var i = 0; i < fileCommonConfig.macroLines.size(); i++) {
                 if (servletKillThrigger.hasTriggered()) {
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
                 var percent = 100 * (i + 1) / fileCommonConfig.macroLines.size();
@@ -142,6 +155,7 @@ public class TS_LibFileTmcrParser {
                 cmd = TS_LibFileTmcrParser_Tokenize.compile_TOKENIZE(fileCommonConfig, i);
                 if (!cmd.result) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
                 d.ci("compileCode", "macroLine", fileCommonConfig.macroLine);
@@ -149,6 +163,7 @@ public class TS_LibFileTmcrParser {
                 cmd = TS_LibFileTmcrCodeMapCompile.compile_CODE_MAPGET(fileCommonConfig);
                 if (!cmd.result) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 } else {
                     d.ci("compileCode", "AFTER_MAPGET.macroLines[" + i + "/" + fileCommonConfig.macroLines.size() + "]-> [" + fileCommonConfig.macroLines.get(i) + "]");
@@ -162,6 +177,7 @@ public class TS_LibFileTmcrParser {
                 if (TS_LibFileTmcrCodeLabelCompile.is_SET_LABEL_ON_ERROR(fileCommonConfig)) {//IF SPECIAL TAG: ERROR LABEL
                     d.ci("compileCode", "***  is_SET_LABEL ERROR found");
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "is_SET_LABEL_ON_ERROR");
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
 
@@ -171,6 +187,7 @@ public class TS_LibFileTmcrParser {
                         if (TS_LibFileTmcrCodeLabelTags.ERROR().equals(s)) {
                             d.ci("compileCode", "***  GOTO_LABEL DETECTED AS ERROR");
                             mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "error_get_GOTO_LABEL_see_console");
+                            d.ce("compileCode", "return@macroLines", i);
                             return null;
                         }
                         d.ci("compileCode", "***  GOTO_LABEL DETECTED as " + s);
@@ -193,6 +210,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodePageCompile.compile_INSERT_PAGE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     } else {
                         fileCommonConfig.insertPageTriggeredBefore = true;
@@ -203,6 +221,7 @@ public class TS_LibFileTmcrParser {
                 if (!fileCommonConfig.insertPageTriggeredBefore) {
                     TS_LibFileTmcrCodePageCompile.createNewPageDefault(fileCommonConfig, mifHandler);
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: First code should be new page! (try to download TMCR file to see macro code)");
+                    d.ce("compileCode", "return@macroLines", i);
                     return null;
                 }
 
@@ -228,6 +247,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_BEGIN_TABLECELL(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -238,6 +258,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_END_TABLECELL(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -248,6 +269,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_TABLECELL_BORDER(fileCommonConfig);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -258,6 +280,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_BEGIN_TABLE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -268,6 +291,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTableCompile.compile_END_TABLE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -278,6 +302,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_BEGIN_TEXT(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -288,6 +313,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_END_TEXT(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -298,6 +324,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT(fileCommonConfig, mifHandler, filenameMode);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -308,6 +335,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_HTML(fileCommonConfig, mifHandler, timeout);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -318,6 +346,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_DATE(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -328,6 +357,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_CREATE_USER(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -338,6 +368,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_DATE(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -348,6 +379,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_USER(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -358,6 +390,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_REVLST_NO(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -368,6 +401,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_USER(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -378,6 +412,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_NEWLINE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -388,6 +423,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_SPC(fileCommonConfig, mifHandler, filenameMode);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -398,6 +434,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_TIME(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -408,6 +445,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_DATE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -418,6 +456,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_HR(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -428,6 +467,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_FUNCNAME(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -438,6 +478,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROM_SQLQUERY(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -448,6 +489,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_CW(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -458,6 +500,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeMapCompile.compile_MAPADD_FROMSQL(servletKillThrigger, anchor, fileCommonConfig, mifHandler, defaultViewTableName, scopedBuffer);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -468,6 +511,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_VAR_FROMSQL_or_REVERSE(servletKillThrigger, anchor, fileCommonConfig, mifHandler, filenameMode, defaultViewTableName, scopedBuffer);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -478,6 +522,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_TABNAME(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -488,6 +533,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeTextCompile.compile_ADD_TEXT_COLNAME(anchor, fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -498,6 +544,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeFontCompile.compile_SET_FONT_COLOR(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -508,6 +555,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeFontCompile.compile_SET_FONT_SIZE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -518,6 +566,7 @@ public class TS_LibFileTmcrParser {
                     cmd = TS_LibFileTmcrCodeFontCompile.compile_SET_FONT_STYLE(fileCommonConfig, mifHandler);
                     if (!cmd.result) {
                         mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
+                        d.ce("compileCode", "return@macroLines", i);
                         return null;
                     }
                     continue;
@@ -536,6 +585,7 @@ public class TS_LibFileTmcrParser {
                 TGS_FuncMTUUtils.thrw(d.className(), "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
             }
             d.ci("compileCode", "for.macroLines.done.");
+            d.cr("compileCode", "return@macroLines", i, "done");
             return null;
         }, ex -> ex);
         if (e != null) {
