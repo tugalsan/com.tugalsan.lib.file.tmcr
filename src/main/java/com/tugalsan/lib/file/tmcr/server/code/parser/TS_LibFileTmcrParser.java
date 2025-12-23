@@ -54,7 +54,7 @@ public class TS_LibFileTmcrParser {
                 }
             }
             if (servletKillThrigger.hasTriggered()) {
-                d.ce("compileCode", "return@macroLines", i);
+                d.ce("compileCode", "return@macroLines", "#1");
                 return null;
             }
 
@@ -62,11 +62,11 @@ public class TS_LibFileTmcrParser {
             var cmd = TS_LibFileTmcrCodeInjectCompile.compile_CODE_INJECT_CODE(fileCommonConfig, timeout);
             if (!cmd.result) {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + cmd.log);
-                d.ce("compileCode", "return@macroLines", i);
+                d.ce("compileCode", "return@macroLines", "#2");
                 return null;
             }
             if (servletKillThrigger.hasTriggered()) {
-                d.ce("compileCode", "return@macroLines", i);
+                d.ce("compileCode", "return@macroLines", "#3");
                 return null;
             }
 
@@ -120,7 +120,7 @@ public class TS_LibFileTmcrParser {
             }
             if (pageCopyIds_begin.size() != pageCopyIds_end.size()) {
                 mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "pageCopyIds_begin.size() != pageCopyIds_end.size()");
-                d.ce("compileCode", "return@macroLines", i);
+                d.ce("compileCode", "return@macroLines", "#4");
                 return null;
             }
             if (!pageCopyIds_begin.isEmpty()) {
@@ -128,13 +128,13 @@ public class TS_LibFileTmcrParser {
                 var pdfRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_PDF()));
                 if (!pdfRequested) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: COPY requires PDF TYPE REQUESTED");
-                    d.ce("compileCode", "return@macroLines", i);
+                    d.ce("compileCode", "return@macroLines", "#5");
                     return null;
                 }
                 var htmRequested = mifHandler.fileCommonConfig.requestedFileTypes.stream().anyMatch(ft -> ft.equals(TGS_LibFileTmcrTypes.FILE_TYPE_HTM()));
                 if (!htmRequested) {
                     mifHandler.saveFile(cmd.classNameDotfuncName + "->" + "ERROR: COPY requires PDF HTM REQUESTED");
-                    d.ce("compileCode", "return@macroLines", i);
+                    d.ce("compileCode", "return@macroLines", "#6");
                     return null;
                 }
             }
@@ -585,7 +585,7 @@ public class TS_LibFileTmcrParser {
                 TGS_FuncMTUUtils.thrw(d.className(), "compileCode", "BREAK: Unknown or unwritten code error! (check FILE TMCR): {" + fileCommonConfig.macroLine + "}");
             }
             d.ci("compileCode", "for.macroLines.done.");
-            d.cr("compileCode", "return@macroLines", i, "done");
+            d.cr("compileCode", "return@macroLines", "done");
             return null;
         }, ex -> ex);
         if (e != null) {
