@@ -1,6 +1,10 @@
 package com.tugalsan.lib.file.tmcr.server.code.page;
 
 public class TS_LibFileTmcrCodePageTags {
+    
+    private TS_LibFileTmcrCodePageTags(){
+        
+    }
 
     public static String CODE_COPY_PAGE_BEGIN() {
         return "COPY_PAGE_BEGIN";
